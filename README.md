@@ -7,3 +7,7 @@ simple way for members to:
 * Pay club dues
 * Manage mailing list subscriptions
 * Request reimbursement for races
+
+This app is based on
+[polymer-starter-kit](https://github.com/PolymerElements/polymer-starter-kit).
+See the project's README for further instructions.
