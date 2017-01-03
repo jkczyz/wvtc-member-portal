@@ -26,7 +26,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="my-icons.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-app.html">
+<link rel="import" href="wvtc-icons.html">
+<link rel="import" href="wvtc-sign-in.html">
 
 
 <dom-module id="wvtc-app">
@@ -43,8 +45,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         color: #fff;
         background-color: var(--app-primary-color);
       }
+
       app-header paper-icon-button {
         --paper-icon-button-ink-color: white;
+      }
+
+      app-header paper-icon-button[disabled] {
+        display: none;
       }
 
       .drawer-list {
@@ -69,6 +76,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         font-weight: bold;
       }
     </style>
+
+    <firebase-app
+        name="wvtc"
+        api-key="AIzaSyBhdjQwxlc8vsrCiGfv372r4nl4DKi_p80"
+        auth-domain="wvtc-demo.firebaseapp.com"
+        database-url="https://wvtc-demo.firebaseio.com">
+    </firebase-app>
 
     <app-location route="{{route}}"></app-location>
     <app-route
@@ -104,6 +118,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <app-toolbar>
             <paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
             <div main-title>West Valley Track Club</div>
+            <paper-icon-button
+                icon="wvtc-icons:sign-out"
+                title="Sign out"
+                disabled="{{!signedIn}}"
+                on-tap="_signOut">
+            </paper-icon-button>
           </app-toolbar>
         </app-header>
 
@@ -112,6 +132,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             attr-for-selected="name"
             fallback-selection="404"
             role="main">
+          <wvtc-sign-in
+              name="sign-in"
+              status-known="{{statusKnown}}"
+              signed-in="{{signedIn}}">
+          </wvtc-sign-in>
           <wvtc-profile name="profile"></wvtc-profile>
           <wvtc-membership name="membership"></wvtc-membership>
           <wvtc-mailing-lists name="mailing-lists"></wvtc-mailing-lists>
@@ -135,21 +160,35 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       observers: [
-        '_routePageChanged(routeData.page)'
+        '_routePageChanged(routeData.page, statusKnown, signedIn)'
       ],
 
-      _routePageChanged: function(page) {
-        this.page = page || 'profile';
+      _routePageChanged: function(page, statusKnown, signedIn) {
+        if (!statusKnown) {
+          return;
+        }
+
+        if (signedIn) {
+          this.page = page || 'profile';
+        } else {
+          this.page = 'sign-in';
+        }
       },
 
       _pageChanged: function(page) {
-        // Load page import on demand. Show 404 page if fails
-        var resolvedPageUrl = this.resolveUrl('wvtc-' + page + '.html');
-        this.importHref(resolvedPageUrl, null, this._showPage404, true);
+        // Load page import on demand. Show 404 page if fails.
+        if (page !== 'sign-in') {
+          var resolvedPageUrl = this.resolveUrl('wvtc-' + page + '.html');
+          this.importHref(resolvedPageUrl, null, this._showPage404, true);
+        }
       },
 
       _showPage404: function() {
         this.page = '404';
+      },
+
+      _signOut: function() {
+        this.$$('wvtc-sign-in').signOut();
       }
     });
   </script>

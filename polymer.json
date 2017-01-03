@@ -2,6 +2,7 @@
   "entrypoint": "index.html",
   "shell": "src/wvtc-app.html",
   "fragments": [
+    "src/wvtc-sign-in.html",
     "src/wvtc-profile.html",
     "src/wvtc-membership.html",
     "src/wvtc-mailing-lists.html",
