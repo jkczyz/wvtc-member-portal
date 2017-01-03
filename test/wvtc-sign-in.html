@@ -16,24 +16,38 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-    <title>Tests</title>
+    <title>wvtc-sign-in</title>
 
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
     <script src="../bower_components/web-component-tester/browser.js"></script>
+
+    <!-- Import the element to test -->
+    <link rel="import" href="../src/wvtc-sign-in.html">
   </head>
   <body>
+    <test-fixture id="basic">
+      <template>
+        <wvtc-sign-in></wvtc-sign-in>
+      </template>
+    </test-fixture>
+
     <script>
-      WCT.loadSuites([
-        'wvtc-sign-in.html?dom=shady',
-        'wvtc-sign-in.html?dom=shadow',
-        'wvtc-profile.html?dom=shady',
-        'wvtc-profile.html?dom=shadow',
-        'wvtc-membership.html?dom=shady',
-        'wvtc-membership.html?dom=shadow',
-        'wvtc-mailing-lists.html?dom=shady',
-        'wvtc-mailing-lists.html?dom=shadow',
-        'wvtc-reimbursement.html?dom=shady',
-        'wvtc-reimbursement.html?dom=shadow'
-      ]);
+      suite('wvtc-sign-in tests', function() {
+        var signIn;
+
+        setup(function() {
+          signIn = fixture('basic');
+          
+          stub('login-fire', {
+            signOut: function() {}
+          });
+        });
+
+        test('SignOut delegates to auth', function() {
+          signIn.signOut();
+          expect(signIn.$.auth.signOut.calledOnce);
+        });
+      });
     </script>
   </body>
 </html>
