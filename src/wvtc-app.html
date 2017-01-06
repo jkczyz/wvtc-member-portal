@@ -26,6 +26,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-tooltip/paper-tooltip.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-app.html">
 <link rel="import" href="wvtc-icons.html">
 <link rel="import" href="wvtc-sign-in.html">
@@ -178,12 +179,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <app-toolbar>
             <paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
             <div main-title>West Valley Track Club</div>
-            <paper-icon-button
-                icon="wvtc-icons:sign-out"
-                title="Sign out"
-                disabled="{{!signedIn}}"
-                on-tap="_signOut">
-            </paper-icon-button>
+            <div>
+              <paper-icon-button
+                  icon="wvtc-icons:sign-out"
+                  disabled="{{!signedIn}}"
+                  on-tap="_signOut">
+              </paper-icon-button>
+              <paper-tooltip>Sign out</paper-tooltip>
+            </div>
           </app-toolbar>
         </app-header>
 
