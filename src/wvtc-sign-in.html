@@ -11,20 +11,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../bower_components/login-fire/login-fire.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="wvtc-sign-in">
   <template>
-    <style include="shared-styles">
-      :host {
-        display: block;
+    <style include="shared-styles"></style>
 
-        padding: 10px;
-      }
-    </style>
-
-    <div class="card">
+    <paper-card>
       <login-fire
           id="auth"
           email-password google facebook
@@ -34,7 +29,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           status-known="{{statusKnown}}"
           signed-in="{{signedIn}}">
       </login-fire>
-    </div>
+    </paper-card>
   </template>
 
   <script>

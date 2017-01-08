@@ -126,6 +126,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         color: var(--primary-color);
         opacity: var(--dark-primary-opacity);
       }
+
+      .content {
+        display: block;
+
+        max-width: 800px;
+        padding: 24px;
+        margin: auto;
+      }
+
+      @media only screen and (max-device-width: 512px) {
+        .content {
+          padding: 8px;
+        }
+      }
     </style>
 
     <firebase-app
@@ -191,6 +205,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </app-header>
 
         <iron-pages
+            class="content"
             selected="[[page]]"
             attr-for-selected="name"
             fallback-selection="404"
