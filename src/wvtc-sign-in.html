@@ -19,16 +19,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <template>
     <style include="shared-styles"></style>
 
-    <paper-card>
-      <login-fire
-          id="auth"
-          email-password google facebook
-          reverse
-          app-name="wvtc"
-          user="{{user}}"
-          status-known="{{statusKnown}}"
-          signed-in="{{signedIn}}">
-      </login-fire>
+    <paper-card class="wvtc-card">
+      <div class="card-content">
+        <login-fire
+            id="auth"
+            email-password google facebook
+            reverse
+            app-name="wvtc"
+            user="{{user}}"
+            status-known="{{statusKnown}}"
+            signed-in="{{signedIn}}">
+        </login-fire>
+      </div>
     </paper-card>
   </template>
 
