@@ -2,13 +2,14 @@
   "entrypoint": "index.html",
   "shell": "src/wvtc-app.html",
   "fragments": [
-    "src/wvtc-sign-in.html",
-    "src/wvtc-profile.html",
-    "src/wvtc-membership.html",
+    "src/wvtc-404.html",
     "src/wvtc-mailing-lists.html",
+    "src/wvtc-membership.html",
+    "src/wvtc-profile.html",
     "src/wvtc-racing.html",
     "src/wvtc-reimbursement.html",
-    "src/wvtc-404.html"
+    "src/wvtc-sign-in.html",
+    "src/wvtc-upcoming-events.html"
   ],
   "sourceGlobs": [
    "src/**/*",

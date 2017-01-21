@@ -170,6 +170,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             attr-for-selected="name"
             role="navigation"
             class="drawer-list">
+          <a name="upcoming-events" href="/upcoming-events" drawer-toggle>
+             <iron-icon icon="event"></iron-icon>
+             <span>Upcoming</span>
+          </a>
           <a name="profile" href="/profile" drawer-toggle>
              <iron-icon icon="account-circle"></iron-icon>
              <span>Profile</span>
@@ -226,6 +230,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               status-known="{{statusKnown}}"
               signed-in="{{signedIn}}">
           </wvtc-sign-in>
+          <wvtc-upcoming-events name="upcoming-events"></wvtc-upcoming-events>
           <wvtc-profile
               name="profile"
               user="[[user]]"

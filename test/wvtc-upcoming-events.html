@@ -16,28 +16,34 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-    <title>Tests</title>
+    <title>wvtc-upcoming-events</title>
 
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
     <script src="../bower_components/web-component-tester/browser.js"></script>
+
+    <!-- Import the element to test -->
+    <link rel="import" href="../src/wvtc-upcoming-events.html">
   </head>
   <body>
+    <test-fixture id="basic">
+      <template>
+        <wvtc-upcoming-events></wvtc-upcoming-events>
+      </template>
+    </test-fixture>
+
     <script>
-      WCT.loadSuites([
-        'wvtc-sign-in.html?dom=shady',
-        'wvtc-sign-in.html?dom=shadow',
-        'wvtc-upcoming-events.html?dom=shady',
-        'wvtc-upcoming-events.html?dom=shadow',
-        'wvtc-profile.html?dom=shady',
-        'wvtc-profile.html?dom=shadow',
-        'wvtc-membership.html?dom=shady',
-        'wvtc-membership.html?dom=shadow',
-        'wvtc-mailing-lists.html?dom=shady',
-        'wvtc-mailing-lists.html?dom=shadow',
-        'wvtc-racing.html?dom=shady',
-        'wvtc-racing.html?dom=shadow',
-        'wvtc-reimbursement.html?dom=shady',
-        'wvtc-reimbursement.html?dom=shadow'
-      ]);
+      suite('wvtc-upcoming-events tests', function() {
+        var home;
+
+        setup(function() {
+          home = fixture('basic');
+        });
+
+        test('Number in circle should be 1', function() {
+          var circle = Polymer.dom(home.root).querySelector('.circle');
+          assert.equal(circle.textContent, '1');
+        })
+      });
     </script>
   </body>
 </html>
