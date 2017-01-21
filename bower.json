@@ -11,6 +11,7 @@
     "iron-icon": "PolymerElements/iron-icon#^1.0.0",
     "iron-icons": "PolymerElements/iron-icons#^1.2.0",
     "iron-iconset-svg": "PolymerElements/iron-iconset-svg#^1.0.0",
+    "iron-image": "PolymerElements/iron-image#^1.2.5",
     "iron-localstorage": "PolymerElements/iron-localstorage#^1.0.0",
     "iron-media-query": "PolymerElements/iron-media-query#^1.0.0",
     "iron-pages": "PolymerElements/iron-pages#^1.0.0",
@@ -20,7 +21,8 @@
     "paper-tooltip": "PolymerElements/paper-tooltip#^1.1.3",
     "polymer": "Polymer/polymer#^1.6.0",
     "polymerfire": "firebase/polymerfire#^0.10.3",
-    "paper-card": "PolymerElements/paper-card#^1.1.4"
+    "paper-card": "PolymerElements/paper-card#^1.1.4",
+    "paper-toast": "PolymerElements/paper-toast#^1.3.0",
   },
   "devDependencies": {
     "web-component-tester": "^4.0.0"

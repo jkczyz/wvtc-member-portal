@@ -40,6 +40,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           type: Object,
           notify: true
         },
+        membership: {
+          type: Object,
+          value: function() { return { isActive: false }; },
+          notify: true
+        },
         statusKnown: {
           type: Boolean,
           notify: true

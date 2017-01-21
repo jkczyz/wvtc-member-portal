@@ -26,23 +26,96 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </head>
   <body>
     <test-fixture id="basic">
-      <template>
-        <wvtc-profile></wvtc-profile>
+      <template is="dom-template">
+        <wvtc-profile user="[[user]]" membership=[[membership]]></wvtc-profile>
       </template>
     </test-fixture>
 
     <script>
       suite('wvtc-profile tests', function() {
-        var home;
+        var profile;
 
         setup(function() {
-          home = fixture('basic');
+          profile = fixture('basic', {
+            user: {
+              displayName: 'Foo Bar',
+              email: 'foobar@baz.com',
+              photoURL: 'http://baz.com/photo/foobar.jpg'
+            },
+            membership: {
+              isActive: true
+            }
+          });
         });
 
-        test('Number in circle should be 1', function() {
-          var circle = Polymer.dom(home.root).querySelector('.circle');
-          assert.equal(circle.textContent, '1');
-        })
+        test('Title contains user name and email address', function(done) {
+          flush(function() {
+            var title = profile.$['profile-title'];
+            var subtitle = profile.$['profile-subtitle'];
+
+            expect(title.textContent).to.be.equal('Foo Bar');
+            expect(subtitle.textContent).to.be.equal('foobar@baz.com');
+            done();
+          });
+        });
+
+        test('Image references user photo URL', function(done) {
+          flush(function() {
+            var image = profile.$['profile-image'].querySelector('iron-image');
+            var icon = profile.$['profile-image'].querySelector('iron-icon');
+
+            expect(image).to.be.visible;
+            expect(icon).to.not.be.visible;
+            expect(image.src).to.be.equal('http://baz.com/photo/foobar.jpg');
+            done();
+          });
+        });
+
+        test('Icon used when user photo URL is missing', function(done) {
+          profile.set('user.photoURL', null);
+          flush(function() {
+            var image = profile.$['profile-image'].querySelector('iron-image');
+            var icon = profile.$['profile-image'].querySelector('iron-icon');
+
+            expect(image).to.not.be.visible;
+            expect(icon).to.be.visible;
+            done();
+          });
+        });
+
+        test('Member status given when membership is active', function() {
+          var status = profile.$['profile-membership'];
+          var joinClub = profile.$['profile-join-club'];
+
+          expect(status.textContent).to.be.equal('Member');
+          expect(joinClub).to.not.be.visible;
+        });
+
+        test('Inactive status given when membership is inactive', function(done) {
+          profile.set('membership', { isActive: false });
+          profile.notifyPath('membership.isActive');
+          flush(function() {
+            var status = profile.$['profile-membership'];
+            var joinClub = profile.$['profile-join-club'];
+
+            expect(status.textContent).to.be.equal('Inactive / Non-Member');
+            expect(joinClub).to.be.visible;
+            done();
+          });
+        });
+
+        test('Unknown status given when membership is unknown', function(done) {
+          profile.set('membership', null);
+          profile.notifyPath('membership.isActive');
+          flush(function() {
+            var status = profile.$['profile-membership'];
+            var joinClub = profile.$['profile-join-club'];
+
+            expect(status.textContent).to.be.equal('Membership Unknown');
+            expect(joinClub).to.be.visible;
+            done();
+          });
+        });
       });
     </script>
   </body>

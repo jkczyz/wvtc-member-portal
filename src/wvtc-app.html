@@ -135,7 +135,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         margin-right: auto;
       }
 
-      @media only screen and (max-device-width: 512px) {
+      @media all and (max-device-width: 600px) {
         .content {
           padding: 8px;
         }
@@ -156,7 +156,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         data="{{routeData}}"
         tail="{{subroute}}"></app-route>
 
-    <app-drawer-layout fullbleed>
+    <app-drawer-layout fullbleed responsive-width="600px">
       <!-- Drawer content -->
       <app-drawer id="drawer" swipe-open no-focus-trap>
         <app-toolbar class="drawer-title">
@@ -212,10 +212,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             role="main">
           <wvtc-sign-in
               name="sign-in"
+              user="{{user}}"
+              membership={{membership}}
               status-known="{{statusKnown}}"
               signed-in="{{signedIn}}">
           </wvtc-sign-in>
-          <wvtc-profile name="profile"></wvtc-profile>
+          <wvtc-profile
+              name="profile"
+              user="[[user]]"
+              membership=[[membership]]>
+          </wvtc-profile>
           <wvtc-membership name="membership"></wvtc-membership>
           <wvtc-mailing-lists name="mailing-lists"></wvtc-mailing-lists>
           <wvtc-reimbursement name="reimbursement"></wvtc-reimbursement>
