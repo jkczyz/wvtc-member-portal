@@ -33,16 +33,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <script>
       suite('wvtc-membership tests', function() {
-        var home;
+        var membership;
 
         setup(function() {
-          home = fixture('basic');
+          membership = fixture('basic');
         });
 
-        test('Number in circle should be 2', function() {
-          var circle = Polymer.dom(home.root).querySelector('.circle');
-          assert.equal(circle.textContent, '2');
-        })
+        test('Title card contains heading, image, and icon', function() {
+          var card = membership.$['title-card'];
+
+          expect(card.heading).to.be.equal('Club Membership');
+          expect(card.image).to.be.equal('../images/photos/membership.jpg');
+          expect(card.icon).to.be.equal('card-membership');
+        });
       });
     </script>
   </body>

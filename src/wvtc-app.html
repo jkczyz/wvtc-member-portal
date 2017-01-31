@@ -38,9 +38,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <template>
     <style>
       :host {
-        --primary-text-color: var(--paper-red-500);
-        --primary-background-color: var(--paper-grey-100);
-
         --primary-color: var(--paper-red-500);
         --light-primary-color: var(--paper-red-100);
         --dark-primary-color: var(--paper-red-700);
@@ -53,7 +50,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       app-drawer-layout {
-        background-color: var(--primary-background-color);
+        background-color: var(--paper-grey-100);
       }
 
       app-drawer {
@@ -101,7 +98,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       app-drawer[persistent] .drawer-list a.iron-selected {
-        background-color: var(--primary-background-color);
+        background-color: var(--paper-grey-100);
       }
 
       .drawer-list a iron-icon {
@@ -200,7 +197,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <!-- Main content -->
       <app-header-layout has-scrolling-region>
 
-        <app-header condenses reveals shadow>
+        <app-header fixed shadow>
           <app-toolbar>
             <paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
             <div main-title>West Valley Track Club</div>

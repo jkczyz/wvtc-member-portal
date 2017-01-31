@@ -33,16 +33,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <script>
       suite('wvtc-upcoming-events tests', function() {
-        var home;
+        var upcomingEvents;
 
         setup(function() {
-          home = fixture('basic');
+          upcomingEvents = fixture('basic');
         });
 
-        test('Number in circle should be 1', function() {
-          var circle = Polymer.dom(home.root).querySelector('.circle');
-          assert.equal(circle.textContent, '1');
-        })
+        test('Title card contains heading, image, and icon', function() {
+          var card = upcomingEvents.$['title-card'];
+
+          expect(card.heading).to.be.equal('Upcoming Events');
+          expect(card.image).to.be.equal('../images/photos/upcoming-events.jpg');
+          expect(card.icon).to.be.equal('event');
+        });
       });
     </script>
   </body>
