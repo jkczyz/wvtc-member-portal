@@ -16,7 +16,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-    <title>wvtc-reimbursement</title>
+    <title>wvtc-racing</title>
 
     <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
     <script src="../bower_components/web-component-tester/browser.js"></script>
@@ -33,16 +33,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <script>
       suite('wvtc-racing tests', function() {
-        var home;
+        var racing;
 
         setup(function() {
-          home = fixture('basic');
+          racing = fixture('basic');
         });
 
-        test('Number in circle should be 5', function() {
-          var circle = Polymer.dom(home.root).querySelector('.circle');
-          assert.equal(circle.textContent, '5');
-        })
+        test('Title card contains heading, image, and icon', function() {
+          var card = racing.$['title-card'];
+
+          expect(card.heading).to.be.equal('Racing');
+          expect(card.image).to.be.equal('../images/photos/racing.jpg');
+          expect(card.icon).to.be.equal('maps:directions-run');
+        });
       });
     </script>
   </body>

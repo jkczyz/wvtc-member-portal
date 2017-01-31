@@ -33,16 +33,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <script>
       suite('wvtc-mailing-lists tests', function() {
-        var home;
+        var mailingLists;
 
         setup(function() {
-          home = fixture('basic');
+          mailingLists = fixture('basic');
         });
 
-        test('Number in circle should be 3', function() {
-          var circle = Polymer.dom(home.root).querySelector('.circle');
-          assert.equal(circle.textContent, '3');
-        })
+        test('Title card contains heading, image, and icon', function() {
+          var card = mailingLists.$['title-card'];
+
+          expect(card.heading).to.be.equal('Mailing Lists');
+          expect(card.image).to.be.equal('../images/photos/mailing-lists.jpg');
+          expect(card.icon).to.be.equal('communication:mail-outline');
+        });
       });
     </script>
   </body>

@@ -14,24 +14,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <dom-module id="shared-styles">
   <template>
     <style>
+      paper-card.wvtc-card {
+        --paper-card-header-color: white;
+        --paper-card-content: {
+          padding: 24px 16px;
+        };
+        --paper-card-actions: {
+          padding: 0px;
+        };
+      }
+
       .wvtc-card {
         display: block;
 
         max-width: 640px;
         margin: auto;
+        margin-bottom: 16px;
+      }
 
-        --paper-card-background-color: white;
-
-        --paper-card-content: {
-          padding: 24px 16px;
-
-          color: black;
-          opacity: var(--dark-primary-opacity);
-        }
-
-        --paper-card-actions: {
-          padding: 0px;
-        }
+      .wvtc-card p {
+        opacity: var(--dark-primary-opacity);
       }
 
       .wvtc-card .card-actions a {
@@ -39,7 +41,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       .wvtc-card .card-actions paper-button {
-        color: var(--primary-text-color);
+        color: var(--primary-color);
       }
 
       .circle {
@@ -61,7 +63,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       h1 {
         margin: 16px 0;
 
-        color: var(--primary-text-color);
+        color: var(--paper-red-500);
         opacity: var(--dark-primary-opacity);
 
         font-size: 22px;
