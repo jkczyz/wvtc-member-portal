@@ -1,0 +1,112 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors.
+Copyright (c) 2017 West Valley Track Club, Inc.
+All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../bower_components/paper-item/paper-item-body.html">
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="wvtc-registration-item">
+  <template>
+    <style include="shared-styles">
+      .toggle {
+        opacity: var(--dark-secondary-opacity);
+      }
+
+      .options {
+        padding: 0 16px 16px;
+        @apply(--layout-horizontal);
+        @apply(--layout-end);
+      }
+
+      #membership {
+        flex: 3 3 160px;
+        padding-right: 16px;
+      }
+
+      #price {
+        flex: 1 1 48px;
+        padding-right: 16px;
+      }
+
+      .payment {
+        flex: 0 0 auto;
+        color: white;
+        background-color: var(--primary-color);
+      }
+    </style>
+
+    <paper-item>
+      <paper-item-body two-line>
+        <div id="heading">[[heading]]</div>
+        <div id="summary" secondary>[[summary]]</div>
+      </paper-item-body>
+      <paper-icon-button
+          class="toggle"
+          icon="[[_toggleIcon]]"
+          on-tap="toggleOpened">
+      </paper-icon-button>
+    </paper-item>
+    <iron-collapse id="details" opened={{opened}}>
+      <div class="options">
+        <paper-dropdown-menu id="membership" label="Membership">
+          <paper-listbox class="dropdown-content" selected="{{selected}}">
+            <template is="dom-repeat" items="{{options}}">
+              <paper-item>{{item.type}}</paper-item>
+            </template>
+          </paper-listbox>
+        </paper-dropdown-menu>
+        <paper-input
+            id="price"
+            label="Price"
+            value="{{_computePrice(selected)}}"
+            readonly>
+        </paper-input>
+        <paper-button class="payment" raised>Pay Dues</paper-button>
+      </div>
+    </iron-collapse>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'wvtc-registration-item',
+      properties: {
+        heading: String,
+        summary: String,
+        options: Array,
+        opened: Boolean,
+        selected: Number,
+        _toggleIcon: {
+          type: String,
+          computed: '_computeToggleIcon(opened)'
+        }
+      },
+      toggleOpened: function() {
+        this.opened = !this.opened;
+        this.selected = this.selected || 0;
+      },
+      _computeToggleIcon: function(opened) {
+        return opened ? 'icons:expand-less' : 'icons:expand-more';
+      },
+      _computePrice: function(selected) {
+        return this.options[selected].price;
+      }
+    });
+  </script>
+</dom-module>

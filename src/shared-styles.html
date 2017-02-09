@@ -14,6 +14,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <dom-module id="shared-styles">
   <template>
     <style>
+      .wvtc-panel {
+        max-width: 640px;
+        margin: auto;
+      }
+
+      .wvtc-subheader {
+        @apply(--paper-font-subhead);
+        font-weight: 500;
+        opacity: var(--dark-secondary-opacity);
+        padding: 24px 16px 0;
+      }
+
       paper-card.wvtc-card {
         --paper-card-header-color: white;
         --paper-card-content: {
@@ -26,9 +38,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       .wvtc-card {
         display: block;
-
-        max-width: 640px;
-        margin: auto;
         margin-bottom: 16px;
       }
 

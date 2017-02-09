@@ -1,0 +1,73 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors.
+Copyright (c) 2016 West Valley Track Club, Inc.
+All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>wvtc-registration-card</title>
+
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../bower_components/web-component-tester/browser.js"></script>
+
+    <!-- Import the element to test -->
+    <link rel="import" href="../src/wvtc-registration-card.html">
+  </head>
+  <body>
+    <test-fixture id="basic">
+      <template>
+        <wvtc-registration-card></wvtc-registration-card>
+      </template>
+    </test-fixture>
+
+    <script>
+      suite('wvtc-registration-card tests', function() {
+        var card;
+
+        setup(function() {
+          card = fixture('basic');
+        });
+
+        var getOptionTypes = function(options) {
+          return options.map(function(option) {
+            return option.type;
+          });
+        };
+
+        test('Individual registration has title and options', function() {
+          var registration = card.$['individual-registration'];
+
+          expect(registration.heading).to.be.equal('Individual');
+          expect(getOptionTypes(registration.options)).to.deep.equal(
+              ['New', 'Renewal', 'Student', 'Non-competitor']);
+        });
+
+        test('Family registration has title and options', function() {
+          var registration = card.$['family-registration'];
+
+          expect(registration.heading).to.be.equal('Family');
+          expect(getOptionTypes(registration.options)).to.deep.equal(
+              ['New', 'Renewal']);
+        });
+
+        test('Lifetime registration has title and options', function() {
+          var registration = card.$['lifetime-registration'];
+
+          expect(registration.heading).to.be.equal('Lifetime');
+          expect(getOptionTypes(registration.options)).to.deep.equal(['New']);
+        });
+      });
+    </script>
+  </body>
+</html>

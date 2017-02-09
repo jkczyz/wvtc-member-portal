@@ -1,0 +1,99 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors.
+Copyright (c) 2016 West Valley Track Club, Inc.
+All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>wvtc-registration-item</title>
+
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../bower_components/web-component-tester/browser.js"></script>
+
+    <!-- Import the element to test -->
+    <link rel="import" href="../src/wvtc-registration-item.html">
+  </head>
+  <body>
+    <test-fixture id="basic">
+      <template is="dom-template">
+        <wvtc-registration-item
+            heading="[[heading]]"
+            summary="[[summary]]"
+            options="[[options]]">
+        </wvtc-registration-item>
+      </template>
+    </test-fixture>
+
+    <script>
+      suite('wvtc-registration-item tests', function() {
+        var item;
+
+        setup(function() {
+          item = fixture('basic', {
+            heading: 'Foo',
+            summary: 'Foo registration summary.',
+            options: [
+              { type: 'Bar', price: '$1'},
+              { type: 'Baz', price: '$10'},
+              { type: 'Qux', price: '$100'},
+            ]
+          });
+        });
+
+        test('Collapsed item has visible heading and summary', function() {
+          var heading = item.$.heading;
+          var summary = item.$.summary;
+          var details = item.$.details;
+
+          expect(heading).to.be.visible;
+          expect(summary).to.be.visible;
+          expect(details).to.not.be.visible;
+
+          expect(heading.textContent).to.be.equal('Foo');
+          expect(summary.textContent).to.be.equal('Foo registration summary.');
+          expect(details.opened).to.be.equal(false);
+        });
+
+        test('Expanded item has visible details', function(done) {
+          flush(function() {
+            var details = item.$.details;
+            var membership = item.$.membership;
+            var price = item.$.price;
+
+            item.toggleOpened();
+
+            expect(details).to.be.visible;
+            expect(membership.value).to.be.equal('Bar');
+            expect(price.value).to.be.equal('$1');
+            done();
+          });
+        });
+
+        test('Changing membership type updates price', function(done) {
+          flush(function() {
+            var membership = item.$.membership;
+            var price = item.$.price;
+
+            item.toggleOpened();
+            item.selected = 1;
+
+            expect(membership.value).to.be.equal('Baz');
+            expect(price.value).to.be.equal('$10');
+            done();
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
