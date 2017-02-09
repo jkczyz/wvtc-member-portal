@@ -46,6 +46,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           expect(card.image).to.be.equal('../images/photos/membership.jpg');
           expect(card.icon).to.be.equal('card-membership');
         });
+
+        test('WVTC registration card is present', function() {
+          var card = membership.$['wvtc-registration'];
+
+          expect(card).to.not.be.undefined;
+        });
       });
     </script>
   </body>
