@@ -12,7 +12,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="shared-styles.html">
-<link rel="import" href="wvtc-registration-card.html">
+<link rel="import" href="wvtc-registration.html">
 <link rel="import" href="wvtc-title-card.html">
 
 <dom-module id="wvtc-membership">
@@ -27,13 +27,67 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <p>Our mission is to encourage and support athletes at all stages of their running pursuits by helping them reach their full potential. The club is focused on creating a friendly and fun environment with workouts and races intertwined with social gatherings.</p>
       </wvtc-title-card>
       <h2 class="wvtc-subheader">2017 Registration</h2>
-      <wvtc-registration-card id="wvtc-registration"></wvtc-registration-card>
+      <paper-card id="card" class="wvtc-card wvtc-item-list" role="listbox">
+        <div class="card-content">
+          <wvtc-registration
+              id="individual-registration"
+              class="wvtc-item"
+              heading="Individual"
+              summary="Don't miss out! Join or renew today."
+              options="{{individualOptions}}">
+          </wvtc-registration>
+          <wvtc-registration
+              id="family-registration"
+              class="wvtc-item"
+              heading="Family"
+              summary="The more the merrier. Sign up the whole brood!"
+              options={{familyOptions}}>
+          </wvtc-registration>
+          <wvtc-registration
+              id="lifetime-registration"
+              class="wvtc-item"
+              heading="Lifetime"
+              summary="WVTC4Life! Join this exclusive circle."
+              options={{lifetimeOptions}}>
+          </wvtc-registration>
+        </div>
+      </paper-card>
     </div>
   </template>
 
   <script>
     Polymer({
-      is: 'wvtc-membership'
+      is: 'wvtc-membership',
+      properties: {
+        individualOptions: {
+          type: Array,
+          value: function() {
+            return [
+              {type: "New", price: "$60"},
+              {type: "Renewal", price: "$50"},
+              {type: "Student", price: "$20"},
+              {type: "Non-competitor", price: "$20"}
+            ];
+          }
+        },
+        familyOptions: {
+          type: Array,
+          value: function() {
+            return [
+              {type: "New", price: "$70"},
+              {type: "Renewal", price: "$65"}
+            ];
+          }
+        },
+        lifetimeOptions: {
+          type: Array,
+          value: function() {
+            return [
+              {type: "New", price: "$500"}
+            ];
+          }
+        }
+      }
     });
   </script>
 </dom-module>
