@@ -3,7 +3,7 @@
   "shell": "src/wvtc-app.html",
   "fragments": [
     "src/wvtc-404.html",
-    "src/wvtc-mailing-lists.html",
+    "src/wvtc-communication.html",
     "src/wvtc-membership.html",
     "src/wvtc-profile.html",
     "src/wvtc-racing.html",

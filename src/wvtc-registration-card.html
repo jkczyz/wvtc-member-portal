@@ -17,36 +17,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <dom-module id="wvtc-registration-card">
   <template>
-    <style include="shared-styles">
-      #card {
-        --paper-card-content: {
-          padding: 0;
-        };
-      }
-
-      #card wvtc-registration-item + wvtc-registration-item {
-        --paper-item: {
-          border-top: 1px solid var(--light-theme-divider-color);
-        };
-      }
-    </style>
-
-    <paper-card id="card" class="wvtc-card" role="listbox">
+    <style include="shared-styles"></style>
+    <paper-card id="card" class="wvtc-card wvtc-item-list" role="listbox">
       <div class="card-content">
         <wvtc-registration-item
             id="individual-registration"
+            class="wvtc-item"
             heading="Individual"
             summary="Don't miss out! Join or renew today."
             options="{{individualOptions}}">
         </wvtc-registration-item>
         <wvtc-registration-item
             id="family-registration"
+            class="wvtc-item"
             heading="Family"
             summary="The more the merrier. Sign up the whole brood!"
             options={{familyOptions}}>
         </wvtc-registration-item>
         <wvtc-registration-item
             id="lifetime-registration"
+            class="wvtc-item"
             heading="Lifetime"
             summary="WVTC4Life! Join this exclusive circle."
             options={{lifetimeOptions}}>

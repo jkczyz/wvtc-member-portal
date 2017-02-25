@@ -53,6 +53,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         color: var(--primary-color);
       }
 
+      .wvtc-item-list {
+        --paper-card-content: {
+          padding: 0;
+        };
+      }
+
+      .wvtc-item-list .wvtc-item + .wvtc-item {
+        --paper-item: {
+          border-top: 1px solid var(--light-theme-divider-color);
+        };
+      }
+
       .circle {
         display: inline-block;
 

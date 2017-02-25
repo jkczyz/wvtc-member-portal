@@ -1,0 +1,65 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors.
+Copyright (c) 2017 West Valley Track Club, Inc.
+All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-item/paper-item-body.html">
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="wvtc-icons.html">
+
+<dom-module id="wvtc-google-group">
+  <template>
+    <style include="shared-styles">
+      paper-icon-button {
+        --paper-icon-button: {
+          color: black;
+          opacity: var(--dark-secondary-opacity);
+        };
+      }
+    </style>
+
+    <paper-item>
+      <paper-item-body two-line>
+        <div>[[email]]</div>
+        <div secondary>[[summary]]</div>
+      </paper-item-body>
+      <a href="[[forum]]" rel="external" target="_blank">
+        <paper-icon-button icon="wvtc-icons:external-link"></paper-icon-button>
+      </a>
+    </paper-item>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'wvtc-google-group',
+      properties: {
+        name: String,
+        summary: String,
+        email: {
+          type: String,
+          computed: '_computeEmail(name)'
+        },
+        forum: {
+          type: String,
+          computed: '_computeForum(name)'
+        }
+      },
+      _computeEmail: function(name) {
+        return name + '@googlegroups.com';
+      },
+      _computeForum: function(name) {
+        return 'https://groups.google.com/forum/#!forum/' + name;
+      }
+    });
+  </script>
+</dom-module>
