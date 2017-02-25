@@ -16,31 +16,31 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-    <title>wvtc-registration-item</title>
+    <title>wvtc-registration</title>
 
     <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
     <script src="../bower_components/web-component-tester/browser.js"></script>
 
     <!-- Import the element to test -->
-    <link rel="import" href="../src/wvtc-registration-item.html">
+    <link rel="import" href="../src/wvtc-registration.html">
   </head>
   <body>
     <test-fixture id="basic">
       <template is="dom-template">
-        <wvtc-registration-item
+        <wvtc-registration
             heading="[[heading]]"
             summary="[[summary]]"
             options="[[options]]">
-        </wvtc-registration-item>
+        </wvtc-registration>
       </template>
     </test-fixture>
 
     <script>
-      suite('wvtc-registration-item tests', function() {
-        var item;
+      suite('wvtc-registration tests', function() {
+        var registration;
 
         setup(function() {
-          item = fixture('basic', {
+          registration = fixture('basic', {
             heading: 'Foo',
             summary: 'Foo registration summary.',
             options: [
@@ -51,10 +51,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           });
         });
 
-        test('Collapsed item has visible heading and summary', function() {
-          var heading = item.$.heading;
-          var summary = item.$.summary;
-          var details = item.$.details;
+        test('Collapsed registration has visible heading and summary', function() {
+          var heading = registration.$.heading;
+          var summary = registration.$.summary;
+          var details = registration.$.details;
 
           expect(heading).to.be.visible;
           expect(summary).to.be.visible;
@@ -65,13 +65,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           expect(details.opened).to.be.equal(false);
         });
 
-        test('Expanded item has visible details', function(done) {
+        test('Expanded registration has visible details', function(done) {
           flush(function() {
-            var details = item.$.details;
-            var membership = item.$.membership;
-            var price = item.$.price;
+            var details = registration.$.details;
+            var membership = registration.$.membership;
+            var price = registration.$.price;
 
-            item.toggleOpened();
+            registration.toggleOpened();
 
             expect(details).to.be.visible;
             expect(membership.value).to.be.equal('Bar');
@@ -82,11 +82,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         test('Changing membership type updates price', function(done) {
           flush(function() {
-            var membership = item.$.membership;
-            var price = item.$.price;
+            var membership = registration.$.membership;
+            var price = registration.$.price;
 
-            item.toggleOpened();
-            item.selected = 1;
+            registration.toggleOpened();
+            registration.selected = 1;
 
             expect(membership.value).to.be.equal('Baz');
             expect(price.value).to.be.equal('$10');

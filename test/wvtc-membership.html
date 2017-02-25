@@ -47,10 +47,33 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           expect(card.icon).to.be.equal('card-membership');
         });
 
-        test('WVTC registration card is present', function() {
-          var card = membership.$['wvtc-registration'];
+        var getOptionTypes = function(options) {
+          return options.map(function(option) {
+            return option.type;
+          });
+        };
 
-          expect(card).to.not.be.undefined;
+        test('Individual registration has title and options', function() {
+          var registration = membership.$['individual-registration'];
+
+          expect(registration.heading).to.be.equal('Individual');
+          expect(getOptionTypes(registration.options)).to.deep.equal(
+              ['New', 'Renewal', 'Student', 'Non-competitor']);
+        });
+
+        test('Family registration has title and options', function() {
+          var registration = membership.$['family-registration'];
+
+          expect(registration.heading).to.be.equal('Family');
+          expect(getOptionTypes(registration.options)).to.deep.equal(
+              ['New', 'Renewal']);
+        });
+
+        test('Lifetime registration has title and options', function() {
+          var registration = membership.$['lifetime-registration'];
+
+          expect(registration.heading).to.be.equal('Lifetime');
+          expect(getOptionTypes(registration.options)).to.deep.equal(['New']);
         });
       });
     </script>
