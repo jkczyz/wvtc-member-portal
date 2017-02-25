@@ -16,35 +16,42 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-    <title>wvtc-mailing-lists</title>
+    <title>wvtc-communication</title>
 
     <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
     <script src="../bower_components/web-component-tester/browser.js"></script>
 
     <!-- Import the element to test -->
-    <link rel="import" href="../src/wvtc-mailing-lists.html">
+    <link rel="import" href="../src/wvtc-communication.html">
   </head>
   <body>
     <test-fixture id="basic">
       <template>
-        <wvtc-mailing-lists></wvtc-mailing-lists>
+        <wvtc-communication></wvtc-communication>
       </template>
     </test-fixture>
 
     <script>
-      suite('wvtc-mailing-lists tests', function() {
-        var mailingLists;
+      suite('wvtc-communication tests', function() {
+        var communication;
 
         setup(function() {
-          mailingLists = fixture('basic');
+          communication = fixture('basic');
         });
 
         test('Title card contains heading, image, and icon', function() {
-          var card = mailingLists.$['title-card'];
+          var card = communication.$['title-card'];
 
-          expect(card.heading).to.be.equal('Mailing Lists');
-          expect(card.image).to.be.equal('../images/photos/mailing-lists.jpg');
+          expect(card.heading).to.be.equal('Communication');
+          expect(card.image).to.be.equal('../images/photos/communication.jpg');
           expect(card.icon).to.be.equal('communication:mail-outline');
+        });
+
+        test('Mailing lists are formatted as a list within a card', function() {
+          var card = communication.$['mailing-list-card'];
+
+          expect(card.className).to.contain('wvtc-card');
+          expect(card.className).to.contain('wvtc-item-list');
         });
       });
     </script>
