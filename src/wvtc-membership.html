@@ -13,21 +13,30 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="wvtc-registration.html">
-<link rel="import" href="wvtc-title-card.html">
+<link rel="import" href="wvtc-usatf-card.html">
 
 <dom-module id="wvtc-membership">
   <template>
-    <style include="shared-styles"></style>
+    <style include="shared-styles">
+      #card {
+        --paper-card-header: {
+          background-color: black;
+        };
+        --paper-card-header-image: {
+          min-width: 180px;
+          max-width: 270px;
+          margin: auto;
+        };
+      }
+    </style>
+
     <div class="wvtc-panel">
-      <wvtc-title-card
-          id="title-card"
-          heading="Club Membership"
-          image="../images/photos/membership.jpg"
-          icon="card-membership">
-        <p>Our mission is to encourage and support athletes at all stages of their running pursuits by helping them reach their full potential. The club is focused on creating a friendly and fun environment with workouts and races intertwined with social gatherings.</p>
-      </wvtc-title-card>
-      <h2 class="wvtc-subheader">2017 Registration</h2>
-      <paper-card id="card" class="wvtc-card wvtc-item-list" role="listbox">
+      <h2 class="wvtc-subheader">Club membership</h2>
+      <paper-card
+          id="card"
+          class="wvtc-card wvtc-item-list"
+          image="../images/logos/wvtc.png"
+          role="listbox">
         <div class="card-content">
           <wvtc-registration
               id="individual-registration"
@@ -47,11 +56,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               id="lifetime-registration"
               class="wvtc-item"
               heading="Lifetime"
-              summary="WVTC4Life! Join this exclusive circle."
+              summary="No mo' fomo. Become a lifer!"
               options={{lifetimeOptions}}>
           </wvtc-registration>
         </div>
       </paper-card>
+      <h2 class="wvtc-subheader">USATF membership</h2>
+      <wvtc-usatf-card></wvtc-usatf-card>
     </div>
   </template>
 

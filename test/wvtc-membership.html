@@ -39,14 +39,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           membership = fixture('basic');
         });
 
-        test('Title card contains heading, image, and icon', function() {
-          var card = membership.$['title-card'];
-
-          expect(card.heading).to.be.equal('Club Membership');
-          expect(card.image).to.be.equal('../images/photos/membership.jpg');
-          expect(card.icon).to.be.equal('card-membership');
-        });
-
         var getOptionTypes = function(options) {
           return options.map(function(option) {
             return option.type;
