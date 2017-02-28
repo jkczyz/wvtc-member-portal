@@ -39,16 +39,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           communication = fixture('basic');
         });
 
-        test('Title card contains heading, image, and icon', function() {
-          var card = communication.$['title-card'];
-
-          expect(card.heading).to.be.equal('Communication');
-          expect(card.image).to.be.equal('../images/photos/communication.jpg');
-          expect(card.icon).to.be.equal('communication:mail-outline');
-        });
-
         test('Mailing lists are formatted as a list within a card', function() {
           var card = communication.$['mailing-list-card'];
+
+          expect(card.className).to.contain('wvtc-card');
+          expect(card.className).to.contain('wvtc-item-list');
+        });
+
+        test('Social media are formatted as a list within a card', function() {
+          var card = communication.$['social-media-card'];
 
           expect(card.className).to.contain('wvtc-card');
           expect(card.className).to.contain('wvtc-item-list');
