@@ -10,24 +10,26 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 
+<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="wvtc-google-group.html">
+<link rel="import" href="wvtc-icons.html">
+<link rel="import" href="wvtc-social-media.html">
 <link rel="import" href="wvtc-title-card.html">
 
 <dom-module id="wvtc-communication">
   <template>
-    <style include="shared-styles"></style>
+    <style include="shared-styles">
+      a iron-icon {
+        color: black;
+        opacity: var(--dark-secondary-opacity);
+        --iron-icon-width: 16px;
+        --iron-icon-height: 16px;
+      }
+    </style>
     <div class="wvtc-panel">
-      <wvtc-title-card
-          id="title-card"
-          heading="Communication"
-          image="../images/photos/communication.jpg"
-          icon="communication:mail-outline">
-        <p>Modus commodo minimum eum te, vero utinam assueverit per eu.</p>
-        <p>Ea duis bonorum nec, falli paulo aliquid ei eum.Has at minim mucius aliquam, est id tempor laoreet.Pro saepe pertinax ei, ad pri animal labores suscipiantur.</p>
-      </wvtc-title-card>
-      <h2 class="wvtc-subheader">Mailing Lists</h2>
+      <h2 class="wvtc-subheader">Email subscriptions</h2>
       <paper-card
           id="mailing-list-card"
           class="wvtc-card wvtc-item-list"
@@ -36,28 +38,69 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <wvtc-google-group
               class="wvtc-item"
               name="wvtc-members"
-              summary="Club announcments about events and performances.">
+              summary="Club announcments about events and performances">
           </wvtc-google-group>
           <wvtc-google-group
               class="wvtc-item"
               name="wvtrackclub"
-              summary="Coach Jack's weekly rants... er workouts.">
+              summary="Coach Jack's weekly rants... er workouts">
           </wvtc-google-group>
           <wvtc-google-group
               class="wvtc-item"
               name="wvtc-sbay"
-              summary="Escape the fog. Run in the South Bay.">
+              summary="Escape the fog, run in the South Bay">
           </wvtc-google-group>
           <wvtc-google-group
               class="wvtc-item"
               name="wvtc-weekendwarriors"
-              summary="Weekend (or day!) runs and social activities.">
+              summary="Weekend (or day!) runs and social activities">
           </wvtc-google-group>
           <wvtc-google-group
               class="wvtc-item"
               name="wvtc-masters"
-              summary="Masters men on the Information Superhighway.">
+              summary="Masters men on the Information Superhighway">
           </wvtc-google-group>
+        </div>
+      </paper-card>
+      <h2 class="wvtc-subheader">Social media</h2>
+      <paper-card
+          id="social-media-card"
+          class="wvtc-card wvtc-item-list"
+          role="listbox">
+        <div class="card-content">
+          <wvtc-social-media
+              class="wvtc-item"
+              name="Facebook"
+              logo="../images/logos/facebook.png"
+              page="https://www.facebook.com/westvalleytc">
+            <div secondary>
+              Follow our page and join our group
+              <a href="https://www.facebook.com/groups/58859348712" rel="external" target="_blank">
+                <iron-icon icon="wvtc-icons:external-link"></iron-icon>
+              </a>
+            </div>
+          </wvtc-social-media>
+          <wvtc-social-media
+              class="wvtc-item"
+              name="Instagram"
+              logo="../images/logos/instagram.png"
+              page="https://www.instagram.com/westvalleytc">
+            <div secondary>Follow us @westvalleytc</div>
+          </wvtc-social-media>
+          <wvtc-social-media
+              class="wvtc-item"
+              name="Twitter"
+              logo="../images/logos/twitter.png"
+              page="https://twitter.com/westvalleytc">
+            <div secondary>Follow us @WestValleyTC</div>
+          </wvtc-social-media>
+          <wvtc-social-media
+              class="wvtc-item"
+              name="Strava"
+              logo="../images/logos/strava.png"
+              page="https://www.strava.com/clubs/38807">
+            <div secondary>Join our running club</div>
+          </wvtc-social-media>
         </div>
       </paper-card>
     </div>
