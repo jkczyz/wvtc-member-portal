@@ -26,8 +26,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </head>
   <body>
     <test-fixture id="basic">
-      <template>
-        <wvtc-membership></wvtc-membership>
+      <template is="dom-template">
+        <wvtc-membership user="[[user]]"></wvtc-membership>
       </template>
     </test-fixture>
 
@@ -36,7 +36,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         var membership;
 
         setup(function() {
-          membership = fixture('basic');
+          membership = fixture('basic', {
+            user: {
+              email: 'foobar@baz.com',
+            }
+          });
         });
 
         var getOptionTypes = function(options) {

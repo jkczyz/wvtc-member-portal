@@ -41,6 +41,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <wvtc-registration
               id="individual-registration"
               class="wvtc-item"
+              user="[[user]]"
               heading="Individual"
               summary="Don't miss out! Join or renew today."
               options="{{individualOptions}}">
@@ -48,6 +49,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <wvtc-registration
               id="family-registration"
               class="wvtc-item"
+              user="[[user]]"
               heading="Family"
               summary="The more the merrier. Sign up the whole brood!"
               options={{familyOptions}}>
@@ -55,6 +57,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <wvtc-registration
               id="lifetime-registration"
               class="wvtc-item"
+              user="[[user]]"
               heading="Lifetime"
               summary="No mo' fomo. Become a lifer!"
               options={{lifetimeOptions}}>
@@ -70,14 +73,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     Polymer({
       is: 'wvtc-membership',
       properties: {
+        user: Object,
         individualOptions: {
           type: Array,
           value: function() {
             return [
-              {type: "New", price: "$60"},
-              {type: "Renewal", price: "$50"},
-              {type: "Student", price: "$20"},
-              {type: "Non-competitor", price: "$20"}
+              {type: "New", price: 6000},
+              {type: "Renewal", price: 5000},
+              {type: "Student", price: 2000},
+              {type: "Non-competitor", price: 2000}
             ];
           }
         },
@@ -85,8 +89,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           type: Array,
           value: function() {
             return [
-              {type: "New", price: "$70"},
-              {type: "Renewal", price: "$65"}
+              {type: "New", price: 7000},
+              {type: "Renewal", price: 6500}
             ];
           }
         },
@@ -94,7 +98,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           type: Array,
           value: function() {
             return [
-              {type: "New", price: "$500"}
+              {type: "New", price: 50000}
             ];
           }
         }

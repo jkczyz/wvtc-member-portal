@@ -1,0 +1,44 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors.
+Copyright (c) 2017 West Valley Track Club, Inc.
+All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<dom-module id="wvtc-stripe-checkout">
+  <script src="https://checkout.stripe.com/checkout.js"></script>
+  <script>
+    Polymer({
+      is: 'wvtc-stripe-checkout',
+      created: function() {
+        this.handler = StripeCheckout.configure({
+          key: 'pk_test_6pRNASCoBOKtIshFeQd4XMUh',
+          image: '../images/logos/checkout.png',
+          locale: 'auto',
+          token: function(token) {
+            console.log(token.id);
+          }
+        });
+      },
+      properties: {
+        user: Object,
+      },
+      open: function(description, amount) {
+        this.handler.open({
+          name: 'West Valley Track Club',
+          description: description,
+          zipCode: true,
+          amount: amount,
+          email: this.user.email
+        });
+      }
+    });
+  </script>
+</dom-module>

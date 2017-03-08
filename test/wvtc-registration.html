@@ -28,6 +28,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <test-fixture id="basic">
       <template is="dom-template">
         <wvtc-registration
+            user="[[user]]"
             heading="[[heading]]"
             summary="[[summary]]"
             options="[[options]]">
@@ -41,12 +42,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         setup(function() {
           registration = fixture('basic', {
+            user: { email: 'foobar@baz.com' },
             heading: 'Foo',
             summary: 'Foo registration summary.',
             options: [
-              { type: 'Bar', price: '$1'},
-              { type: 'Baz', price: '$10'},
-              { type: 'Qux', price: '$100'},
+              { type: 'Bar', price: 100},
+              { type: 'Baz', price: 1000},
+              { type: 'Qux', price: 10000},
             ]
           });
         });
@@ -88,8 +90,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             registration.toggleOpened();
             registration.selected = 1;
 
+            var description =
+                registration._formatMembership(registration.selected);
+            expect(description).to.be.equal('Foo Membership (Baz)');
             expect(membership.value).to.be.equal('Baz');
+
+            expect(registration.price).to.be.equal(1000);
             expect(price.value).to.be.equal('$10');
+
             done();
           });
         });
