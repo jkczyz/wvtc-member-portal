@@ -21,6 +21,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-item/paper-item-body.html">
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="shared-styles.html">
+<link rel="import" href="wvtc-stripe-checkout.html">
 
 <dom-module id="wvtc-registration">
   <template>
@@ -52,6 +53,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
+    <wvtc-stripe-checkout id="checkout" user="[[user]]"></wvtc-stripe-checkout>
     <paper-item>
       <paper-item-body two-line>
         <div id="heading">[[heading]]</div>
@@ -75,10 +77,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <paper-input
             id="price"
             label="Price"
-            value="{{_computePrice(selected)}}"
+            value="{{_formatPrice(price)}}"
             readonly>
         </paper-input>
-        <paper-button class="payment" raised>Pay Dues</paper-button>
+        <paper-button class="payment" on-tap="_payDues" raised>
+          Pay Dues
+        </paper-button>
       </div>
     </iron-collapse>
   </template>
@@ -87,15 +91,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     Polymer({
       is: 'wvtc-registration',
       properties: {
+        user: Object,
         heading: String,
         summary: String,
         options: Array,
+        price: {
+          type: Number,
+          computed: '_computePrice(options, selected)'
+        },
         opened: Boolean,
         selected: Number,
         _toggleIcon: {
           type: String,
           computed: '_computeToggleIcon(opened)'
-        }
+        },
       },
       toggleOpened: function() {
         this.opened = !this.opened;
@@ -104,8 +113,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _computeToggleIcon: function(opened) {
         return opened ? 'icons:expand-less' : 'icons:expand-more';
       },
-      _computePrice: function(selected) {
-        return this.options[selected].price;
+      _computePrice: function(options, selected) {
+        return options[selected].price;
+      },
+      _formatPrice: function(price) {
+        return '$' + (price / 100);
+      },
+      _formatMembership: function(selected) {
+        return this.heading + ' Membership (' + this.options[selected].type +
+            ')';
+      },
+      _payDues: function() {
+        var description = this._formatMembership(this.selected);
+        var amount = this.price;
+        this.$.checkout.open(description, amount);
       }
     });
   </script>
