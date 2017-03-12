@@ -7,6 +7,7 @@
   "dependencies": {
     "app-layout": "PolymerElements/app-layout#^0.10.6",
     "app-route": "PolymerElements/app-route#^0.9.0",
+    "firebaseui": "^1.0.0",
     "iron-collapse": "PolymerElements/iron-collapse#^1.3.0",
     "iron-flex-layout": "PolymerElements/iron-flex-layout#^1.0.0",
     "iron-icon": "PolymerElements/iron-icon#^1.0.0",
@@ -16,7 +17,6 @@
     "iron-localstorage": "PolymerElements/iron-localstorage#^1.0.0",
     "iron-media-query": "PolymerElements/iron-media-query#^1.0.0",
     "iron-selector": "PolymerElements/iron-selector#^1.0.0",
-    "login-fire": "^0.1.4",
     "neon-animation": "PolymerElements/neon-animated-pages#^1.2.4",
     "paper-card": "PolymerElements/paper-card#^1.1.4",
     "paper-dropdown-menu": "PolymerElements/paper-dropdown-menu#^1.5.0",
@@ -28,7 +28,6 @@
     "paper-tooltip": "PolymerElements/paper-tooltip#^1.1.3",
     "polymer": "Polymer/polymer#^1.6.0",
     "polymerfire": "firebase/polymerfire#^0.10.3",
-    "firebaseui": "^1.0.0"
   },
   "devDependencies": {
     "web-component-tester": "^4.0.0"
