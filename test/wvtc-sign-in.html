@@ -37,13 +37,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         setup(function() {
           signIn = fixture('basic');
-          
-          stub('login-fire', {
-            signOut: function() {}
+
+          stub('firebase-auth', {
+            signOut: function() {
+              return new Promise(function(resolve, reject) {});
+            }
           });
         });
 
-        test('SignOut delegates to auth', function() {
+        test('SignOut delegates to Firebase authentication', function() {
           signIn.signOut();
           expect(signIn.$.auth.signOut.calledOnce);
         });

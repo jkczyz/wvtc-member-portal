@@ -16,11 +16,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/polymerfire/firebase-auth.html">
 <link rel="import" href="shared-styles.html">
 
-<script src="https://cdn.firebase.com/libs/firebaseui/1.0.0/firebaseui.js"></script>
-<link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/1.0.0/firebaseui.css" />
-
 <dom-module id="wvtc-sign-in">
   <template>
+    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/1.0.0/firebaseui.css">
     <style include="shared-styles"></style>
 
     <firebase-app
@@ -29,27 +27,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         auth-domain="wvtc-demo.firebaseapp.com"
         database-url="https://wvtc-demo.firebaseio.com">
     </firebase-app>
-    <!-- Doesn't appear to support more than one provider. -->
     <firebase-auth
         id="auth"
         app-name="wvtc"
         user="{{user}}"
         status-known="{{statusKnown}}"
-        signed-in="{{signedIn}}"
-        provider="google"
+        signed-in="{{authSignedIn}}"
         on-error="handleError">
     </firebase-auth>
-
     <div class="wvtc-panel">
-      <paper-card class="wvtc-card">
-        <div class="card-content">
-          <!-- ui.start() cannot find this unless it is in index.html. -->
-          <div id="firebaseui-auth-container"></div>
-        </div>
-      </paper-card>
+      <div id="firebase-auth-ui"></div>
     </div>
   </template>
 
+  <script src="https://cdn.firebase.com/libs/firebaseui/1.0.0/firebaseui.js"></script>
   <script>
     Polymer({
       is: 'wvtc-sign-in',
@@ -69,27 +60,41 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         },
         signedIn: {
           type: Boolean,
+          computed: '_computeSignedIn(authSignedIn, user)',
           notify: true
-        }
+        },
+        uiConfig: {
+          type: Object,
+          value: function() {
+            return {
+              signInFlow: 'popup',
+              signInOptions: [
+                firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+                firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+                firebase.auth.EmailAuthProvider.PROVIDER_ID
+              ],
+              callbacks: {
+                signInSuccess: function(currentUser, credential, redirectUrl) {
+                  // Disable redirect since this is a single-page app.
+                  return false;
+                }
+              }
+            };
+          }
+        },
+      },
+      _computeSignedIn: function(authSignedIn, user) {
+        return authSignedIn && user != null;
       },
       ready: function() {
-        var uiConfig = {
-          signInSuccessUrl: '/',
-          signInOptions: [
-            // Leave the lines as is for the providers you want to offer your users.
-            firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-            firebase.auth.FacebookAuthProvider.PROVIDER_ID,
-            firebase.auth.EmailAuthProvider.PROVIDER_ID
-          ]
-        };
-
-        // Initialize the FirebaseUI Widget using Firebase.
-        var ui = new firebaseui.auth.AuthUI(this.$.auth.auth);
-        // The start method will wait until the DOM is loaded.
-        ui.start('#firebaseui-auth-container', uiConfig);
+        this.ui = new firebaseui.auth.AuthUI(this.$.auth.auth);
+        this.ui.start(this.$['firebase-auth-ui'], this.uiConfig);
       },
       signOut: function() {
-        this.$.auth.signOut();
+        self = this;
+        this.$.auth.signOut().then(function(response) {
+          self.ui.start(self.$['firebase-auth-ui'], self.uiConfig);
+        });
       }
     });
   </script>
