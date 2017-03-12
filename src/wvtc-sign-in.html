@@ -10,27 +10,41 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 
-<link rel="import" href="../bower_components/login-fire/login-fire.html">
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-app.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-auth.html">
 <link rel="import" href="shared-styles.html">
+
+<script src="https://cdn.firebase.com/libs/firebaseui/1.0.0/firebaseui.js"></script>
+<link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/1.0.0/firebaseui.css" />
 
 <dom-module id="wvtc-sign-in">
   <template>
     <style include="shared-styles"></style>
 
+    <firebase-app
+        name="wvtc"
+        api-key="AIzaSyBhdjQwxlc8vsrCiGfv372r4nl4DKi_p80"
+        auth-domain="wvtc-demo.firebaseapp.com"
+        database-url="https://wvtc-demo.firebaseio.com">
+    </firebase-app>
+    <!-- Doesn't appear to support more than one provider. -->
+    <firebase-auth
+        id="auth"
+        app-name="wvtc"
+        user="{{user}}"
+        status-known="{{statusKnown}}"
+        signed-in="{{signedIn}}"
+        provider="google"
+        on-error="handleError">
+    </firebase-auth>
+
     <div class="wvtc-panel">
       <paper-card class="wvtc-card">
         <div class="card-content">
-          <login-fire
-              id="auth"
-              email-password google facebook
-              reverse
-              app-name="wvtc"
-              user="{{user}}"
-              status-known="{{statusKnown}}"
-              signed-in="{{signedIn}}">
-          </login-fire>
+          <!-- ui.start() cannot find this unless it is in index.html. -->
+          <div id="firebaseui-auth-container"></div>
         </div>
       </paper-card>
     </div>
@@ -57,6 +71,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           type: Boolean,
           notify: true
         }
+      },
+      ready: function() {
+        var uiConfig = {
+          signInSuccessUrl: '/',
+          signInOptions: [
+            // Leave the lines as is for the providers you want to offer your users.
+            firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+            firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+            firebase.auth.EmailAuthProvider.PROVIDER_ID
+          ]
+        };
+
+        // Initialize the FirebaseUI Widget using Firebase.
+        var ui = new firebaseui.auth.AuthUI(this.$.auth.auth);
+        // The start method will wait until the DOM is loaded.
+        ui.start('#firebaseui-auth-container', uiConfig);
       },
       signOut: function() {
         this.$.auth.signOut();
