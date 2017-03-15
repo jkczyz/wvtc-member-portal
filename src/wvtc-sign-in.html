@@ -10,7 +10,6 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 
-<link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-app.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-auth.html">
@@ -61,40 +60,44 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         signedIn: {
           type: Boolean,
           computed: '_computeSignedIn(authSignedIn, user)',
+          observer: '_signedInChanged',
           notify: true
-        },
-        uiConfig: {
-          type: Object,
-          value: function() {
-            return {
-              signInFlow: 'popup',
-              signInOptions: [
-                firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-                firebase.auth.FacebookAuthProvider.PROVIDER_ID,
-                firebase.auth.EmailAuthProvider.PROVIDER_ID
-              ],
-              callbacks: {
-                signInSuccess: function(currentUser, credential, redirectUrl) {
-                  // Disable redirect since this is a single-page app.
-                  return false;
-                }
-              }
-            };
-          }
-        },
+        }
       },
       _computeSignedIn: function(authSignedIn, user) {
         return authSignedIn && user != null;
       },
+      _signedInChanged: function() {
+        if (!this.signedIn) {
+          this._showSignIn();
+        }
+      },
       ready: function() {
+        this.uiConfig = {
+          signInFlow: 'popup',
+          signInOptions: [
+            firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+            firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+            firebase.auth.EmailAuthProvider.PROVIDER_ID
+          ],
+          callbacks: {
+            signInSuccess: function(currentUser, credential, redirectUrl) {
+              // Disable redirect since this is a single-page app.
+              return false;
+            }
+          }
+        };
         this.ui = new firebaseui.auth.AuthUI(this.$.auth.auth);
-        this.ui.start(this.$['firebase-auth-ui'], this.uiConfig);
+        this._showSignIn();
+      },
+      _showSignIn: function() {
+        if (this.ui) {
+          var uiElement = this.$['firebase-auth-ui'];
+          this.ui.start(uiElement, this.uiConfig);
+        }
       },
       signOut: function() {
-        self = this;
-        this.$.auth.signOut().then(function(response) {
-          self.ui.start(self.$['firebase-auth-ui'], self.uiConfig);
-        });
+        this.$.auth.signOut();
       }
     });
   </script>
