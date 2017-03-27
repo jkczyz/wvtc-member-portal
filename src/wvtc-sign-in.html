@@ -13,6 +13,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-app.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-auth.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-document.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-query.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="wvtc-sign-in">
@@ -34,6 +36,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         signed-in="{{authSignedIn}}"
         on-error="handleError">
     </firebase-auth>
+    <firebase-document
+        id="user"
+        app-name="wvtc"
+        path="/users/[[user.uid]]"
+        data="{{userRecord}}">
+    </firebase-document>
+
     <div class="wvtc-panel">
       <div id="firebase-auth-ui"></div>
     </div>
@@ -62,6 +71,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           computed: '_computeSignedIn(authSignedIn, user)',
           observer: '_signedInChanged',
           notify: true
+        },
+        userRecord: {
+          type: Object,
+          observer: '_userRecordChanged',
+          notify: true
         }
       },
       _computeSignedIn: function(authSignedIn, user) {
@@ -70,6 +84,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _signedInChanged: function() {
         if (!this.signedIn) {
           this._showSignIn();
+        }
+      },
+      _userRecordChanged: function(newData, oldData) {
+        // For email-based authentication, set the display name since it is not
+        // available at the time the createUserRecord Cloud Function is called.
+        if (!this.$.user.valueIsEmpty(newData) && !newData.displayName) {
+          if (!this.user.displayName) {
+            throw 'User authentication record missing displayName.';
+          }
+
+          this.$.user.ref.child('displayName').set(this.user.displayName)
+              .catch(function(error) {
+                throw error;
+              });
         }
       },
       ready: function() {
