@@ -1,0 +1,9 @@
+{
+  "name": "wvtc-member-portal",
+  "description": "Cloud Functions for West Valley Track Club",
+  "dependencies": {
+    "firebase-admin": "^4.1.2",
+    "firebase-functions": "^0.5"
+  },
+  "private": true
+}
