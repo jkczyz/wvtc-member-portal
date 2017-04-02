@@ -78,10 +78,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           type: Array,
           value: function() {
             return [
-              {type: "New", price: 6000},
-              {type: "Renewal", price: 5000},
-              {type: "Student", price: 2000},
-              {type: "Non-competitor", price: 2000}
+              {
+                type: "New",
+                sku: 'new_2017_individual_membership',
+                price: 6000
+              },
+              {
+                type: "Renewal",
+                sku: 'renewal_2017_individual_membership',
+                price: 5000
+              },
+              {
+                type: "Student",
+                sku: 'student_2017_individual_membership',
+                price: 2000
+              },
+              {
+                type: "Non-competitor",
+                sku: 'non-competitor_2017_individual_membership',
+                price: 2000
+              }
             ];
           }
         },
@@ -89,8 +105,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           type: Array,
           value: function() {
             return [
-              {type: "New", price: 7000},
-              {type: "Renewal", price: 6500}
+              {
+                type: "New",
+                sku: 'new_2017_family_membership',
+                price: 7000
+              },
+              {
+                type: "Renewal",
+                sku: 'renewal_2017_family_membership',
+                price: 6500
+              }
             ];
           }
         },
@@ -98,7 +122,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           type: Array,
           value: function() {
             return [
-              {type: "New", price: 50000}
+              {
+                type: "New",
+                sku: 'new_lifetime_membership',
+                price: 50000
+              }
             ];
           }
         }
