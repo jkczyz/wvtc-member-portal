@@ -95,6 +95,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         heading: String,
         summary: String,
         options: Array,
+        sku: {
+          type: String,
+          computed: '_computeSku(options, selected)'
+        },
         price: {
           type: Number,
           computed: '_computePrice(options, selected)'
@@ -113,6 +117,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _computeToggleIcon: function(opened) {
         return opened ? 'icons:expand-less' : 'icons:expand-more';
       },
+      _computeSku: function(options, selected) {
+        return options[selected].sku;
+      },
       _computePrice: function(options, selected) {
         return options[selected].price;
       },
@@ -125,8 +132,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
       _payDues: function() {
         var description = this._formatMembership(this.selected);
+        var sku = this.sku;
         var amount = this.price;
-        this.$.checkout.open(description, amount);
+        this.$.checkout.open(description, sku, amount);
       }
     });
   </script>
