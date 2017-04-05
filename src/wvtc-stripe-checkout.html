@@ -14,19 +14,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/neon-animation/animations/fade-out-animation.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/paper-progress/paper-progress.html">
+<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../bower_components/polymer/polymer.html">
 
 <dom-module id="wvtc-stripe-checkout">
   <template>
-    <paper-dialog
-        id="dialog"
-        entry-animation="fade-in-animation"
-        exit-animation="fade-out-animation"
-        modal="[[_isDialogModal(state)]]">
-      <p>[[_getDialogText(state)]]</p>
-      <paper-progress hidden$='[[!_showProgressBar(state)]]' indeterminate>
-      </paper-progress>
-    </paper-dialog>
+    <div id="wrapper">
+      <paper-dialog
+          id="dialog"
+          modal
+          entry-animation="fade-in-animation"
+          exit-animation="fade-out-animation">
+        <p>Processing payment...</p>
+        <paper-progress indeterminate></paper-progress>
+      </paper-dialog>
+      <paper-toast
+          id="toast"
+          duration="0"
+          text="Error processing payment: [[error]]">
+      </paper-toast>
+    </div>
   </template>
 
   <script src="https://checkout.stripe.com/checkout.js"></script>
@@ -35,14 +42,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       is: 'wvtc-stripe-checkout',
       properties: {
         user: Object,
-        state: {
-          type: String,
-          value: 'inactive',
-          notify: true
-        },
         error: {
-          type: Object,
-          value: function() { return {}; },
+          type: String,
+          value: '',
           notify: true
         }
       },
@@ -53,23 +55,30 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           image: '../images/logos/checkout.png',
           locale: 'auto',
           token: function(token) {
-            self.state = 'processing';
+            self.error = '';
             self.$.dialog.open();
 
-            var request = {
+            var request = new XMLHttpRequest();
+            var url = 'https://us-central1-wvtc-demo.cloudfunctions.net/processStripePayment';
+            request.open('POST', url, true);
+            request.setRequestHeader("Content-type", "application/json");
+            request.onreadystatechange = function() {
+              if (request.readyState != 4) return;
+              if (request.status != 200) {
+                self.$.dialog.close();
+                self.error = request.responseText;
+                self.$.toast.fitInto = self.$.wrapper;
+                self.$.toast.open();
+                return;
+              }
+
+              self.$.dialog.close();
+            };
+            request.send(JSON.stringify({
               uid: self.user.uid,
               sku: sku,
               tokenId: token.id
-            };
-            console.log(request);
-
-            // Simulate payment.
-            setTimeout(function() {
-              self.state = 'paid';
-              setTimeout(function() {
-                self.$.dialog.close();
-              }, 2000);
-            }, 5000);
+            }));
           }
         });
         handler.open({
@@ -81,24 +90,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           email: this.user.email
         });
       },
-      _isDialogModal: function(state) {
-        return state == 'processing';
-      },
-      _getDialogText: function(state, error) {
-        switch (state) {
-          case 'inactive':
-            return 'No payment processed';
-          case 'processing':
-            return 'Processing payment...';
-          case 'paid':
-            return 'Payment successful!';
-          case 'error':
-            return 'Unable to process payment';
-        }
-      },
-      _showProgressBar: function(state) {
-        return state == 'processing';
-      }
     });
   </script>
 </dom-module>

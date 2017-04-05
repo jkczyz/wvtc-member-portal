@@ -42,6 +42,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         path="/users/[[user.uid]]"
         data="{{userRecord}}">
     </firebase-document>
+    <firebase-document
+        id="membership"
+        app-name="wvtc"
+        path="/members/all/[[user.uid]]"
+        data="{{membership}}">
+    </firebase-document>
 
     <div class="wvtc-panel">
       <div id="firebase-auth-ui"></div>
@@ -59,7 +65,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         },
         membership: {
           type: Object,
-          value: function() { return { isActive: false }; },
           notify: true
         },
         statusKnown: {

@@ -98,7 +98,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               always-on-top>
           </paper-toast>
           <paper-button on-tap="_openToast">Edit Profile</paper-button>
-          <a href="/membership" hidden$="{{membership.isActive}}">
+          <a href="/membership" hidden$="{{_isActiveMember(membership)}}">
             <paper-button id="profile-join-club">Join Club</paper-button>
           </a>
         </div>
@@ -109,7 +109,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <script>
     Polymer({
       is: 'wvtc-profile',
-
       properties: {
         user: {
           type: Object,
@@ -118,19 +117,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           type: Object,
         }
       },
-
       _formatMembership: function(membership) {
-        if (!membership) {
-          return 'Membership Unknown';
+        if (Object.keys(membership).length == 0) {
+          return 'Non-Member / Unknown';
         }
 
-        if (!membership.isActive) {
-          return 'Inactive / Non-Member';
+        if (!membership.paidOn) {
+          return 'Inactive Member';
+        }
+
+        if (membership.year == 'lifetime') {
+          return 'Lifetime Member';
         }
 
         return 'Member';
       },
-
+      _isActiveMember: function(membership) {
+        return !!membership.paidOn;
+      },
       _openToast: function() {
         this.$.toast.fitInto = this.$['profile-content'];
         this.$.toast.open();
