@@ -44,8 +44,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <div class="card-content">
           <template is="dom-if" if="{{hasPaidDues(membership)}}">
             <div class="no-list">
-              <p>Your club membership is current</p>
-              <p><em>Dues paid on [[membership.paidOn]]</em></p>
+              <p>All paid up — your club membership is current</p>
+              <p><em>Dues paid on [[_formatDate(membership.paidOn)]]</em></p>
             </div>
           </template>
           <template is="dom-if" if="{{!hasPaidDues(membership)}}">
@@ -81,6 +81,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </div>
   </template>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
   <script>
     Polymer({
       is: 'wvtc-membership',
@@ -147,6 +148,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       hasPaidDues: function(membership) {
         console.log(!!membership.paidOn);
         return !!membership && !!membership.paidOn;
+      },
+      _formatDate: function(date) {
+        return moment(date).format('MMMM D, YYYY');
       }
     });
   </script>
