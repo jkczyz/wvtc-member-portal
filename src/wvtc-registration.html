@@ -84,7 +84,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </paper-button>
       </div>
     </iron-collapse>
-    <wvtc-stripe-checkout id="checkout" user="[[user]]"></wvtc-stripe-checkout>
+    <wvtc-stripe-checkout
+        id="checkout"
+        url="https://us-central1-wvtc-demo.cloudfunctions.net/processMemberDues"
+        user="[[user]]">
+    </wvtc-stripe-checkout>
   </template>
 
   <script>
