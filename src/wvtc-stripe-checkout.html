@@ -12,6 +12,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../bower_components/neon-animation/animations/fade-in-animation.html">
 <link rel="import" href="../bower_components/neon-animation/animations/fade-out-animation.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/paper-progress/paper-progress.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
@@ -19,6 +20,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <dom-module id="wvtc-stripe-checkout">
   <template>
+    <style include="shared-styles">
+      #close {
+        color: var(--dark-accent-color);
+      }
+    </style>
+
     <div id="wrapper">
       <paper-dialog
           id="dialog"
@@ -32,6 +39,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           id="toast"
           duration="0"
           text="Error processing payment: [[error]]">
+        <paper-button
+            id="close"
+            on-tap="closeErrorToast">Close</paper-button>
       </paper-toast>
     </div>
   </template>
@@ -42,11 +52,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       is: 'wvtc-stripe-checkout',
       properties: {
         user: Object,
-        error: {
-          type: String,
-          value: '',
-          notify: true
-        }
+        error: String
       },
       open: function(description, sku, amount) {
         var self = this;
@@ -64,15 +70,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             request.setRequestHeader("Content-type", "application/json");
             request.onreadystatechange = function() {
               if (request.readyState != 4) return;
-              if (request.status != 200) {
-                self.$.dialog.close();
-                self.error = request.responseText;
-                self.$.toast.fitInto = self.$.wrapper;
-                self.$.toast.open();
-                return;
-              }
 
               self.$.dialog.close();
+              if (request.status != 200) {
+                self.openErrorToast(request.responseText);
+              }
             };
             request.send(JSON.stringify({
               uid: self.user.uid,
@@ -90,6 +92,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           email: this.user.email
         });
       },
+      openErrorToast: function(error) {
+        this.error = error;
+        this.$.toast.fitInto = this.$.wrapper;
+        this.$.toast.open();
+      },
+      closeErrorToast: function() {
+        this.$.toast.close();
+      }
     });
   </script>
 </dom-module>
