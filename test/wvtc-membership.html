@@ -27,7 +27,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <body>
     <test-fixture id="basic">
       <template is="dom-template">
-        <wvtc-membership user="[[user]]"></wvtc-membership>
+        <wvtc-membership
+            user="[[user]]"
+            membership="[[membership]]">
+        </wvtc-membership>
       </template>
     </test-fixture>
 
@@ -39,7 +42,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           membership = fixture('basic', {
             user: {
               email: 'foobar@baz.com',
-            }
+            },
+            membership: {}
           });
         });
 
@@ -49,27 +53,36 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           });
         };
 
-        test('Individual registration has title and options', function() {
-          var registration = membership.$['individual-registration'];
+        test('Individual registration has title and options', function(done) {
+          flush(function() {
+            var registration = membership.$$('#individual-registration');
 
-          expect(registration.heading).to.be.equal('Individual');
-          expect(getOptionTypes(registration.options)).to.deep.equal(
-              ['New', 'Renewal', 'Student', 'Non-competitor']);
+            expect(registration.heading).to.be.equal('Individual');
+            expect(getOptionTypes(registration.options)).to.deep.equal(
+                ['New', 'Renewal', 'Student', 'Non-competitor']);
+            done();
+          });
         });
 
-        test('Family registration has title and options', function() {
-          var registration = membership.$['family-registration'];
+        test('Family registration has title and options', function(done) {
+          flush(function() {
+            var registration = membership.$$('#family-registration');
 
-          expect(registration.heading).to.be.equal('Family');
-          expect(getOptionTypes(registration.options)).to.deep.equal(
-              ['New', 'Renewal']);
+            expect(registration.heading).to.be.equal('Family');
+            expect(getOptionTypes(registration.options)).to.deep.equal(
+                ['New', 'Renewal']);
+            done();
+          });
         });
 
-        test('Lifetime registration has title and options', function() {
-          var registration = membership.$['lifetime-registration'];
+        test('Lifetime registration has title and options', function(done) {
+          flush(function() {
+            var registration = membership.$$('#lifetime-registration');
 
-          expect(registration.heading).to.be.equal('Lifetime');
-          expect(getOptionTypes(registration.options)).to.deep.equal(['New']);
+            expect(registration.heading).to.be.equal('Lifetime');
+            expect(getOptionTypes(registration.options)).to.deep.equal(['New']);
+            done();
+          });
         });
       });
     </script>
