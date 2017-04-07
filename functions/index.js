@@ -1,5 +1,6 @@
 const admin = require('firebase-admin');
 const functions = require('firebase-functions');
+const stripe = require("stripe")("sk_test_Irhk77KavFhME0JraJhXVUQK");
 
 // CORS Express middleware to enable CORS Requests.
 const cors = require('cors');
@@ -26,14 +27,12 @@ exports.processMemberDues = functions.https.onRequest((req, res) => {
     const now = new Date();
 
     console.log('Processing %s payment for uid %s', sku, uid);
+    var orderId;
     return admin.database().ref('users/' + uid).once('value').then(snapshot => {
       const user = snapshot.val();
-      throw Error('Unimplemented');
-    }).then(orderId => {
-      console.log('Created order ' + orderId);
-      return orderId;
-    }).then(orderId => {
-      console.log('Paid order ' + orderId);
+      return processStripeOrder(user, sku, tokenId);
+    }).then(order => {
+      orderId = order.id;
       return admin.database().ref('members/' + year + '/' + uid).set({
         orderId: orderId,
         paidOn: now.toJSON()
@@ -44,6 +43,8 @@ exports.processMemberDues = functions.https.onRequest((req, res) => {
         paidOn: now.toJSON()
       });
     }).then(() => {
+      return fulfillStripeOrder(orderId);
+    }).then(() => {
       res.status(200).end();
     }).catch(error => {
       console.error(error.message);
@@ -51,3 +52,30 @@ exports.processMemberDues = functions.https.onRequest((req, res) => {
     });
   });
 });
+
+var processStripeOrder = function(user, sku, tokenId) {
+  return stripe.orders.create({
+    currency: 'usd',
+    email: user.email,
+    items: [{
+      type: 'sku',
+      parent: sku,
+      quantity: 1
+    }]
+  }).then(order => {
+    return stripe.orders.pay(order.id, {
+      source: tokenId
+    });
+  }).then(order => {
+    console.log('Processed order %s', order.id);
+    return order;
+  });
+};
+
+var fulfillStripeOrder = function(orderId) {
+  return stripe.orders.update(orderId, {
+    status: 'fulfilled'
+  }).then(order => {
+    console.log('Fulfilled order %s', order.id);
+  });
+};
