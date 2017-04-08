@@ -1,0 +1,87 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors.
+Copyright (c) 2017 West Valley Track Club, Inc.
+All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-item/paper-item-body.html">
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="wvtc-race">
+  <template>
+    <style include="shared-styles">
+      .summary {
+        @apply(--layout-horizontal);
+      }
+
+      .date {
+        flex-basis: 96px;
+      }
+
+      .toggle {
+        display: none;
+        opacity: var(--dark-secondary-opacity);
+      }
+
+      .details {
+        padding: 0 16px 16px;
+        @apply(--layout-horizontal);
+        @apply(--layout-end);
+      }
+    </style>
+
+    <paper-item>
+      <paper-item-body two-line>
+        <div>[[race.name]]</div>
+        <div class="summary" secondary>
+          <div class="date">[[_formatDate(race.date)]]</div>
+          <div>[[race.location]]</div>
+        </div>
+      </paper-item-body>
+      <paper-icon-button
+          class="toggle"
+          icon="[[_toggleIcon]]"
+          on-tap="toggleOpened">
+      </paper-icon-button>
+    </paper-item>
+    <iron-collapse id="details" opened={{opened}}>
+      <div class="details">
+      </div>
+    </iron-collapse>
+  </template>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+  <script>
+    Polymer({
+      is: 'wvtc-race',
+      properties: {
+        race: Object,
+        opened: Boolean,
+        _toggleIcon: {
+          type: String,
+          computed: '_computeToggleIcon(opened)'
+        }
+      },
+      toggleOpened: function() {
+        this.opened = !this.opened;
+      },
+      _computeToggleIcon: function(opened) {
+        return opened ? 'icons:expand-less' : 'icons:expand-more';
+      },
+      _formatDate: function(date) {
+        return moment(date).format('ddd, MMM D');
+      }
+    });
+  </script>
+</dom-module>
