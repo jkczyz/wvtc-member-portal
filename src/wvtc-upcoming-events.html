@@ -12,27 +12,107 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="shared-styles.html">
-<link rel="import" href="wvtc-title-card.html">
+<link rel="import" href="wvtc-facebook-event.html">
 
 <dom-module id="wvtc-upcoming-events">
   <template>
     <style include="shared-styles"></style>
 
     <div class="wvtc-panel">
-      <wvtc-title-card
-          id="title-card"
-          heading="Upcoming Events"
-          image="../images/photos/upcoming-events.jpg"
-          icon="event">
-        <p>Modus commodo minimum eum te, vero utinam assueverit per eu.</p>
-        <p>Ea duis bonorum nec, falli paulo aliquid ei eum.Has at minim mucius aliquam, est id tempor laoreet.Pro saepe pertinax ei, ad pri animal labores suscipiantur.</p>
-      </wvtc-title-card>
+      <h2 class="wvtc-subheader">Upcoming events</h2>
+      <template is="dom-repeat" items="{{events}}" as="event">
+        <wvtc-facebook-event event="[[event]]"></wvtc-facebook-event>
+      </template>
     </div>
   </template>
 
   <script>
     Polymer({
-      is: 'wvtc-upcoming-events'
+      is: 'wvtc-upcoming-events',
+      properties: {
+        events: {
+          type: Array,
+          value: function() {
+            return [
+              {
+                "id": "1342777902445861",
+                "name": "Stow Lake Stampede 5K (and Kid's Mile)",
+                "place": {
+                  "name": "Golden Gate Park - Peacock Meadow",
+                  "location": {
+                    "city": "San Francisco",
+                    "country": "United States",
+                    "latitude": 37.771493936924,
+                    "located_in": "480553381967378",
+                    "longitude": -122.45779641518,
+                    "state": "CA",
+                    "zip": "94117"
+                  },
+                  "id": "145646782125468"
+                },
+                "cover": {
+                  "offset_x": 0,
+                  "offset_y": 50,
+                  "source": "https://scontent.xx.fbcdn.net/v/t1.0-9/s720x720/17264675_10154444356825950_1421215239976919764_n.jpg?oh=68599f1a84f9e46f0ad5c8da3dc5ad00&oe=59552A48",
+                  "id": "10154444356825950"
+                },
+                "start_time": "2017-04-23T07:30:00-0700",
+                "end_time": "2017-04-23T10:30:00-0700"
+              },
+              {
+                "id": "1006919159410183",
+                "name": "5th Annual Paavo Nurmi Two Mile",
+                "place": {
+                  "name": "Kezar Stadium",
+                  "location": {
+                    "city": "San Francisco",
+                    "country": "United States",
+                    "latitude": 37.766944444444,
+                    "longitude": -122.45611111111,
+                    "state": "CA",
+                    "street": "670 Kezar Drive",
+                    "zip": "94117"
+                  },
+                  "id": "103211553067740"
+                },
+                "cover": {
+                  "offset_x": 0,
+                  "offset_y": 0,
+                  "source": "https://scontent.xx.fbcdn.net/v/t1.0-9/s720x720/17796030_1848921545357348_1448527110608353309_n.jpg?oh=50ae3bad1d5c85ca7d1cf3b2e07eca4a&oe=598EBA0B",
+                  "id": "1848921545357348"
+                },
+                "start_time": "2017-05-02T18:30:00-0700",
+                "end_time": "2017-05-02T19:00:00-0700"
+              },
+              {
+                "id": "107942319741264",
+                "name": "Marin Memorial Day 10K, Don Ritchie 5K, and Youth Track Races",
+                "place": {
+                  "name": "College of Marin",
+                  "location": {
+                    "city": "Kentfield",
+                    "country": "United States",
+                    "latitude": 37.954932628157,
+                    "longitude": -122.5496789239,
+                    "state": "CA",
+                    "street": "835 College Ave",
+                    "zip": "94904"
+                  },
+                  "id": "110940541990"
+                },
+                "cover": {
+                  "offset_x": 0,
+                  "offset_y": 0,
+                  "source": "https://scontent.xx.fbcdn.net/v/t31.0-8/s720x720/17239826_1544971835535649_6683853682457319663_o.jpg?oh=f0fd46d6bfbbe27fe5cdf87ccb0dc498&oe=595E3738",
+                  "id": "1544971835535649"
+                },
+                "start_time": "2017-05-29T08:00:00-0700",
+                "end_time": "2017-05-29T11:00:00-0700"
+              }
+            ];
+          }
+        }
+      }
     });
   </script>
 </dom-module>
