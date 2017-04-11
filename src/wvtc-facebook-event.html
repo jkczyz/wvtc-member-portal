@@ -10,15 +10,12 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 
-<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
-<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
-<link rel="import" href="../bower_components/iron-icons/maps-icons.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
-<link rel="import" href="../bower_components/paper-item/paper-icon-item.html">
-<link rel="import" href="../bower_components/paper-item/paper-item-body.html">
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="shared-styles.html">
+<link rel="import" href="wvtc-event-place.html">
+<link rel="import" href="wvtc-event-time.html">
 
 <dom-module id="wvtc-facebook-event">
   <template>
@@ -29,21 +26,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         white-space: nowrap;
         width: inherit;
       }
-      paper-icon-item {
-        --paper-item-icon-width: 40px;
-      }
-      iron-icon {
-        --iron-icon-width: 24px;
-        --iron-icon-height: 24px;
-        --iron-icon: {
-          color: black;
-          opacity: var(--dark-secondary-opacity);
-        };
-      }
-      paper-icon-item a {
-        color: inherit;
-        text-decoration: none;
-      }
     </style>
 
     <paper-card
@@ -52,65 +34,28 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         image="[[event.cover.source]]">
       <div class="card-content">
         <h1>[[event.name]]</h1>
-        <paper-icon-item>
-          <iron-icon icon="schedule" item-icon></iron-icon>
-          <paper-item-body>
-            <div>[[_formatDate(event.start_time)]]</div>
-            <div secondary>[[_formatTime(event.start_time, event.end_time)]]</div>
-          </paper-item-body>
-        </paper-icon-item>
-          <paper-icon-item>
-            <iron-icon icon="maps:place" item-icon></iron-icon>
-            <a href$="[[_formatMapsUrl(event.place)]]"
-               rel="external"
-               target="_blank">
-              <paper-item-body two-line>
-                <div>[[event.place.name]]</div>
-                <div secondary>[[_formatLocation(event.place.location)]]</div>
-              </paper-item-body>
-            </a>
-          </paper-icon-item>
+        <wvtc-event-time
+            start-time="[[event.start_time]]"
+            end-time="[[event.end_time]]">
+        </wvtc-event-time>
+        <wvtc-event-place place="[[event.place]]"></wvtc-event-place>
       </div>
       <div class="card-actions">
-        <a href="https://www.facebook.com/events/{{event.id}}/"
-           rel="external"
-           target="_blank"
-           hidden$="{{!!event.id}}">
+        <a href$="[[_formUrl(event)]]" rel="external" target="_blank">
           <paper-button>Details</paper-button>
         </a>
       </div>
     </paper-card>
   </template>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
   <script>
     Polymer({
       is: 'wvtc-facebook-event',
       properties: {
         event: Object
       },
-      _formatDate: function(date) {
-        return moment(date).format('ddd, MMMM D');
-      },
-      _formatTime: function(start_date, end_date) {
-        var time = moment(start_date).format('h:mm A');
-        if (!!end_date) {
-          time += moment(end_date).format(' — h:mm A');
-        }
-        return time;
-      },
-      _formatLocation: function(location) {
-        var city = location.city + ', ' + location.state + ' ' + location.zip;
-        if (!location.street) return city;
-
-        return location.street + ', ' + city;
-      },
-      _formatMapsUrl: function(place) {
-        var location = place.location;
-        var query = encodeURIComponent(
-            place.name + ', ' + this._formatLocation(location));
-        return 'http://maps.google.com/?ll=' + location.latitude + ',' +
-            location.longitude + '&q=' + query;
+      _formUrl: function(event) {
+        return "https://www.facebook.com/events/" + event.id;
       }
     });
   </script>
