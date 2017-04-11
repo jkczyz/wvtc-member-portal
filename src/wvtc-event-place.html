@@ -55,11 +55,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         place: Object
       },
       _formUrl: function(place) {
-        var location = place.location;
-        var query = encodeURIComponent(
-            place.name + ', ' + this._formatLocation(place));
-        return 'http://maps.google.com/?ll=' + location.latitude + ',' +
-            location.longitude + '&q=' + query;
+        var query = encodeURIComponent(place.name);
+        var formattedLocation = this._formatLocation(place);
+        if (!!formattedLocation) {
+          query += encodeURIComponent(', ' + formattedLocation);
+        }
+
+        var geo = encodeURIComponent(
+            place.location.latitude + ',' + place.location.longitude);
+
+        return 'http://maps.google.com/?ll=' + geo + '&q=' + query;
       },
       _formatLocation: function(place) {
         var location = place.location;
