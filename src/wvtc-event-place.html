@@ -42,7 +42,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <a href$="[[_formUrl(place)]]" rel="external" target="_blank">
         <paper-item-body two-line>
           <div>[[place.name]]</div>
-          <div secondary>[[_formatLocation(place.location)]]</div>
+          <div secondary>[[_formatLocation(place)]]</div>
         </paper-item-body>
       </a>
     </paper-icon-item>
@@ -57,12 +57,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _formUrl: function(place) {
         var location = place.location;
         var query = encodeURIComponent(
-            place.name + ', ' + this._formatLocation(location));
+            place.name + ', ' + this._formatLocation(place));
         return 'http://maps.google.com/?ll=' + location.latitude + ',' +
             location.longitude + '&q=' + query;
       },
-      _formatLocation: function(location) {
-        var city = location.city + ', ' + location.state + ' ' + location.zip;
+      _formatLocation: function(place) {
+        var location = place.location;
+        var city = location.city + ', ' + location.state;
+        if (!!location.zip) {
+          city += ' ' + location.zip;
+        }
+
+        if (place.name == city) return '';
+
         if (!location.street) return city;
 
         return location.street + ', ' + city;
