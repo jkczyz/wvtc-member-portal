@@ -3,11 +3,11 @@
   "shell": "src/wvtc-app.html",
   "fragments": [
     "src/wvtc-404.html",
+    "src/wvtc-benefits.html",
     "src/wvtc-communication.html",
     "src/wvtc-membership.html",
     "src/wvtc-profile.html",
     "src/wvtc-racing.html",
-    "src/wvtc-reimbursement.html",
     "src/wvtc-sign-in.html",
     "src/wvtc-upcoming-events.html"
   ],
