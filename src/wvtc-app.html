@@ -179,9 +179,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <iron-icon icon="maps:directions-run"></iron-icon>
             <span>Racing</span>
           </a>
-          <a name="reimbursement" href="/reimbursement" drawer-toggle>
+          <a name="benefits" href="/benefits" drawer-toggle>
             <iron-icon icon="editor:attach-money"></iron-icon>
-            <span>Reimbursement</span>
+            <span>Benefits</span>
           </a>
         </iron-selector>
       </app-drawer>
@@ -228,10 +228,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <wvtc-membership
               name="membership"
               user="[[user]]"
-              membership=[[membership]]></wvtc-membership>
+              membership=[[membership]]>
+          </wvtc-membership>
           <wvtc-communication name="communication"></wvtc-communication>
           <wvtc-racing name="racing"></wvtc-racing>
-          <wvtc-reimbursement name="reimbursement"></wvtc-reimbursement>
+          <wvtc-benefits
+              name="benefits"
+              membership="[[membership]]">
+          </wvtc-benefits>
           <wvtc-404 name="404"></wvtc-404>
         </neon-animated-pages>
       </app-header-layout>

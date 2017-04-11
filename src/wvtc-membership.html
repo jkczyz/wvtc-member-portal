@@ -10,6 +10,7 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="wvtc-registration.html">
@@ -74,6 +75,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 options={{lifetimeOptions}}>
             </wvtc-registration>
           </template>
+        </div>
+        <div class="card-actions" hidden$="{{!hasPaidDues(membership)}}">
+          <a href="/benefits">
+            <paper-button>Benefits</paper-button>
+          </a>
         </div>
       </paper-card>
       <h2 class="wvtc-subheader">USATF membership</h2>
