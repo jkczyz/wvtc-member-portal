@@ -1,6 +1,28 @@
 {
   "rules": {
-    ".read": "auth != null",
-    ".write": "auth != null"
+    "users": {
+      "$uid": {
+        ".read": "$uid === auth.uid",
+        ".write": "$uid === auth.uid"
+      }
+    },
+    "members": {
+      "$year": {
+        "$uid": {
+          ".read": "$uid === auth.uid",
+          ".write": false
+        }
+      }
+    },
+    "races": {
+      ".read": "auth != null",
+      ".write": false
+    },
+    "benefits": {
+      ".read": "root.child('members/all/' + auth.uid + '/year')
+                    .val()
+                    .matches(/^2017|lifetime$/)",
+      ".write": false
+    }
   }
 }
