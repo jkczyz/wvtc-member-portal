@@ -19,9 +19,7 @@
       ".write": false
     },
     "benefits": {
-      ".read": "root.child('members/all/' + auth.uid + '/year')
-                    .val()
-                    .matches(/^2017|lifetime$/)",
+      ".read": "root.child('members/all/' + auth.uid + '/year').val().matches(/^2017|lifetime$/)",
       ".write": false
     }
   }
