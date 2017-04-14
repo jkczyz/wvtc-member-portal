@@ -13,6 +13,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="shared-styles.html">
+<link rel="import" href="wvtc-discount-card.html">
 
 <dom-module id="wvtc-benefits">
   <template>
@@ -27,12 +28,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </div>
       </paper-card>
       <h2 class="wvtc-subheader">Discounts</h2>
-      <paper-card class="wvtc-card">
-        <div class="card-content">
-          <p>Modus commodo minimum eum te, vero utinam assueverit per eu.</p>
-          <p>Ea duis bonorum nec, falli paulo aliquid ei eum.Has at minim mucius aliquam, est id tempor laoreet.Pro saepe pertinax ei, ad pri animal labores suscipiantur.</p>
-        </div>
-      </paper-card>
+      <wvtc-discount-card
+          membership="[[membership]]"
+          summary="Receive 15% off select items at Running Warehouse"
+          key="running_warehouse"
+          logo="../images/logos/running-warehouse.jpg"
+          page="http://www.runningwarehouse.com">
+      </wvtc-discount-card>
+      <wvtc-discount-card
+          membership="[[membership]]"
+          summary="Receive 50% off all Honey Stinger products through September 2017"
+          key="honey_stinger"
+          logo="../images/logos/honey-stinger.jpg"
+          page="http://www.honeystinger.com">
+      </wvtc-discount-card>
     </div>
   </template>
 
