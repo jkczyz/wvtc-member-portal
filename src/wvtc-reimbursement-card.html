@@ -10,17 +10,20 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 
-<link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="shared-styles.html">
 
-<dom-module id="wvtc-usatf-card">
+<dom-module id="wvtc-reimbursement-card">
   <template>
     <style include="shared-styles">
       #card {
         --paper-card-content: {
           padding-top: 0;
+        };
+        /* Contact PAUSATF aboout using a white or transparent background. */
+        --paper-card-header: {
+          background-color: #fcfcfc;
         };
         --paper-card-header-image: {
           min-width: 280px;
@@ -30,25 +33,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
-    <paper-card id="card" class="wvtc-card" image="../images/logos/usatf.jpg">
+    <paper-card id="card" class="wvtc-card" image="../images/logos/pausatf.jpg">
       <div class="card-content">
-        <p>USATF membership is required to compete with West Valley Track Club</p>
-        <p><em>Register using club number 110</em></p>
-      </div>
-      <div class="card-actions">
-        <a href="https://www.usatf.org/membership/application/" target="_blank">
-          <paper-button>Join / Renew</paper-button>
-        </a>
-        <a href="http://pausatf.x10host.com/data/members.php?club=110" target="_blank">
-          <paper-button>Active Members</paper-button>
-        </a>
+        <p>Members in good standing are eligible for PA race reimbursement</p>
+        <p><em>Check back for details</em></p>
       </div>
     </paper-card>
   </template>
 
   <script>
     Polymer({
-      is: 'wvtc-usatf-card'
+      is: 'wvtc-reimbursement-card'
     });
   </script>
 </dom-module>

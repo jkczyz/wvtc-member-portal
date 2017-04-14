@@ -10,10 +10,10 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 
-<link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="wvtc-discount-card.html">
+<link rel="import" href="wvtc-reimbursement-card.html">
 
 <dom-module id="wvtc-benefits">
   <template>
@@ -21,12 +21,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <div class="wvtc-panel">
       <h2 class="wvtc-subheader">Race reimbursement</h2>
-      <paper-card class="wvtc-card">
-        <div class="card-content">
-          <p>Ut labores minimum atomorum pro. Laudem tibique ut has.</p>
-          <p>Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea. Cu mei vide viris gloriatur, at populo eripuit sit.</p>
-        </div>
-      </paper-card>
+      <wvtc-reimbursement-card></wvtc-reimbursement-card>
       <h2 class="wvtc-subheader">Discounts</h2>
       <wvtc-discount-card
           membership="[[membership]]"
