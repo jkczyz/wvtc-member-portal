@@ -19,29 +19,22 @@ exports.createUserRecord = functions.auth.user().onCreate(event => {
 exports.processMemberDues = functions.https.onRequest((req, res) => {
   cors({origin: true, methods: ['POST']})(req, res, () => {
     const uid = req.body.uid;
+    const email = req.body.email;
     const sku = req.body.sku;
     const tokenId = req.body.tokenId;
 
     const skuParts = sku.split('_');
     const year = skuParts[1];
-    const now = new Date();
 
     console.log('Processing %s payment for uid %s', sku, uid);
     var orderId;
-    return admin.database().ref('users/' + uid).once('value').then(snapshot => {
-      const user = snapshot.val();
-      return processStripeOrder(user, sku, tokenId);
-    }).then(order => {
+    var chargeId;
+    return processStripeOrder(uid, email, sku, tokenId).then(order => {
       orderId = order.id;
-      return admin.database().ref('members/' + year + '/' + uid).set({
-        orderId: orderId,
-        paidOn: now.toJSON()
-      });
-    }).then(() => {
-      return admin.database().ref('members/all/' + uid).set({
-        year: year,
-        paidOn: now.toJSON()
-      });
+      chargeId = order.charge;
+      return updateStripeCharge(chargeId, email);
+    }).then(charge => {
+      return updateMemberDatabase(uid, orderId, year);
     }).then(() => {
       return fulfillStripeOrder(orderId);
     }).then(() => {
@@ -53,15 +46,31 @@ exports.processMemberDues = functions.https.onRequest((req, res) => {
   });
 });
 
-var processStripeOrder = function(user, sku, tokenId) {
+var updateMemberDatabase = function(uid, orderId, year) {
+  const now = new Date();
+  return admin.database().ref('members/all/' + uid).set({
+    year: year,
+    paidOn: now.toJSON()
+  }).then(() => {
+    return admin.database().ref('members/' + year + '/' + uid).set({
+      orderId: orderId,
+      paidOn: now.toJSON()
+    });
+  });
+};
+
+var processStripeOrder = function(uid, email, sku, tokenId) {
   return stripe.orders.create({
     currency: 'usd',
-    email: user.email,
+    email: email,
     items: [{
       type: 'sku',
       parent: sku,
       quantity: 1
-    }]
+    }],
+    metadata: {
+      uid: uid
+    }
   }).then(order => {
     return stripe.orders.pay(order.id, {
       source: tokenId
@@ -69,6 +78,12 @@ var processStripeOrder = function(user, sku, tokenId) {
   }).then(order => {
     console.log('Processed order %s', order.id);
     return order;
+  });
+};
+
+var updateStripeCharge = function(chargeId, email) {
+  return stripe.charges.update(chargeId , {
+    receipt_email: email
   });
 };
 
