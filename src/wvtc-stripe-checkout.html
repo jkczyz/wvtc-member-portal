@@ -78,6 +78,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             };
             request.send(JSON.stringify({
               uid: self.user.uid,
+              email: token.email,
               sku: sku,
               tokenId: token.id
             }));
