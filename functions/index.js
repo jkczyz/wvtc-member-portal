@@ -83,6 +83,7 @@ var processStripeOrder = function(uid, email, sku, tokenId) {
 
 var updateStripeCharge = function(chargeId, email) {
   return stripe.charges.update(chargeId , {
+    description: 'Payment for member dues',
     receipt_email: email
   });
 };
