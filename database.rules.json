@@ -21,6 +21,14 @@
     "benefits": {
       ".read": "root.child('members/all/' + auth.uid + '/year').val().matches(/^2017|lifetime$/)",
       ".write": false
+    },
+    "reimbursements": {
+      "$year": {
+        "$uid": {
+          ".read": "$uid === auth.uid",
+          ".write": "$uid === auth.uid"
+        }
+      }
     }
   }
 }

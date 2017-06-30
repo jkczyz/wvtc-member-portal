@@ -21,7 +21,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <div class="wvtc-panel">
       <h2 class="wvtc-subheader">Race reimbursement</h2>
-      <wvtc-reimbursement-card></wvtc-reimbursement-card>
+      <wvtc-reimbursement-card
+          user="[[user]]"
+          membership="[[membership]]">
+      </wvtc-reimbursement-card>
       <h2 class="wvtc-subheader">Discounts</h2>
       <wvtc-discount-card
           membership="[[membership]]"
@@ -44,6 +47,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     Polymer({
       is: 'wvtc-benefits',
       properties: {
+        user: Object,
         membership: Object
       }
     });
