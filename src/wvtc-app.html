@@ -10,7 +10,6 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 
-<link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
 <link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
@@ -30,6 +29,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/neon-animation/animations/fade-out-animation.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-tooltip/paper-tooltip.html">
+<link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="wvtc-icons.html">
 <link rel="import" href="wvtc-sign-in.html">
 
@@ -223,17 +223,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <wvtc-profile
               name="profile"
               user="[[user]]"
-              membership=[[membership]]>
+              membership="[[membership]]">
           </wvtc-profile>
           <wvtc-membership
               name="membership"
               user="[[user]]"
-              membership=[[membership]]>
+              membership="[[membership]]">
           </wvtc-membership>
           <wvtc-communication name="communication"></wvtc-communication>
           <wvtc-racing name="racing"></wvtc-racing>
           <wvtc-benefits
               name="benefits"
+              user="[[user]]"
               membership="[[membership]]">
           </wvtc-benefits>
           <wvtc-404 name="404"></wvtc-404>

@@ -10,8 +10,16 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-datatable/paper-datatable.html">
+<link rel="import" href="../bower_components/paper-datatable/paper-datatable-column.html">
+<link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-document.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="wvtc-reimbursement-card">
@@ -27,19 +35,206 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           margin: auto;
         };
       }
+
+      .form {
+        padding: 0 16px 16px;
+        @apply(--layout-horizontal);
+        @apply(--layout-end);
+      }
+
+      .races {
+        flex: 3 3 160px;
+        padding-right: 16px;
+      }
+
+      .amount {
+        flex: 1 1 48px;
+        padding-right: 16px;
+      }
+
+      .request {
+        flex: 0 0 auto;
+        color: white;
+        background-color: var(--primary-color);
+      }
     </style>
+
+    <firebase-document
+        app-name="wvtc"
+        path="/races/2017/road"
+        data="{{roadRaces}}">
+    </firebase-document>
+    <firebase-document
+        app-name="wvtc"
+        path="/races/2017/xc"
+        data="{{xcRaces}}">
+    </firebase-document>
+    <firebase-document
+        id="reimbursements"
+        app-name="wvtc"
+        path="/reimbursements/2017/[[user.uid]]"
+        data="{{reimbursements}}">
+    </firebase-document>
 
     <paper-card id="card" class="wvtc-card" image="../images/logos/pausatf.png">
       <div class="card-content">
         <p>Members in good standing are eligible for PA race reimbursement</p>
-        <p><em>Check back for details</em></p>
+        <p hidden$="[[!_isActiveMember(membership)]]">
+          <em>Deadlines to file requests are July 15 and December 15</em>
+        </p>
+        <div class="form" hidden$="[[!_isActiveMember(membership)]]">
+          <paper-dropdown-menu class="races" label="Race">
+            <paper-listbox class="dropdown-content" selected="{{selected}}">
+              <template is="dom-repeat" items="{{eligibleRaces}}">
+                <paper-item>{{item.name}}</paper-item>
+              </template>
+            </paper-listbox>
+          </paper-dropdown-menu>
+          <paper-input
+              class="amount"
+              label="Amount"
+              value="{{_formatAmount(selectedRace.amount)}}"
+              readonly>
+          </paper-input>
+          <paper-button
+              class="request"
+              on-tap="_requestReimbursement"
+              raised
+              disabled="{{_isRaceUnselected(selected)}}">
+            Request
+          </paper-button>
+        </div>
+        <paper-datatable
+            hidden$="{{_hasRequestedReimbursements(reimbursements.*)}}"
+            data="{{reimbursementRequests}}"
+            resize-behavior="overflow">
+          <paper-datatable-column header="Race" property="race">
+          </paper-datatable-column>
+          <paper-datatable-column
+              header="Amount"
+              property="amount"
+              type="Number">
+            <template>{{_formatAmount(value)}}</template>
+          </paper-datatable-column>
+          <paper-datatable-column header="Status" property="status">
+          </paper-datatable-column>
+        </paper-datatable>
       </div>
     </paper-card>
   </template>
 
   <script>
     Polymer({
-      is: 'wvtc-reimbursement-card'
+      is: 'wvtc-reimbursement-card',
+      properties: {
+        user: Object,
+        membership: Object,
+        allRaces: {
+          type: Array,
+          computed: '_computeAllRaces(xcRaces, roadRaces)'
+        },
+        eligibleRaces: {
+          type: Array,
+          computed: '_computeEligibleRaces(allRaces, reimbursements.*)'
+        },
+        reimbursementRequests: {
+          type: Array,
+          computed: '_computeReimbursementRequests(allRaces, reimbursements.*)'
+        },
+        selectedRace: {
+          type: Object,
+          computed: '_computeSelectedRace(eligibleRaces, selected)'
+        }
+      },
+      ready: function() {
+        // The request button isn't disabled until this is explicitly set.
+        this.selected = -1;
+      },
+      _computeAllRaces: function(xcRaces, roadRaces) {
+        var toSimplifiedRace = function(races) {
+          return function(id) {
+            var race = races[id];
+            return {
+              id: id,
+              name: race.name,
+              date: race.date,
+              amount: race.reimbursementAmount
+            };
+          };
+        };
+        var xc = Object.keys(xcRaces).map(toSimplifiedRace(xcRaces));
+        var road = Object.keys(roadRaces).map(toSimplifiedRace(roadRaces));
+        return xc.concat(road);
+      },
+      _computeEligibleRaces: function(allRaces, reimbursements) {
+        var compareByDate = function(race1, race2) {
+          if (race1.date < race2.date) {
+            return -1;
+          }
+          if (race1.date > race2.date) {
+            return 1;
+          }
+          return 0;
+        };
+        var isPast = function(race) {
+          var now = new Date();
+          return race.date < now.toJSON();
+        };
+        var hasNotBeenRequested = function(race) {
+          return !reimbursements.base.hasOwnProperty(race.id);
+        };
+
+        return allRaces.sort(compareByDate)
+                       .filter(isPast)
+                       .filter(hasNotBeenRequested);
+      },
+      _computeReimbursementRequests: function(allRaces, reimbursements) {
+        var hasRequestedReimbursement = function(race) {
+          return reimbursements.base.hasOwnProperty(race.id);
+        };
+        var toReimbursementRequest = function(race) {
+          var request = reimbursements.base[race.id];
+          return {
+            race: race.name,
+            requestedOn: request.requestedOn,
+            amount: race.amount,
+            status: request.status
+          };
+        };
+
+        return allRaces.filter(hasRequestedReimbursement)
+                       .map(toReimbursementRequest);
+      },
+      _computeSelectedRace: function(eligibleRaces, selected) {
+        if (this._isRaceUnselected(selected)) {
+          return null;
+        }
+        return eligibleRaces[selected];
+      },
+      _isRaceUnselected: function(selected) {
+        return selected < 0;
+      },
+      _hasRequestedReimbursements: function(reimbursements) {
+        return this.$.reimbursements.valueIsEmpty(reimbursements.base);
+      },
+      _formatAmount: function(amount) {
+        if (!amount) {
+          return '';
+        }
+        return '$' + (amount / 100);
+      },
+      _requestReimbursement: function() {
+        var race = this.selectedRace;
+        var now = new Date();
+        this.set('reimbursements.' + race.id, {
+          requestedOn: now.toJSON(),
+          status: 'Pending'
+        });
+        this.selected = -1;
+      },
+      _isActiveMember: function(membership) {
+        return !!membership.paidOn;
+      },
     });
   </script>
 </dom-module>
