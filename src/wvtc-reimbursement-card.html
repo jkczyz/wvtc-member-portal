@@ -10,12 +10,14 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 
+<link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/paper-datatable/paper-datatable.html">
 <link rel="import" href="../bower_components/paper-datatable/paper-datatable-column.html">
-<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
@@ -39,7 +41,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       .form {
-        padding: 0 16px 16px;
+        padding: 0 8px 16px;
         @apply(--layout-horizontal);
         @apply(--layout-end);
       }
@@ -60,16 +62,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         background-color: var(--primary-color);
       }
 
-      paper-dialog h1 {
-        font-size: 20px;
-        font-weight: 500;
-        opacity: var(--dark-primary-opacity);
-        line-height: 28px;
+      .buttons {
+        @apply(--layout-horizontal);
+        @apply(--layout-justified);
       }
 
-      paper-dialog p {
-        font-size: 14px;
+      .toggle {
         opacity: var(--dark-secondary-opacity);
+        margin-right: 8px;
+      }
+
+      .preferences {
+        padding: 0 16px 16px;
       }
     </style>
 
@@ -138,20 +142,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </paper-datatable>
       </div>
       <div class="card-actions">
-        <paper-button on-tap="_openDialog">Preferences</paper-button>
+        <div class="buttons">
+          <paper-button toggles="{{opened}}" on-tap="toggleOpened">Preferences</paper-button>
+          <paper-icon-button
+              class="toggle"
+              icon="[[_toggleIcon]]"
+              on-tap="toggleOpened">
+          </paper-icon-button>
+        </div>
+        <iron-collapse class="preferences" opened={{opened}}>
+          <p>Choose how race registration fees are reimbursed</p>
+          <wvtc-reimbursement-pref user="[[user]]"></wvtc-reimbursement-pref>
+        </iron-collapse>
       </div>
     </paper-card>
-    <paper-dialog
-        id="dialog"
-        entry-animation="fade-in-animation"
-        exit-animation="fade-out-animation">
-      <h1>Reimbursement method</h1>
-      <p>Choose how race registration fees are reimbursed</p>
-      <wvtc-reimbursement-pref user="[[user]]"></wvtc-reimbursement-pref>
-      <div class="buttons">
-        <paper-button dialog-dismiss>Close</paper-button>
-      </div>
-    </paper-dialog>
   </template>
 
   <script>
@@ -177,7 +181,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         reimbursementRequests: {
           type: Array,
           computed: '_computeReimbursementRequests(allRaces, reimbursements.*)'
-        }
+        },
+        _toggleIcon: {
+          type: String,
+          computed: '_computeToggleIcon(opened)'
+        },
       },
       _computeAllRaces: function(xcRaces, roadRaces) {
         var toSimplifiedRace = function(races) {
@@ -252,8 +260,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         });
         this.selectedRace = null;
       },
-      _openDialog: function() {
-        this.$.dialog.open();
+      toggleOpened: function() {
+        this.opened = !this.opened;
+      },
+      _computeToggleIcon: function(opened) {
+        return opened ? 'icons:expand-less' : 'icons:expand-more';
       },
       _isActiveMember: function(membership) {
         return !!membership.paidOn;
