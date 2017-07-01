@@ -98,9 +98,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </p>
         <div class="form" hidden$="[[!_isActiveMember(membership)]]">
           <paper-dropdown-menu class="races" label="Race">
-            <paper-listbox class="dropdown-content" selected="{{selected}}">
-              <template is="dom-repeat" items="{{eligibleRaces}}">
-                <paper-item>{{item.name}}</paper-item>
+            <paper-listbox
+                class="dropdown-content"
+                selected="{{selectedRace}}"
+                attr-for-selected="race">
+              <template is="dom-repeat" items="{{eligibleRaces}}" as="race">
+                <paper-item race="[[race]]">{{race.name}}</paper-item>
               </template>
             </paper-listbox>
           </paper-dropdown-menu>
@@ -114,7 +117,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               class="request"
               on-tap="_requestReimbursement"
               raised
-              disabled="{{_isRaceUnselected(selected)}}">
+              disabled="[[!selectedRace]]">
             Request
           </paper-button>
         </div>
@@ -165,18 +168,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           type: Array,
           computed: '_computeEligibleRaces(allRaces, reimbursements.*)'
         },
+        selectedRace: {
+          type: Object,
+          value: function() {
+            return null;
+          }
+        },
         reimbursementRequests: {
           type: Array,
           computed: '_computeReimbursementRequests(allRaces, reimbursements.*)'
-        },
-        selectedRace: {
-          type: Object,
-          computed: '_computeSelectedRace(eligibleRaces, selected)'
         }
-      },
-      ready: function() {
-        // The request button isn't disabled until this is explicitly set.
-        this.selected = -1;
       },
       _computeAllRaces: function(xcRaces, roadRaces) {
         var toSimplifiedRace = function(races) {
@@ -233,15 +234,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         return allRaces.filter(hasRequestedReimbursement)
                        .map(toReimbursementRequest);
       },
-      _computeSelectedRace: function(eligibleRaces, selected) {
-        if (this._isRaceUnselected(selected)) {
-          return null;
-        }
-        return eligibleRaces[selected];
-      },
-      _isRaceUnselected: function(selected) {
-        return selected < 0;
-      },
       _hasRequestedReimbursements: function(reimbursements) {
         return this.$.reimbursements.valueIsEmpty(reimbursements.base);
       },
@@ -258,7 +250,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           requestedOn: now.toJSON(),
           status: 'Pending'
         });
-        this.selected = -1;
+        this.selectedRace = null;
       },
       _openDialog: function() {
         this.$.dialog.open();
