@@ -1,0 +1,79 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors.
+Copyright (c) 2017 West Valley Track Club, Inc.
+All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="wvtc-reimbursement-pref">
+  <template>
+    <style include="shared-styles">
+      .preference {
+        padding: 0 16px;
+      }
+    </style>
+
+    <firebase-document
+        app-name="wvtc"
+        path="/users/[[user.uid]]"
+        data="{{userRecord}}">
+    </firebase-document>
+
+    <div class="preference">
+      <paper-dropdown-menu id="method" label="Method">
+        <paper-listbox
+            class="dropdown-content"
+            selected="{{userRecord.reimbursementMethod}}"
+            attr-for-selected="method">
+          <template is="dom-repeat" items="{{methods}}" as="method">
+            <paper-item method="[[method]]">{{method}}</paper-item>
+          </template>
+        </paper-listbox>
+      </paper-dropdown-menu>
+      <paper-input
+          label="Email"
+          value="{{userRecord.paypalEmail}}"
+          hidden$="[[!_isPayPalSelected(userRecord.reimbursementMethod)]]">
+      </paper-input>
+      <paper-input
+          label="Username"
+          value="{{userRecord.venmoUsername}}"
+          hidden$="[[!_isVenmoSelected(userRecord.reimbursementMethod)]]">
+        </paper-input>
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'wvtc-reimbursement-pref',
+      properties: {
+        user: Object,
+        userRecord: Object,
+        methods: {
+          type: Array,
+          value: function() {
+            return ['Check', 'PayPal', 'Venmo'];
+          }
+        }
+      },
+      _isPayPalSelected: function(method) {
+        return method == 'PayPal';
+      },
+      _isVenmoSelected: function(method) {
+        return method == 'Venmo';
+      }
+    });
+  </script>
+</dom-module>
