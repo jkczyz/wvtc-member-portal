@@ -41,7 +41,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <div class="card-content">
         <p>[[summary]]</p>
         <p hidden$="[[!_isActiveMember(membership)]]">
-          <em>Use discount code <strong>[[code]]</strong> at checkout</em>
+          <template is="dom-if" if="{{key}}">
+            <em>Use discount code <strong>[[code]]</strong> at checkout</em>
+          </template>
+          <template is="dom-if" if="{{mention}}">
+            <em>Mention you're a member of WVTC to get this perk</em>
+          </template>
         </p>
       </div>
       <div class="card-actions">
@@ -58,6 +63,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       properties: {
         summary: String,
         key: String,
+        mention: Boolean,
         logo: String,
         page: String
       },
