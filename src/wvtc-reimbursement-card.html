@@ -80,18 +80,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <firebase-document
         app-name="wvtc"
         path="/races/2017/road"
-        data="{{roadRaces}}">
+        data="{{_roadRaces}}">
     </firebase-document>
     <firebase-document
         app-name="wvtc"
         path="/races/2017/xc"
-        data="{{xcRaces}}">
+        data="{{_xcRaces}}">
     </firebase-document>
     <firebase-document
         id="reimbursements"
         app-name="wvtc"
         path="/reimbursements/2017/[[user.uid]]"
-        data="{{reimbursements}}">
+        data="{{_reimbursements}}">
     </firebase-document>
 
     <paper-card id="card" class="wvtc-card" image="../images/logos/pausatf.png">
@@ -126,7 +126,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           </paper-button>
         </div>
         <paper-datatable
-            hidden$="{{_hasRequestedReimbursements(reimbursements.*)}}"
+            hidden$="{{_hasRequestedReimbursements(_reimbursements.*)}}"
             data="{{reimbursementRequests}}"
             resize-behavior="overflow">
           <paper-datatable-column header="Race" property="race">
@@ -168,11 +168,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         membership: Object,
         allRaces: {
           type: Array,
-          computed: '_computeAllRaces(xcRaces, roadRaces)'
+          computed: '_computeAllRaces(_xcRaces, _roadRaces)'
         },
         eligibleRaces: {
           type: Array,
-          computed: '_computeEligibleRaces(allRaces, reimbursements.*)'
+          computed: '_computeEligibleRaces(allRaces, _reimbursements.*)'
         },
         selectedRace: {
           type: Object,
@@ -182,8 +182,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         },
         reimbursementRequests: {
           type: Array,
-          computed: '_computeReimbursementRequests(allRaces, reimbursements.*)'
+          computed: '_computeReimbursementRequests(allRaces, _reimbursements.*)'
         },
+        _xcRaces: Object,
+        _roadRaces: Object,
+        _reimbursements: Object,
         _toggleIcon: {
           type: String,
           computed: '_computeToggleIcon(opened)'
@@ -256,7 +259,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _requestReimbursement: function() {
         var race = this.selectedRace;
         var now = new Date();
-        this.set('reimbursements.' + race.id, {
+        this.set('_reimbursements.' + race.id, {
           requestedOn: now.toJSON(),
           status: 'Pending'
         });

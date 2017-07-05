@@ -142,11 +142,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </style>
 
     <app-location route="{{route}}"></app-location>
-    <app-route
-        route="{{route}}"
-        pattern="/:page"
-        data="{{routeData}}"
-        tail="{{subroute}}"></app-route>
+    <app-route route="{{route}}" pattern="/:page" data="{{routeData}}">
+    </app-route>
 
     <app-drawer-layout fullbleed responsive-width="600px">
       <!-- Drawer content -->
@@ -196,7 +193,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <div>
               <paper-icon-button
                   icon="wvtc-icons:sign-out"
-                  disabled="{{!signedIn}}"
+                  disabled="{{!_signedIn}}"
                   on-tap="_signOut">
               </paper-icon-button>
               <paper-tooltip>Sign out</paper-tooltip>
@@ -216,8 +213,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               name="sign-in"
               user="{{user}}"
               membership={{membership}}
-              status-known="{{statusKnown}}"
-              signed-in="{{signedIn}}">
+              status-known="{{_statusKnown}}"
+              signed-in="{{_signedIn}}">
           </wvtc-sign-in>
           <wvtc-upcoming-events name="upcoming-events"></wvtc-upcoming-events>
           <wvtc-profile
@@ -248,15 +245,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       is: 'wvtc-app',
 
       properties: {
+        routeData: Object,
         page: {
           type: String,
           reflectToAttribute: true,
           observer: '_pageChanged'
-        }
+        },
+        _statusKnown: Boolean,
+        _signedIn: Boolean
       },
 
       observers: [
-        '_routePageChanged(routeData.page, statusKnown, signedIn)'
+        '_routePageChanged(routeData.page, _statusKnown, _signedIn)'
       ],
 
       _routePageChanged: function(page, statusKnown, signedIn) {
