@@ -11,15 +11,18 @@
     "src/wvtc-sign-in.html",
     "src/wvtc-upcoming-events.html"
   ],
-  "sourceGlobs": [
+  "sources": [
    "src/**/*",
    "images/**/*",
    "bower.json"
   ],
-  "includeDependencies": [
+  "extraDependencies": [
     "manifest.json",
     "bower_components/webcomponentsjs/webcomponents-lite.min.js"
   ],
+  "lint": {
+    "rules": ["polymer-1"]
+  },
   "builds": [
     { "preset": "es5-bundled" }
   ]

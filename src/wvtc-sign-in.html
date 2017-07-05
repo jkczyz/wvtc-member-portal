@@ -33,7 +33,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         app-name="wvtc"
         user="{{user}}"
         status-known="{{statusKnown}}"
-        signed-in="{{authSignedIn}}"
+        signed-in="{{_authSignedIn}}"
         on-error="handleError">
     </firebase-auth>
     <firebase-document
@@ -73,7 +73,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         },
         signedIn: {
           type: Boolean,
-          computed: '_computeSignedIn(authSignedIn, user)',
+          computed: '_computeSignedIn(_authSignedIn, user)',
           observer: '_signedInChanged',
           notify: true
         },
@@ -81,7 +81,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           type: Object,
           observer: '_userRecordChanged',
           notify: true
-        }
+        },
+        _authSignedIn: Boolean
       },
       _computeSignedIn: function(authSignedIn, user) {
         return authSignedIn && user != null;

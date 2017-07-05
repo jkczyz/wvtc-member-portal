@@ -86,7 +86,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <template is="dom-if" if="{{!user.photoURL}}">
               <iron-icon icon="account-circle"></iron-icon>
             </template>
-            <template is="dom-if" if="{{!!user.photoURL}}">
+            <template is="dom-if" if="{{user.photoURL}}">
               <iron-image src$="{{user.photoURL}}" sizing="cover"></iron-image>
             </template>
           </div>

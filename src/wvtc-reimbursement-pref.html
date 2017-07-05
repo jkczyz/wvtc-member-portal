@@ -15,6 +15,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-document.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="wvtc-reimbursement-pref">
@@ -28,29 +29,29 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <firebase-document
         app-name="wvtc"
         path="/users/[[user.uid]]"
-        data="{{userRecord}}">
+        data="{{_userRecord}}">
     </firebase-document>
 
     <div class="preference">
       <paper-dropdown-menu id="method" label="Method">
         <paper-listbox
             class="dropdown-content"
-            selected="{{userRecord.reimbursementMethod}}"
+            selected="{{_userRecord.reimbursementMethod}}"
             attr-for-selected="method">
-          <template is="dom-repeat" items="{{methods}}" as="method">
+          <template is="dom-repeat" items="{{_methods}}" as="method">
             <paper-item method="[[method]]">{{method}}</paper-item>
           </template>
         </paper-listbox>
       </paper-dropdown-menu>
       <paper-input
           label="Email"
-          value="{{userRecord.paypalEmail}}"
-          hidden$="[[!_isPayPalSelected(userRecord.reimbursementMethod)]]">
+          value="{{_userRecord.paypalEmail}}"
+          hidden$="[[!_isPayPalSelected(_userRecord.reimbursementMethod)]]">
       </paper-input>
       <paper-input
           label="Username"
-          value="{{userRecord.venmoUsername}}"
-          hidden$="[[!_isVenmoSelected(userRecord.reimbursementMethod)]]">
+          value="{{_userRecord.venmoUsername}}"
+          hidden$="[[!_isVenmoSelected(_userRecord.reimbursementMethod)]]">
         </paper-input>
     </div>
   </template>
@@ -60,8 +61,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       is: 'wvtc-reimbursement-pref',
       properties: {
         user: Object,
-        userRecord: Object,
-        methods: {
+        _userRecord: Object,
+        _methods: {
           type: Array,
           value: function() {
             return ['Check', 'PayPal', 'Venmo'];
