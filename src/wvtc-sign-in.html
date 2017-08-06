@@ -48,6 +48,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         path="/members/all/[[user.uid]]"
         data="{{membership}}">
     </firebase-document>
+    <firebase-document
+        id="board"
+        app-name="wvtc"
+        path="/board/2017/[[user.uid]]"
+        data="{{_board}}">
+    </firebase-document>
 
     <div class="wvtc-panel">
       <div id="firebase-auth-ui"></div>
@@ -67,6 +73,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           type: Object,
           notify: true
         },
+        isAdmin: {
+          type: Boolean,
+          notify: true,
+          computed: '_computeIsAdmin(_board)'
+        },
         statusKnown: {
           type: Boolean,
           notify: true
@@ -82,7 +93,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           observer: '_userRecordChanged',
           notify: true
         },
-        _authSignedIn: Boolean
+        _authSignedIn: Boolean,
+        _board: Boolean
+      },
+      _computeIsAdmin: function(board) {
+        return !this.$.board.valueIsEmpty(board) && !!board;
       },
       _computeSignedIn: function(authSignedIn, user) {
         return authSignedIn && user != null;

@@ -1,5 +1,6 @@
 {
   "rules": {
+    ".read": "root.child('board/2017/' + auth.uid).exists()",
     "users": {
       "$uid": {
         ".read": "$uid === auth.uid",

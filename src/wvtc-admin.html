@@ -1,0 +1,70 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors.
+Copyright (c) 2016 West Valley Track Club, Inc.
+All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-document.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="wvtc-reimbursement-races.html">
+<link rel="import" href="wvtc-reimbursement-record.html">
+
+<dom-module id="wvtc-admin">
+  <template>
+    <style include="shared-styles"></style>
+
+    <div class="wvtc-panel">
+      <h2 class="wvtc-subheader">Race reimbursements</h2>
+      <firebase-document
+          app-name="wvtc"
+          path="/reimbursements/2017"
+          data="{{_reimbursements}}">
+      </firebase-document>
+      <paper-card
+          id="card"
+          class="wvtc-card wvtc-item-list"
+          role="listbox">
+        <div class="card-content">
+          <wvtc-reimbursement-races races="{{_races}}">
+          </wvtc-reimbursement-races>
+          <template is="dom-repeat" items="{{requesters}}" as="uid">
+            <wvtc-reimbursement-record
+                class="wvtc-item"
+                uid="{{uid}}"
+                races={{_races}}
+                reimbursements="{{_reimbursementRequests(_reimbursements.*, uid)}}">
+            </wvtc-reimbursement-record>
+          </template>
+        </div>
+      </paper-card>
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'wvtc-admin',
+      properties: {
+        user: Object,
+        requesters: {
+          type: Array,
+          computed: '_computeRequesters(_reimbursements)'
+        },
+        _reimbursements: Object
+      },
+      _computeRequesters: function(reimbursements) {
+        return Object.keys(reimbursements);
+      },
+      _reimbursementRequests: function(reimbursements, uid) {
+        return reimbursements.base[uid];
+      }
+    });
+  </script>
+</dom-module>

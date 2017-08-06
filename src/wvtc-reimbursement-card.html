@@ -25,6 +25,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/polymerfire/firebase-document.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="wvtc-reimbursement-pref.html">
+<link rel="import" href="wvtc-reimbursement-races.html">
+<link rel="import" href="wvtc-reimbursement-table.html">
 
 <dom-module id="wvtc-reimbursement-card">
   <template>
@@ -78,16 +80,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </style>
 
     <firebase-document
-        app-name="wvtc"
-        path="/races/2017/road"
-        data="{{_roadRaces}}">
-    </firebase-document>
-    <firebase-document
-        app-name="wvtc"
-        path="/races/2017/xc"
-        data="{{_xcRaces}}">
-    </firebase-document>
-    <firebase-document
         id="reimbursements"
         app-name="wvtc"
         path="/reimbursements/2017/[[user.uid]]"
@@ -125,21 +117,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             Request
           </paper-button>
         </div>
-        <paper-datatable
-            hidden$="{{_hasRequestedReimbursements(_reimbursements.*)}}"
-            data="{{reimbursementRequests}}"
-            resize-behavior="overflow">
-          <paper-datatable-column header="Race" property="race">
-          </paper-datatable-column>
-          <paper-datatable-column
-              header="Amount"
-              property="amount"
-              type="Number">
-            <template>{{_formatAmount(value)}}</template>
-          </paper-datatable-column>
-          <paper-datatable-column header="Status" property="status">
-          </paper-datatable-column>
-        </paper-datatable>
+        <wvtc-reimbursement-races races="{{_races}}"></wvtc-reimbursement-races>
+        <wvtc-reimbursement-table
+            hidden$="{{!_hasRequestedReimbursements(_reimbursements.*)}}"
+            races={{_races}}
+            reimbursements="{{_reimbursements}}">
+        </wvtc-reimbursement-table>
       </div>
       <div class="card-actions">
         <div class="buttons">
@@ -166,13 +149,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       properties: {
         user: Object,
         membership: Object,
-        allRaces: {
-          type: Array,
-          computed: '_computeAllRaces(_xcRaces, _roadRaces)'
-        },
         eligibleRaces: {
           type: Array,
-          computed: '_computeEligibleRaces(allRaces, _reimbursements.*)'
+          computed: '_computeEligibleRaces(_races, _reimbursements.*)'
         },
         selectedRace: {
           type: Object,
@@ -180,33 +159,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             return null;
           }
         },
-        reimbursementRequests: {
-          type: Array,
-          computed: '_computeReimbursementRequests(allRaces, _reimbursements.*)'
-        },
-        _xcRaces: Object,
-        _roadRaces: Object,
-        _reimbursements: Object,
         _toggleIcon: {
           type: String,
           computed: '_computeToggleIcon(opened)'
         },
-      },
-      _computeAllRaces: function(xcRaces, roadRaces) {
-        var toSimplifiedRace = function(races) {
-          return function(id) {
-            var race = races[id];
-            return {
-              id: id,
-              name: race.name,
-              date: race.date,
-              amount: race.reimbursementAmount
-            };
-          };
-        };
-        var xc = Object.keys(xcRaces).map(toSimplifiedRace(xcRaces));
-        var road = Object.keys(roadRaces).map(toSimplifiedRace(roadRaces));
-        return xc.concat(road);
       },
       _computeEligibleRaces: function(allRaces, reimbursements) {
         var compareByDate = function(race1, race2) {
@@ -230,25 +186,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                        .filter(isPast)
                        .filter(hasNotBeenRequested);
       },
-      _computeReimbursementRequests: function(allRaces, reimbursements) {
-        var hasRequestedReimbursement = function(race) {
-          return reimbursements.base.hasOwnProperty(race.id);
-        };
-        var toReimbursementRequest = function(race) {
-          var request = reimbursements.base[race.id];
-          return {
-            race: race.name,
-            requestedOn: request.requestedOn,
-            amount: race.amount,
-            status: request.status
-          };
-        };
-
-        return allRaces.filter(hasRequestedReimbursement)
-                       .map(toReimbursementRequest);
-      },
       _hasRequestedReimbursements: function(reimbursements) {
-        return this.$.reimbursements.valueIsEmpty(reimbursements.base);
+        return !this.$.reimbursements.valueIsEmpty(reimbursements.base);
       },
       _formatAmount: function(amount) {
         if (!amount) {

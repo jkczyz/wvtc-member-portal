@@ -180,6 +180,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <iron-icon icon="editor:attach-money"></iron-icon>
             <span>Benefits</span>
           </a>
+          <a name="admin" href="/admin" drawer-toggle>
+            <div hidden$="[[!_isAdmin]]">
+              <iron-icon icon="supervisor-account"></iron-icon>
+              <span>Admin</span>
+            </div>
+          </a>
         </iron-selector>
       </app-drawer>
 
@@ -212,7 +218,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <wvtc-sign-in
               name="sign-in"
               user="{{user}}"
-              membership={{membership}}
+              membership="{{membership}}"
+              is-admin="{{_isAdmin}}"
               status-known="{{_statusKnown}}"
               signed-in="{{_signedIn}}">
           </wvtc-sign-in>
@@ -234,6 +241,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               user="[[user]]"
               membership="[[membership]]">
           </wvtc-benefits>
+          <wvtc-admin name="admin" user="[[user]]"></wvtc-admin>
           <wvtc-404 name="404"></wvtc-404>
         </neon-animated-pages>
       </app-header-layout>
@@ -252,7 +260,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           observer: '_pageChanged'
         },
         _statusKnown: Boolean,
-        _signedIn: Boolean
+        _signedIn: Boolean,
+        _isAdmin: Boolean
       },
 
       observers: [
