@@ -1,0 +1,57 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors.
+Copyright (c) 2017 West Valley Track Club, Inc.
+All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/paper-datatable/paper-datatable.html">
+<link rel="import" href="../bower_components/paper-datatable/paper-datatable-column.html">
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="wvtc-reimbursement-requests.html">
+
+<dom-module id="wvtc-reimbursement-table">
+  <template>
+    <wvtc-reimbursement-requests
+        reimbursements="{{reimbursements}}"
+        races="{{races}}"
+        requests="{{requests}}">
+    </wvtc-reimbursement-requests>
+    <paper-datatable
+        data="{{requests}}"
+        resize-behavior="overflow">
+      <paper-datatable-column header="Race" property="race">
+      </paper-datatable-column>
+      <paper-datatable-column
+          header="Amount"
+          property="amount"
+          type="Number">
+        <template>{{_formatAmount(value)}}</template>
+      </paper-datatable-column>
+      <paper-datatable-column header="Status" property="status">
+      </paper-datatable-column>
+    </paper-datatable>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'wvtc-reimbursement-table',
+      properties: {
+        reimbursements: Object,
+        races: Array
+      },
+      _formatAmount: function(amount) {
+        if (!amount) {
+          return '';
+        }
+        return '$' + (amount / 100);
+      }
+    });
+  </script>
+</dom-module>

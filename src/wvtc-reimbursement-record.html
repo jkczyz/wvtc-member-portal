@@ -1,0 +1,119 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors.
+Copyright (c) 2017 West Valley Track Club, Inc.
+All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-item/paper-item-body.html">
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-document.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="wvtc-reimbursement-requests.html">
+<link rel="import" href="wvtc-reimbursement-table.html">
+
+<dom-module id="wvtc-reimbursement-record">
+  <template>
+    <style include="shared-styles">
+      .amount {
+        color: green;
+      }
+
+      .toggle {
+        opacity: var(--dark-secondary-opacity);
+        margin-right: 8px;
+      }
+    </style>
+
+    <firebase-document
+        app-name="wvtc"
+        path="/users/{{uid}}"
+        data="{{user}}">
+    </firebase-document>
+    <wvtc-reimbursement-requests
+        reimbursements="{{reimbursements}}"
+        races="{{races}}"
+        requests="{{requests}}">
+    </wvtc-reimbursement-requests>
+    <paper-item>
+      <paper-item-body two-line>
+        <div>[[user.displayName]]</div>
+        <div secondary>[[_reimbursementMethod(user)]]</div>
+      </paper-item-body>
+      <div class="amount">[[_amountOwed(requests)]]</div>
+      <paper-icon-button
+          class="toggle"
+          icon="[[_toggleIcon]]"
+          on-tap="toggleOpened">
+      </paper-icon-button>
+    </paper-item>
+    <iron-collapse opened={{opened}}>
+      <wvtc-reimbursement-table
+          races="{{races}}"
+          reimbursements="{{reimbursements}}">
+      </wvtc-reimbursement-table>
+    </iron-collapse>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'wvtc-reimbursement-record',
+      properties: {
+        uid: String,
+        user: Object,
+        reimbursements: Object,
+        races: Array,
+        opened: Boolean,
+        _toggleIcon: {
+          type: String,
+          computed: '_computeToggleIcon(opened)'
+        },
+      },
+      _reimbursementMethod: function(user) {
+        switch (user.reimbursementMethod) {
+          case 'Check':
+            return user.email + ' (' + user.reimbursementMethod + ')';
+          case 'PayPal':
+            return user.paypalEmail + ' (' + user.reimbursementMethod + ')';
+          case 'Venmo':
+            return user.venmoUsername + ' (' + user.reimbursementMethod + ')';
+          default:
+            return user.email;
+        }
+      },
+      _amountOwed: function(requests) {
+        var isOwed = function(request) {
+          return request.status == 'Pending' || request.status == 'Verified';
+        };
+        var toAmount = function(request) {
+          return request.amount;
+        };
+        var sumAmounts = function(sum, value) {
+          return sum + value;
+        };
+
+        var amountOwed = requests.filter(isOwed)
+                                 .map(toAmount)
+                                 .reduce(sumAmounts, 0);
+        return amountOwed == 0 ? '' : '$' + (amountOwed / 100);
+      },
+      toggleOpened: function() {
+        this.opened = !this.opened;
+        this.selected = this.selected || 0;
+      },
+      _computeToggleIcon: function(opened) {
+        return opened ? 'icons:expand-less' : 'icons:expand-more';
+      },
+    });
+  </script>
+</dom-module>
