@@ -32,18 +32,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </firebase-document>
 
     <div class="wvtc-panel">
-      <h2 class="wvtc-subheader">2017 PA USATF Road Racing</h2>
-      <paper-card class="wvtc-card wvtc-item-list" role="listbox">
-        <div class="card-content">
-          <template is="dom-repeat" items="{{_toArray(roadRaces)}}">
-            <wvtc-race class="wvtc-item" race="{{item}}"></wvtc-race>
-          </template>
-        </div>
-      </paper-card>
       <h2 class="wvtc-subheader">2017 PA USATF Cross Country</h2>
       <paper-card class="wvtc-card wvtc-item-list" role="listbox">
         <div class="card-content">
           <template is="dom-repeat" items="{{_toArray(xcRaces)}}">
+            <wvtc-race class="wvtc-item" race="{{item}}"></wvtc-race>
+          </template>
+        </div>
+      </paper-card>
+      <h2 class="wvtc-subheader">2017 PA USATF Road Racing</h2>
+      <paper-card class="wvtc-card wvtc-item-list" role="listbox">
+        <div class="card-content">
+          <template is="dom-repeat" items="{{_toArray(roadRaces)}}">
             <wvtc-race class="wvtc-item" race="{{item}}"></wvtc-race>
           </template>
         </div>
