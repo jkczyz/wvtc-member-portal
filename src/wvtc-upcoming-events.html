@@ -30,82 +30,37 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     Polymer({
       is: 'wvtc-upcoming-events',
       properties: {
+        // TODO: Retrieve these programmatically.
         events: {
           type: Array,
           value: function() {
             return [
+              // Retrieved via Facebook Graph API request:
+              //
+              // /1986745448264355?fields=id,name,place,cover,start_time,end_time
               {
-                "id": "1006919159410183",
-                "name": "5th Annual Paavo Nurmi Two Mile",
+                "id": "1986745448264355",
+                "name": "WVTC XC Kick-Off",
                 "place": {
-                  "name": "Kezar Stadium",
+                  "name": "Patxi's Inner Sunset",
                   "location": {
                     "city": "San Francisco",
                     "country": "United States",
-                    "latitude": 37.766944444444,
-                    "longitude": -122.45611111111,
+                    "latitude": 37.76426,
+                    "longitude": -122.46677,
                     "state": "CA",
-                    "street": "670 Kezar Drive",
-                    "zip": "94117"
+                    "street": "822 Irving St",
+                    "zip": "94122"
                   },
-                  "id": "103211553067740"
+                  "id": "171498552912597"
                 },
                 "cover": {
                   "offset_x": 0,
-                  "offset_y": 0,
-                  "source": "https://scontent.xx.fbcdn.net/v/t1.0-9/s720x720/17796030_1848921545357348_1448527110608353309_n.jpg?oh=50ae3bad1d5c85ca7d1cf3b2e07eca4a&oe=598EBA0B",
-                  "id": "1848921545357348"
+                  "offset_y": 50,
+                  "source": "https://scontent.xx.fbcdn.net/v/t1.0-9/p720x720/20882250_841814514876_9103652745395123415_n.jpg?oh=2de8bfe0d1bab80859552d3cb6a92494&oe=59ED0A2E",
+                  "id": "841814514876"
                 },
-                "start_time": "2017-05-02T18:30:00-0700",
-                "end_time": "2017-05-02T19:00:00-0700"
-              },
-              {
-                "id": "203561610078937",
-                "name": "Alaska Airlines Bay to Breakers",
-                "place": {
-                  "name": "San Francisco, CA",
-                  "location": {
-                    "city": "San Francisco",
-                    "country": "United States",
-                    "latitude": 37.775,
-                    "longitude": -122.418,
-                    "state": "CA"
-                  },
-                  "id": "114952118516947"
-                },
-                "cover": {
-                  "offset_x": 0,
-                  "offset_y": 0,
-                  "source": "https://scontent.xx.fbcdn.net/v/t1.0-9/s720x720/17342969_10158417498735451_6195616967487250323_n.jpg?oh=905d88e655da5c98fa8ed9fa6ff3c212&oe=5953E087",
-                  "id": "10158417498735451"
-                },
-                "start_time": "2017-05-21T00:00:00-0700",
-                "end_time": "2017-05-21T23:59:00-0700"
-              },
-              {
-                "id": "107942319741264",
-                "name": "Marin Memorial Day 10K, Don Ritchie 5K, and Youth Track Races",
-                "place": {
-                  "name": "College of Marin",
-                  "location": {
-                    "city": "Kentfield",
-                    "country": "United States",
-                    "latitude": 37.954932628157,
-                    "longitude": -122.5496789239,
-                    "state": "CA",
-                    "street": "835 College Ave",
-                    "zip": "94904"
-                  },
-                  "id": "110940541990"
-                },
-                "cover": {
-                  "offset_x": 0,
-                  "offset_y": 0,
-                  "source": "https://scontent.xx.fbcdn.net/v/t31.0-8/s720x720/17239826_1544971835535649_6683853682457319663_o.jpg?oh=f0fd46d6bfbbe27fe5cdf87ccb0dc498&oe=595E3738",
-                  "id": "1544971835535649"
-                },
-                "start_time": "2017-05-29T08:00:00-0700",
-                "end_time": "2017-05-29T11:00:00-0700"
+                "start_time": "2017-08-22T19:30:00-0700"
               }
             ];
           }
