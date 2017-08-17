@@ -37,7 +37,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <iron-icon icon="schedule" item-icon></iron-icon>
       <paper-item-body>
         <div>[[_formatDate(startTime)]]</div>
-        <div secondary>[[_formatTime(startTime, endTime)]]</div>
+        <div secondary>
+          [[_formatStartTime(startTime)]][[_formatEndTime(endTime)]]
+        </div>
       </paper-item-body>
     </paper-icon-item>
   </template>
@@ -56,12 +58,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _formatDate: function(date) {
         return moment(date).format('dddd, MMMM D');
       },
-      _formatTime: function(startTime, endTime) {
-        var time = moment(startTime).format('h:mm A');
-        if (!!endTime) {
-          time += moment(endTime).format(' — h:mm A');
-        }
-        return time;
+      _formatStartTime: function(time) {
+        return moment(time).format('h:mm A');
+      },
+      _formatEndTime: function(time) {
+        return moment(time).format(' — h:mm A');
       }
     });
   </script>
