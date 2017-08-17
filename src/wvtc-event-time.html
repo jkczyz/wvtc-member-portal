@@ -48,10 +48,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       is: 'wvtc-event-time',
       properties: {
         startTime: String,
-        endTime: String
+        endTime: {
+          type: String,
+          value: ''
+        }
       },
       _formatDate: function(date) {
-        return moment(date).format('ddd, MMMM D');
+        return moment(date).format('dddd, MMMM D');
       },
       _formatTime: function(startTime, endTime) {
         var time = moment(startTime).format('h:mm A');

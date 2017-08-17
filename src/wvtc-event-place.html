@@ -42,7 +42,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <a href$="[[_formUrl(place)]]" rel="external" target="_blank">
         <paper-item-body two-line>
           <div>[[place.name]]</div>
-          <div secondary>[[_formatLocation(place)]]</div>
+          <div secondary>[[_formatLocation(place.location)]]</div>
         </paper-item-body>
       </a>
     </paper-icon-item>
@@ -55,29 +55,41 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         place: Object
       },
       _formUrl: function(place) {
-        var query = encodeURIComponent(place.name);
-        var formattedLocation = this._formatLocation(place);
-        if (!!formattedLocation) {
-          query += encodeURIComponent(', ' + formattedLocation);
-        }
+        var query = {};
+        query['api'] = '1';
 
-        var geo = encodeURIComponent(
-            place.location.latitude + ',' + place.location.longitude);
-
-        return 'http://maps.google.com/?ll=' + geo + '&q=' + query;
-      },
-      _formatLocation: function(place) {
         var location = place.location;
-        var city = location.city + ', ' + location.state;
-        if (!!location.zip) {
-          city += ' ' + location.zip;
+        var destination = this._formatLocation(location);
+        if (!location.street) {
+          destination = place.name + ', ' + destination;
+        }
+        query['destination'] = destination;
+
+        if (!!location.latitude && !!location.longitude) {
+          query['ll'] = location.latitude + ',' + location.longitude;
         }
 
-        if (place.name == city) return '';
+        var toKeyValuePair = function(key) {
+          return key + '=' + encodeURIComponent(query[key]);
+        };
+        var queryString = Object.keys(query)
+                                .sort()
+                                .map(toKeyValuePair)
+                                .join('&');
 
-        if (!location.street) return city;
+        return 'http://www.google.com/maps/dir/?' + queryString;
+      },
+      _formatLocation: function(location) {
+        var address = location.city + ', ' + location.state;
+        if (!!location.zip) {
+          address += ' ' + location.zip;
+        }
 
-        return location.street + ', ' + city;
+        if (!!location.street) {
+          address = location.street + ', ' + address
+        }
+
+        return address;
       }
     });
   </script>

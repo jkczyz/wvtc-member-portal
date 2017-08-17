@@ -17,10 +17,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-item/paper-item-body.html">
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="shared-styles.html">
+<link rel="import" href="wvtc-event-place.html">
+<link rel="import" href="wvtc-event-time.html">
 
 <dom-module id="wvtc-race">
   <template>
     <style include="shared-styles">
+      wvtc-event-time, wvtc-event-place {
+        --paper-item: {
+          border-top: 0px;
+        };
+      }
       .summary {
         @apply(--layout-horizontal);
       }
@@ -30,14 +37,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       .toggle {
-        display: none;
         opacity: var(--dark-secondary-opacity);
-      }
-
-      .details {
-        padding: 0 16px 16px;
-        @apply(--layout-horizontal);
-        @apply(--layout-end);
       }
     </style>
 
@@ -45,8 +45,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <paper-item-body two-line>
         <div>[[race.name]]</div>
         <div class="summary" secondary>
-          <div class="date">[[_formatDate(race.date)]]</div>
-          <div>[[race.location]]</div>
+          <div class="date">[[_formatDate(race.date, opened)]]</div>
         </div>
       </paper-item-body>
       <paper-icon-button
@@ -56,7 +55,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </paper-icon-button>
     </paper-item>
     <iron-collapse id="details" opened={{opened}}>
-      <div class="details">
+      <div>
+        <wvtc-event-time start-time="[[race.event.start_time]]">
+        </wvtc-event-time>
+        <wvtc-event-place place="[[race.event.place]]"></wvtc-event-place>
       </div>
     </iron-collapse>
   </template>
@@ -79,8 +81,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _computeToggleIcon: function(opened) {
         return opened ? 'icons:expand-less' : 'icons:expand-more';
       },
-      _formatDate: function(date) {
-        return moment(date).format('ddd, MMM D');
+      _formatDate: function(date, opened) {
+        return opened ? '' : moment(date).format('dddd, MMMM D');
       }
     });
   </script>
