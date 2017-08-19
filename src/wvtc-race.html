@@ -17,25 +17,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-item/paper-item-body.html">
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="shared-styles.html">
+<link rel="import" href="wvtc-event-attendance.html">
 <link rel="import" href="wvtc-event-place.html">
 <link rel="import" href="wvtc-event-time.html">
 
 <dom-module id="wvtc-race">
   <template>
     <style include="shared-styles">
-      wvtc-event-time, wvtc-event-place {
+      wvtc-event-attendance, wvtc-event-time, wvtc-event-place {
         --paper-item: {
           border-top: 0px;
         };
       }
-      .summary {
-        @apply(--layout-horizontal);
-      }
-
-      .date {
-        flex-basis: 96px;
-      }
-
       .toggle {
         opacity: var(--dark-secondary-opacity);
       }
@@ -54,11 +47,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           on-tap="toggleOpened">
       </paper-icon-button>
     </paper-item>
-    <iron-collapse id="details" opened={{opened}}>
+    <iron-collapse opened={{opened}}>
       <div>
         <wvtc-event-time start-time="[[race.event.start_time]]">
         </wvtc-event-time>
         <wvtc-event-place place="[[race.event.place]]"></wvtc-event-place>
+        <wvtc-event-attendance
+            hidden$="[[!_isActiveMember(membership)]]"
+            uid="[[uid]]"
+            eid="[[eid]]">
+        </wvtc-event-attendance>
       </div>
     </iron-collapse>
   </template>
@@ -68,7 +66,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     Polymer({
       is: 'wvtc-race',
       properties: {
+        uid: String,
+        eid: String,
         race: Object,
+        membership: Object,
         opened: Boolean,
         _toggleIcon: {
           type: String,
@@ -83,6 +84,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
       _formatDate: function(date, opened) {
         return opened ? '' : moment(date).format('dddd, MMMM D');
+      },
+      _isActiveMember: function(membership) {
+        return !!membership.paidOn;
       }
     });
   </script>

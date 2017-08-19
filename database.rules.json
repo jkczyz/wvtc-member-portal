@@ -19,6 +19,18 @@
       ".read": "auth != null",
       ".write": false
     },
+    "attendance": {
+      ".read": "root.child('members/all/' + auth.uid + '/year').val().matches(/^2017|lifetime$/)",
+      ".write": false,
+      "$year": {
+        "$eid": {
+          "$uid": {
+            ".read": "$uid === auth.uid",
+            ".write": "$uid === auth.uid"
+          }
+        }
+      }
+    },
     "benefits": {
       ".read": "root.child('members/all/' + auth.uid + '/year').val().matches(/^2017|lifetime$/)",
       ".write": false

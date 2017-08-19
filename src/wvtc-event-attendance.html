@@ -1,0 +1,119 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors.
+Copyright (c) 2017 West Valley Track Club, Inc.
+All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/iron-icons/social-icons.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-item/paper-icon-item.html">
+<link rel="import" href="../bower_components/paper-item/paper-item-body.html">
+<link rel="import" href="../bower_components/paper-radio-group/paper-radio-group.html">
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-document.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="wvtc-event-attendance">
+  <template>
+    <style include="shared-styles">
+      paper-icon-item {
+        --paper-item-icon-width: 40px;
+      }
+      paper-item-body {
+        --paper-item-body-two-line-min-height: 60px;
+      }
+      iron-icon {
+        --iron-icon-width: 24px;
+        --iron-icon-height: 24px;
+        --iron-icon: {
+          color: black;
+          opacity: var(--dark-secondary-opacity);
+        };
+      }
+
+      paper-radio-group > paper-button[checked] {
+        color: red;
+      }
+    </style>
+
+    <firebase-document
+        app-name="wvtc"
+        path="/attendance/2017/[[eid]]"
+        data="{{_attendance}}">
+    </firebase-document>
+    <firebase-document
+        app-name="wvtc"
+        path="/attendance/2017/[[eid]]/[[uid]]/response"
+        data="{{_response}}">
+    </firebase-document>
+
+    <paper-icon-item>
+      <iron-icon icon="social:people" item-icon></iron-icon>
+      <paper-item-body two-line>
+        <div>[[yesCount]] attending</div>
+        <div secondary>[[maybeCount]] maybe, [[noCount]] no</div>
+      </paper-item-body>
+    </paper-icon-item>
+    <paper-icon-item>
+      <iron-icon icon="event" item-icon></iron-icon>
+      <paper-item-body two-line>
+        <paper-radio-group
+            selected="{{_response}}"
+            selectable="paper-button"
+            allow-empty-selection>
+          <paper-button name="yes">Yes</paper-button>
+          <paper-button name="no">No</paper-button>
+          <paper-button name="maybe">Maybe</paper-button>
+        </paper-radio-group>
+      </paper-item-body>
+    </paper-icon-item>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'wvtc-event-attendance',
+      properties: {
+        uid: String,
+        eid: String,
+        yesCount: {
+          type: Number,
+          computed: '_computeYesCount(_attendance.*)'
+        },
+        noCount: {
+          type: Number,
+          computed: '_computeNoCount(_attendance.*)'
+        },
+        maybeCount: {
+          type: Number,
+          computed: '_computeMaybeCount(_attendance.*)'
+        },
+        _attendance: Object
+      },
+      _computeYesCount: function(attendance) {
+        var isYesResponse = this._hasResponse("yes");
+        return Object.values(attendance.base).filter(isYesResponse).length;
+      },
+      _computeNoCount: function(attendance) {
+        var isNoResponse = this._hasResponse("no");
+        return Object.values(attendance.base).filter(isNoResponse).length;
+      },
+      _computeMaybeCount: function(attendance) {
+        var isMaybeResponse = this._hasResponse("maybe");
+        return Object.values(attendance.base).filter(isMaybeResponse).length;
+      },
+      _hasResponse: function(response) {
+        return function(rsvp) {
+          return rsvp.response == response;
+        };
+      }
+    });
+  </script>
+</dom-module>

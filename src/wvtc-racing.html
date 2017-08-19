@@ -36,7 +36,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <paper-card class="wvtc-card wvtc-item-list" role="listbox">
         <div class="card-content">
           <template is="dom-repeat" items="{{_toArray(xcRaces)}}">
-            <wvtc-race class="wvtc-item" race="{{item}}"></wvtc-race>
+            <wvtc-race
+                class="wvtc-item"
+                uid="{{user.uid}}"
+                eid="{{item.eid}}"
+                race="{{item.race}}"
+                membership="[[membership]]">
+            </wvtc-race>
           </template>
         </div>
       </paper-card>
@@ -44,7 +50,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <paper-card class="wvtc-card wvtc-item-list" role="listbox">
         <div class="card-content">
           <template is="dom-repeat" items="{{_toArray(roadRaces)}}">
-            <wvtc-race class="wvtc-item" race="{{item}}"></wvtc-race>
+            <wvtc-race
+                class="wvtc-item"
+                uid="{{user.uid}}"
+                eid="{{item.eid}}"
+                race="{{item.race}}"
+                membership="[[membership]]">
+            </wvtc-race>
           </template>
         </div>
       </paper-card>
@@ -54,9 +66,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <script>
     Polymer({
       is: 'wvtc-racing',
-      _toArray: function(object) {
-        return Object.values(object);
+      properties: {
+        user: Object,
+        membership: Object
       },
+      _toArray: function(object) {
+        var toKeyValuePair = function(key) {
+          return {
+            eid: key,
+            race: object[key]
+          };
+        };
+
+        return Object.keys(object).map(toKeyValuePair);
+      }
     });
   </script>
 </dom-module>
