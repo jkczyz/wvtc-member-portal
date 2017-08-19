@@ -23,6 +23,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       paper-icon-item {
         --paper-item-icon-width: 40px;
       }
+      paper-item-body {
+        --paper-item-body-two-line-min-height: 60px;
+      }
       iron-icon {
         --iron-icon-width: 24px;
         --iron-icon-height: 24px;
@@ -35,7 +38,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <paper-icon-item>
       <iron-icon icon="schedule" item-icon></iron-icon>
-      <paper-item-body>
+      <paper-item-body two-line>
         <div>[[_formatDate(startTime)]]</div>
         <div secondary>
           [[_formatStartTime(startTime)]][[_formatEndTime(endTime)]]
