@@ -1,6 +1,6 @@
 {
   "rules": {
-    ".read": "root.child('board/2017/' + auth.uid).exists()",
+    ".read": "root.child('members/all/' + auth.uid + '/year').val().matches(/^2017|lifetime$/)",
     "users": {
       "$uid": {
         ".read": "$uid === auth.uid",
