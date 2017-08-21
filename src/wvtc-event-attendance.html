@@ -107,6 +107,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <paper-dialog
         id="dialog"
+        on-iron-overlay-opened="_onDialogOpened"
+        on-iron-overlay-closed="_onDialogClosed"
         entry-animation="fade-in-animation"
         exit-animation="fade-out-animation">
       <h2>[[name]]</h2>
@@ -199,6 +201,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
       _openDialog: function() {
         this.$.dialog.open();
+      },
+      _onDialogOpened: function() {
+        var dialog = this.$.dialog;
+        window.onpopstate = function(event) {
+          window.onpopstate = null;
+          dialog.close();
+        };
+
+        history.pushState({ isDialog: true }, "", "#rsvp");
+      },
+      _onDialogClosed: function(event) {
+        if (history.state.isDialog) {
+          window.history.back();
+        }
       }
     });
   </script>
