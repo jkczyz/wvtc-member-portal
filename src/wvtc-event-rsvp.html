@@ -11,8 +11,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../bower_components/iron-icons/maps-icons.html">
 <link rel="import" href="../bower_components/iron-icons/social-icons.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../bower_components/paper-badge/paper-badge.html">
 <link rel="import" href="../bower_components/paper-item/paper-icon-item.html">
 <link rel="import" href="../bower_components/paper-item/paper-item-body.html">
 <link rel="import" href="../bower_components/polymer/polymer.html">
@@ -30,7 +32,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           opacity: var(--dark-secondary-opacity);
         };
       }
-      .profile-image {
+      .profile {
         width: 40px;
         height: 40px;
         border-radius: 50%;
@@ -45,11 +47,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <paper-icon-item>
       <template is="dom-if" if="{{!_user.photoURL}}">
-        <iron-icon icon="social:person" item-icon></iron-icon>
+        <iron-icon id="profile" icon="social:person" item-icon></iron-icon>
       </template>
       <template is="dom-if" if="{{_user.photoURL}}">
-        <img class="profile-image" src="[[_user.photoURL]]" item-icon></img>
+        <img id="profile" class="profile" src="[[_user.photoURL]]" item-icon>
+        </img>
       </template>
+      <paper-badge
+          for="profile"
+          icon="[[_badgeIcon]]"
+          hidden$="[[!_badgeIcon]]">
+      </paper-badge>
       <paper-item-body two-line>
         <div>[[_user.displayName]]</div>
         <div secondary>[[_user.email]]</div>
@@ -62,7 +70,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       is: 'wvtc-event-rsvp',
       properties: {
         uid: String,
-        rsvp: Object
+        rsvp: Object,
+        _badgeIcon: {
+          type: String,
+          computed: '_computeBadgeIcon(rsvp)'
+        }
+      },
+      _computeBadgeIcon: function(rsvp) {
+        switch (rsvp.carpool) {
+          case 'drive':
+            return 'maps:directions-car';
+          case 'ride':
+            return 'maps:directions-walk';
+          default:
+            return '';
+        }
       }
     });
   </script>

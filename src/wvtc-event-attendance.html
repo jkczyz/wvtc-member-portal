@@ -12,6 +12,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/iron-icons/maps-icons.html">
 <link rel="import" href="../bower_components/iron-icons/social-icons.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/neon-animation/animations/fade-in-animation.html">
@@ -22,6 +23,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
 <link rel="import" href="../bower_components/paper-item/paper-icon-item.html">
 <link rel="import" href="../bower_components/paper-item/paper-item-body.html">
+<link rel="import" href="../bower_components/paper-radio-button/paper-radio-button.html">
 <link rel="import" href="../bower_components/paper-radio-group/paper-radio-group.html">
 <link rel="import" href="../bower_components/paper-tabs/paper-tab.html">
 <link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
@@ -82,6 +84,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         path="/attendance/2017/[[eid]]/[[uid]]/response"
         data="{{_response}}">
     </firebase-document>
+    <firebase-document
+        app-name="wvtc"
+        path="/attendance/2017/[[eid]]/[[uid]]/carpool"
+        data="{{_carpool}}">
+    </firebase-document>
 
     <paper-icon-item>
       <iron-icon icon="social:people" item-icon></iron-icon>
@@ -94,13 +101,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <iron-icon icon="event" item-icon></iron-icon>
       <paper-item-body two-line>
         <paper-radio-group
-            secondary
             selected="{{_response}}"
             selectable="paper-button"
             allow-empty-selection>
           <paper-button name="yes">Yes</paper-button>
           <paper-button name="no">No</paper-button>
           <paper-button name="maybe">Maybe</paper-button>
+        </paper-radio-group>
+      </paper-item-body>
+    </paper-icon-item>
+    <paper-icon-item hidden$="[[!_showCarpool(_response)]]">
+      <iron-icon icon="maps:directions-car" item-icon></iron-icon>
+      <paper-item-body two-line>
+        <paper-radio-group selected="{{_carpool}}" allow-empty-selection>
+          <paper-radio-button name="drive">Can drive</paper-radio-button>
+          <paper-radio-button name="ride">Need ride</paper-radio-button>
         </paper-radio-group>
       </paper-item-body>
     </paper-icon-item>
@@ -173,17 +188,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         _attendance: Object,
         _selected: {
           type: String,
-          value: "0"
+          value: '0'
         }
       },
       _computeYesRsvp: function(attendance) {
-        return this._filterRsvpByResponse(attendance.base, "yes");
+        return this._filterRsvpByResponse(attendance.base, 'yes');
       },
       _computeNoRsvp: function(attendance) {
-        return this._filterRsvpByResponse(attendance.base, "no");
+        return this._filterRsvpByResponse(attendance.base, 'no');
       },
       _computeMaybeRsvp: function(attendance) {
-        return this._filterRsvpByResponse(attendance.base, "maybe");
+        return this._filterRsvpByResponse(attendance.base, 'maybe');
       },
       _filterRsvpByResponse: function(attendance, response) {
         var toIdAndRsvp = function(key) {
@@ -209,12 +224,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           dialog.close();
         };
 
-        history.pushState({ isDialog: true }, "", "#rsvp");
+        history.pushState({ isDialog: true }, '', '#rsvp');
       },
       _onDialogClosed: function(event) {
         if (history.state.isDialog) {
           window.history.back();
         }
+      },
+      _showCarpool: function(response) {
+        return response == 'yes' || response == 'maybe';
       }
     });
   </script>
