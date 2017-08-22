@@ -46,10 +46,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </firebase-document>
 
     <paper-icon-item>
-      <template is="dom-if" if="{{!_user.photoURL}}">
+      <template is="dom-if" if="[[!_hasPhotoUrl(_user)]]">
         <iron-icon id="profile" icon="social:person" item-icon></iron-icon>
       </template>
-      <template is="dom-if" if="{{_user.photoURL}}">
+      <template is="dom-if" if="[[_hasPhotoUrl(_user)]]">
         <img id="profile" class="profile" src="[[_user.photoURL]]" item-icon>
         </img>
       </template>
@@ -76,6 +76,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           computed: '_computeBadgeIcon(rsvp)'
         }
       },
+      _hasPhotoUrl: function(user) {
+        if (!user.photoURL) {
+          return false;
+        }
+
+        // Facebook profile photo URLs expire.
+        if (user.photoURL.startsWith('https://scontent.xx.fbcdn.net/')) {
+          return false;
+        }
+
+        return true;
+      },
       _computeBadgeIcon: function(rsvp) {
         switch (rsvp.carpool) {
           case 'drive':
@@ -87,5 +99,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       }
     });
+
+    // Polyfill for String.prototype.startsWith().
+    if (!String.prototype.startsWith) {
+      String.prototype.startsWith = function(searchString, position) {
+        return this.substr(position || 0, searchString.length) === searchString;
+      };
+    }
   </script>
 </dom-module>

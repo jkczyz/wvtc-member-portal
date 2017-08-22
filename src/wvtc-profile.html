@@ -83,10 +83,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <p id="profile-membership">[[_formatMembership(membership)]]</p>
           </div>
           <div id="profile-image">
-            <template is="dom-if" if="{{!user.photoURL}}">
+            <template is="dom-if" if="[[!_hasPhotoUrl(user)]]">
               <iron-icon icon="account-circle"></iron-icon>
             </template>
-            <template is="dom-if" if="{{user.photoURL}}">
+            <template is="dom-if" if="[[_hasPhotoUrl(user)]]">
               <iron-image src$="{{user.photoURL}}" sizing="cover"></iron-image>
             </template>
           </div>
@@ -135,10 +135,29 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _isActiveMember: function(membership) {
         return !!membership.paidOn;
       },
+      _hasPhotoUrl: function(user) {
+        if (!user.photoURL) {
+          return false;
+        }
+
+        // Facebook profile photo URLs expire.
+        if (user.photoURL.startsWith('https://scontent.xx.fbcdn.net/')) {
+          return false;
+        }
+
+        return true;
+      },
       _openToast: function() {
         this.$.toast.fitInto = this.$['profile-content'];
         this.$.toast.open();
       }
     });
+
+    // Polyfill for String.prototype.startsWith().
+    if (!String.prototype.startsWith) {
+      String.prototype.startsWith = function(searchString, position) {
+        return this.substr(position || 0, searchString.length) === searchString;
+      };
+    }
   </script>
 </dom-module>
