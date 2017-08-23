@@ -10,35 +10,16 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 
-<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../bower_components/iron-icons/maps-icons.html">
-<link rel="import" href="../bower_components/iron-icons/social-icons.html">
-<link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../bower_components/paper-badge/paper-badge.html">
 <link rel="import" href="../bower_components/paper-item/paper-icon-item.html">
 <link rel="import" href="../bower_components/paper-item/paper-item-body.html">
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-document.html">
-<link rel="import" href="shared-styles.html">
+<link rel="import" href="wvtc-profile-image.html">
 
 <dom-module id="wvtc-event-rsvp">
   <template>
-    <style include="shared-styles">
-      iron-icon {
-        --iron-icon-width: 40px;
-        --iron-icon-height: 40px;
-        --iron-icon: {
-          color: black;
-          opacity: var(--dark-secondary-opacity);
-        };
-      }
-      .profile {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-      }
-    </style>
-
     <firebase-document
         app-name="wvtc"
         path="/users/[[uid]]"
@@ -46,23 +27,29 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </firebase-document>
 
     <paper-icon-item>
-      <template is="dom-if" if="[[!_hasPhotoUrl(_user)]]">
-        <iron-icon id="profile" icon="social:person" item-icon></iron-icon>
-      </template>
-      <template is="dom-if" if="[[_hasPhotoUrl(_user)]]">
-        <img id="profile" class="profile" src="[[_user.photoURL]]" item-icon>
-        </img>
-      </template>
+      <wvtc-profile-image
+          id="profile-image"
+          user="{{_user}}"
+          item-icon>
+      </wvtc-profile-image>
       <paper-badge
-          for="profile"
-          icon="[[_badgeIcon]]"
-          hidden$="[[!_badgeIcon]]">
+          for="profile-image"
+          label="can drive"
+          icon="maps:directions-car"
+          hidden$="[[!_canDrive(rsvp)]]">
+      </paper-badge>
+      <paper-badge
+          for="profile-image"
+          label="needs ride"
+          icon="maps:directions-walk"
+          hidden$="[[!_needsRide(rsvp)]]">
       </paper-badge>
       <paper-item-body two-line>
         <div>[[_user.displayName]]</div>
         <div secondary>[[_user.email]]</div>
       </paper-item-body>
     </paper-icon-item>
+
   </template>
 
   <script>
@@ -70,11 +57,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       is: 'wvtc-event-rsvp',
       properties: {
         uid: String,
-        rsvp: Object,
-        _badgeIcon: {
-          type: String,
-          computed: '_computeBadgeIcon(rsvp)'
-        }
+        rsvp: Object
       },
       _hasPhotoUrl: function(user) {
         if (!user.photoURL) {
@@ -88,15 +71,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         return true;
       },
-      _computeBadgeIcon: function(rsvp) {
-        switch (rsvp.carpool) {
-          case 'drive':
-            return 'maps:directions-car';
-          case 'ride':
-            return 'maps:directions-walk';
-          default:
-            return '';
-        }
+      _canDrive: function(rsvp) {
+        return rsvp.carpool == 'drive';
+      },
+      _needsRide: function(rsvp) {
+        return rsvp.carpool == 'ride';
       }
     });
 
