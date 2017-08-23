@@ -59,18 +59,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         uid: String,
         rsvp: Object
       },
-      _hasPhotoUrl: function(user) {
-        if (!user.photoURL) {
-          return false;
-        }
-
-        // Facebook profile photo URLs expire.
-        if (user.photoURL.startsWith('https://scontent.xx.fbcdn.net/')) {
-          return false;
-        }
-
-        return true;
-      },
       _canDrive: function(rsvp) {
         return rsvp.carpool == 'drive';
       },
@@ -78,12 +66,5 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         return rsvp.carpool == 'ride';
       }
     });
-
-    // Polyfill for String.prototype.startsWith().
-    if (!String.prototype.startsWith) {
-      String.prototype.startsWith = function(searchString, position) {
-        return this.substr(position || 0, searchString.length) === searchString;
-      };
-    }
   </script>
 </dom-module>
