@@ -93,7 +93,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
       _amountOwed: function(requests) {
         var isOwed = function(request) {
-          return request.status == 'Pending' || request.status == 'Verified';
+          return request.status == 'Verified';
         };
         var toAmount = function(request) {
           return request.amount;
@@ -105,7 +105,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         var amountOwed = requests.filter(isOwed)
                                  .map(toAmount)
                                  .reduce(sumAmounts, 0);
-        return amountOwed == 0 ? '' : '$' + (amountOwed / 100);
+        return '$' + (amountOwed / 100);
       },
       toggleOpened: function() {
         this.opened = !this.opened;
