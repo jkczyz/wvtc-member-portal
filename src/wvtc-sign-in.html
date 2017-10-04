@@ -10,6 +10,7 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 
+<link rel="import" href="../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-app.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-auth.html">
@@ -36,24 +37,45 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         signed-in="{{_authSignedIn}}"
         on-error="handleError">
     </firebase-auth>
+
     <firebase-document
         id="user"
         app-name="wvtc"
         path="/users/[[user.uid]]"
-        data="{{userRecord}}">
+        data="{{firebaseUserRecord}}">
     </firebase-document>
+    <app-indexeddb-mirror
+        key="/users/[[user.uid]]"
+        session="{{user.uid}}"
+        data="{{firebaseUserRecord}}"
+        persisted-data="{{userRecord}}">
+    </app-indexeddb-mirror>
+
     <firebase-document
         id="membership"
         app-name="wvtc"
         path="/members/all/[[user.uid]]"
-        data="{{membership}}">
+        data="{{firebaseMembership}}">
     </firebase-document>
+    <app-indexeddb-mirror
+        key="/members/all/[[user.uid]]"
+        session="{{user.uid}}"
+        data="{{firebaseMembership}}"
+        persisted-data="{{membership}}">
+    </app-indexeddb-mirror>
+
     <firebase-document
         id="board"
         app-name="wvtc"
         path="/board/2017/[[user.uid]]"
-        data="{{_board}}">
+        data="{{_firebaseBoard}}">
     </firebase-document>
+    <app-indexeddb-mirror
+        key="/board/2017/[[user.uid]]"
+        session="{{user.uid}}"
+        data="{{_firebaseBoard}}"
+        persisted-data="{{_board}}">
+    </app-indexeddb-mirror>
 
     <div class="wvtc-panel">
       <div id="firebase-auth-ui"></div>
