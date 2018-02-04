@@ -1,0 +1,78 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors.
+Copyright (c) 2018 West Valley Track Club, Inc.
+All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<dom-module id="wvtc-member">
+  <script>
+    Polymer({
+      is: 'wvtc-member',
+      properties: {
+        membership: Object,
+        isMember: {
+          type: Boolean,
+          computed: '_computeIsMember(membership)',
+          notify: true
+        },
+        isLifetimeMember: {
+          type: Boolean,
+          computed: '_computeIsLifetimeMember(membership, isMember)',
+          notify: true
+        },
+        isActive: {
+          type: Boolean,
+          computed: '_computeIsActive(membership, isMember, isLifetimeMember)',
+          notify: true
+        },
+        formattedMembership: {
+          type: String,
+          computed: '_computeFormattedMembership(isMember, isLifetimeMember, isActive)',
+          notify: true
+        }
+      },
+      _computeIsMember: function(membership) {
+        return !!membership && !!membership.paidOn;
+      },
+      _computeIsLifetimeMember: function(membership, isMember) {
+        return isMember && membership.year == 'lifetime';
+      },
+      _computeIsActive: function(membership, isMember, isLifetimeMember) {
+        if (!isMember) {
+          return false;
+        }
+
+        if (isLifetimeMember) {
+          return true;
+        }
+
+        var now = new Date();
+        var duesYear = now.getFullYear();
+        return membership.year >= duesYear;
+      },
+      _computeFormattedMembership: function(isMember, isLifetimeMember, isActive) {
+        if (!isMember) {
+          return 'Non-member';
+        }
+
+        if (!isActive) {
+          return 'Inactive Member';
+        }
+
+        if (isLifetimeMember) {
+          return 'Lifetime Member';
+        }
+
+        return 'Member';
+      }
+    });
+  </script>
+</dom-module>

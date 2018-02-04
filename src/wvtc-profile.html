@@ -17,6 +17,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="shared-styles.html">
+<link rel="import" href="wvtc-member.html">
 
 <dom-module id="wvtc-profile">
   <template>
@@ -74,13 +75,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
+    <wvtc-member
+        membership="[[membership]]"
+        is-active="{{isActiveMember}}"
+        formatted-membership="{{formattedMembership}}">
+    </wvtc-member>
+    
     <div class="wvtc-panel">
       <paper-card class="wvtc-card">
         <div id="profile-content">
           <div class="card-content">
             <div id="profile-title">{{user.displayName}}</div>
             <div id="profile-subtitle">{{user.email}}</div>
-            <p id="profile-membership">[[_formatMembership(membership)]]</p>
+            <p id="profile-membership">{{formattedMembership}}</p>
           </div>
           <div id="profile-image">
             <template is="dom-if" if="[[!_hasPhotoUrl(user)]]">
@@ -98,8 +105,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               always-on-top>
           </paper-toast>
           <paper-button on-tap="_openToast">Edit Profile</paper-button>
-          <a href="/membership" hidden$="{{_isActiveMember(membership)}}">
-            <paper-button id="profile-join-club">Join Club</paper-button>
+          <a href="/membership" hidden$="{{isActiveMember}}">
+            <paper-button id="profile-join-club">Pay Dues</paper-button>
           </a>
         </div>
       </paper-card>
@@ -116,24 +123,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         membership: {
           type: Object,
         }
-      },
-      _formatMembership: function(membership) {
-        if (Object.keys(membership).length == 0) {
-          return 'Non-Member / Unknown';
-        }
-
-        if (!membership.paidOn) {
-          return 'Inactive Member';
-        }
-
-        if (membership.year == 'lifetime') {
-          return 'Lifetime Member';
-        }
-
-        return 'Member';
-      },
-      _isActiveMember: function(membership) {
-        return !!membership.paidOn;
       },
       _hasPhotoUrl: function(user) {
         if (!user.photoURL) {
