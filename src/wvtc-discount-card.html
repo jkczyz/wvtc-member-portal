@@ -15,6 +15,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-document.html">
 <link rel="import" href="shared-styles.html">
+<link rel="import" href="wvtc-member.html">
 
 <dom-module id="wvtc-discount-card">
   <template>
@@ -37,10 +38,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         data="{{code}}">
     </firebase-document>
 
+    <wvtc-member
+        membership="[[membership]]"
+        is-active="{{isActiveMember}}">
+    </wvtc-member>
+
     <paper-card id="card" class="wvtc-card" image="[[logo]]">
       <div class="card-content">
         <p>[[summary]]</p>
-        <p hidden$="[[!_isActiveMember(membership)]]">
+        <p hidden$="{{!isActiveMember}}">
           <template is="dom-if" if="{{key}}">
             <em>Use discount code <strong>[[code]]</strong> at checkout</em>
           </template>
@@ -67,10 +73,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         mention: Boolean,
         logo: String,
         page: String
-      },
-      _isActiveMember: function(membership) {
-        return !!membership.paidOn;
-      },
+      }
     });
   </script>
 </dom-module>

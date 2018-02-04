@@ -104,13 +104,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           });
         });
 
-        test('Unknown status given when membership is unknown', function(done) {
+        test('Non-member status given when membership is unknown', function(done) {
           profile.set('membership', {});
           flush(function() {
             var status = profile.$['profile-membership'];
             var joinClub = profile.$['profile-join-club'];
 
-            expect(status.textContent).to.be.equal('Non-Member / Unknown');
+            expect(status.textContent).to.be.equal('Non-Member');
             expect(joinClub).to.be.visible;
             done();
           });

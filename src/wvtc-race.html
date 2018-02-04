@@ -20,6 +20,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="wvtc-event-attendance.html">
 <link rel="import" href="wvtc-event-place.html">
 <link rel="import" href="wvtc-event-time.html">
+<link rel="import" href="wvtc-member.html">
 
 <dom-module id="wvtc-race">
   <template>
@@ -33,6 +34,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         opacity: var(--dark-secondary-opacity);
       }
     </style>
+
+    <wvtc-member
+        membership="[[membership]]"
+        is-active="{{isActiveMember}}">
+    </wvtc-member>
 
     <paper-item>
       <paper-item-body two-line>
@@ -53,7 +59,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </wvtc-event-time>
         <wvtc-event-place place="[[race.event.place]]"></wvtc-event-place>
         <wvtc-event-attendance
-            hidden$="[[!_isActiveMember(membership)]]"
+            hidden$="{{!isActiveMember}}"
             name="[[race.name]]"
             uid="[[uid]]"
             eid="[[eid]]">
@@ -85,9 +91,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
       _formatDate: function(date, opened) {
         return opened ? '' : moment(date).format('dddd, MMMM D');
-      },
-      _isActiveMember: function(membership) {
-        return !!membership.paidOn;
       }
     });
   </script>

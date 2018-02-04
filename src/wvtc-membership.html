@@ -13,6 +13,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="shared-styles.html">
+<link rel="import" href="wvtc-member.html">
 <link rel="import" href="wvtc-registration.html">
 <link rel="import" href="wvtc-usatf-card.html">
 
@@ -35,6 +36,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
+    <wvtc-member
+        membership="[[membership]]"
+        is-active="{{hasPaidDues}}">
+    </wvtc-member>
+
     <div class="wvtc-panel">
       <h2 class="wvtc-subheader">Club membership</h2>
       <paper-card
@@ -43,13 +49,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           image="../images/logos/wvtc.png"
           role="listbox">
         <div class="card-content">
-          <template is="dom-if" if="{{hasPaidDues(membership)}}">
+          <template is="dom-if" if="{{hasPaidDues}}">
             <div class="no-list">
               <p>All paid up — your club membership is current</p>
               <p><em>Dues paid on [[_formatDate(membership.paidOn)]]</em></p>
             </div>
           </template>
-          <template is="dom-if" if="{{!hasPaidDues(membership)}}">
+          <template is="dom-if" if="{{!hasPaidDues}}">
             <wvtc-registration
                 id="individual-registration"
                 class="wvtc-item"
@@ -76,7 +82,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </wvtc-registration>
           </template>
         </div>
-        <div class="card-actions" hidden$="{{!hasPaidDues(membership)}}">
+        <div class="card-actions" hidden$="{{!hasPaidDues}}">
           <a href="/benefits">
             <paper-button>Benefits</paper-button>
           </a>
@@ -99,23 +105,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           value: function() {
             return [
               {
-                type: "New",
-                sku: 'new_2017_individual_membership',
+                type: 'New',
+                sku: 'new_2018_individual_membership',
                 price: 6000
               },
               {
-                type: "Renewal",
-                sku: 'renewal_2017_individual_membership',
+                type: 'Renewal',
+                sku: 'renewal_2018_individual_membership',
                 price: 5000
               },
               {
-                type: "Student",
-                sku: 'student_2017_individual_membership',
+                type: 'Student',
+                sku: 'student_2018_individual_membership',
                 price: 2000
               },
               {
-                type: "Non-competitor",
-                sku: 'non-competitor_2017_individual_membership',
+                type: 'Non-competitor',
+                sku: 'non-competitor_2018_individual_membership',
                 price: 2000
               }
             ];
@@ -126,13 +132,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           value: function() {
             return [
               {
-                type: "New",
-                sku: 'new_2017_family_membership',
+                type: 'New',
+                sku: 'new_2018_family_membership',
                 price: 7000
               },
               {
-                type: "Renewal",
-                sku: 'renewal_2017_family_membership',
+                type: 'Renewal',
+                sku: 'renewal_2018_family_membership',
                 price: 6500
               }
             ];
@@ -143,16 +149,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           value: function() {
             return [
               {
-                type: "New",
+                type: 'New',
                 sku: 'new_lifetime_membership',
                 price: 50000
               }
             ];
           }
         }
-      },
-      hasPaidDues: function(membership) {
-        return !!membership && !!membership.paidOn;
       },
       _formatDate: function(date) {
         return moment(date).format('MMMM D, YYYY');
