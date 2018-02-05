@@ -1,6 +1,6 @@
 {
   "rules": {
-    ".read": "root.child('members/all/' + auth.uid + '/year').val().matches(/^2017|lifetime$/)",
+    ".read": "root.child('members/all/' + auth.uid + '/year').val().matches(/^2017|2018|lifetime$/)",
     "users": {
       "$uid": {
         ".read": "$uid === auth.uid",
@@ -20,7 +20,7 @@
       ".write": false
     },
     "attendance": {
-      ".read": "root.child('members/all/' + auth.uid + '/year').val().matches(/^2017|lifetime$/)",
+      ".read": "root.child('members/all/' + auth.uid + '/year').val().matches(/^2017|2018|lifetime$/)",
       ".write": false,
       "$year": {
         "$eid": {
@@ -32,7 +32,7 @@
       }
     },
     "benefits": {
-      ".read": "root.child('members/all/' + auth.uid + '/year').val().matches(/^2017|lifetime$/)",
+      ".read": "root.child('members/all/' + auth.uid + '/year').val().matches(/^2018|lifetime$/)",
       ".write": false
     },
     "reimbursements": {
