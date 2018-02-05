@@ -20,17 +20,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         membership: Object,
         isMember: {
           type: Boolean,
-          computed: '_computeIsMember(membership)',
+          computed: '_computeIsMember(membership.*)',
           notify: true
         },
         isLifetimeMember: {
           type: Boolean,
-          computed: '_computeIsLifetimeMember(membership, isMember)',
+          computed: '_computeIsLifetimeMember(membership.*, isMember)',
           notify: true
         },
         isActive: {
           type: Boolean,
-          computed: '_computeIsActive(membership, isMember, isLifetimeMember)',
+          computed: '_computeIsActive(membership.*, isMember, isLifetimeMember)',
           notify: true
         },
         formattedMembership: {
@@ -40,10 +40,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       },
       _computeIsMember: function(membership) {
-        return !!membership && !!membership.paidOn;
+        return !!membership && !!membership.base.paidOn;
       },
       _computeIsLifetimeMember: function(membership, isMember) {
-        return isMember && membership.year == 'lifetime';
+        return isMember && membership.base.year == 'lifetime';
       },
       _computeIsActive: function(membership, isMember, isLifetimeMember) {
         if (!isMember) {
@@ -56,7 +56,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         var now = new Date();
         var duesYear = now.getFullYear();
-        return membership.year >= duesYear;
+        return membership.base.year >= duesYear;
       },
       _computeFormattedMembership: function(isMember, isLifetimeMember, isActive) {
         if (!isMember) {
