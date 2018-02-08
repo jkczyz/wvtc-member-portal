@@ -10,70 +10,30 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 
-<link rel="import" href="../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
-<link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="../bower_components/polymerfire/firebase-document.html">
 <link rel="import" href="shared-styles.html">
-<link rel="import" href="wvtc-race.html">
+<link rel="import" href="wvtc-racing-schedule.html">
 
 <dom-module id="wvtc-racing">
   <template>
     <style include="shared-styles"></style>
 
-    <firebase-document
-        app-name="wvtc"
-        path="/races/2017/road"
-        data="{{firebaseRoadRaces}}">
-    </firebase-document>
-    <app-indexeddb-mirror
-        key="races/2017/road"
-        session="{{user.uid}}"
-        data="{{firebaseRoadRaces}}"
-        persisted-data="{{roadRaces}}">
-    </app-indexeddb-mirror>
-
-    <firebase-document
-        app-name="wvtc"
-        path="/races/2017/xc"
-        data="{{firebaseXcRaces}}">
-    </firebase-document>
-    <app-indexeddb-mirror
-        key="races/2017/xc"
-        session="{{user.uid}}"
-        data="{{firebaseXcRaces}}"
-        persisted-data="{{xcRaces}}">
-    </app-indexeddb-mirror>
-
     <div class="wvtc-panel">
-      <h2 class="wvtc-subheader">2017 PA USATF Cross Country</h2>
-      <paper-card class="wvtc-card wvtc-item-list" role="listbox">
-        <div class="card-content">
-          <template is="dom-repeat" items="{{_toArray(xcRaces)}}">
-            <wvtc-race
-                class="wvtc-item"
-                uid="{{user.uid}}"
-                eid="{{item.eid}}"
-                race="{{item.race}}"
-                membership="[[membership]]">
-            </wvtc-race>
-          </template>
-        </div>
-      </paper-card>
-      <h2 class="wvtc-subheader">2017 PA USATF Road Racing</h2>
-      <paper-card class="wvtc-card wvtc-item-list" role="listbox">
-        <div class="card-content">
-          <template is="dom-repeat" items="{{_toArray(roadRaces)}}">
-            <wvtc-race
-                class="wvtc-item"
-                uid="{{user.uid}}"
-                eid="{{item.eid}}"
-                race="{{item.race}}"
-                membership="[[membership]]">
-            </wvtc-race>
-          </template>
-        </div>
-      </paper-card>
+      <h2 class="wvtc-subheader">[[year]] PA USATF Cross Country</h2>
+      <wvtc-racing-schedule
+          user="[[user]]"
+          membership=[[membership]]
+          year="[[year]]"
+          type="xc">
+      </wvtc-racing-schedule>
+
+      <h2 class="wvtc-subheader">[[year]] PA USATF Road Racing</h2>
+      <wvtc-racing-schedule
+          user="[[user]]"
+          membership=[[membership]]
+          year="[[year]]"
+          type="road">
+      </wvtc-racing-schedule>
     </div>
   </template>
 
@@ -82,17 +42,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       is: 'wvtc-racing',
       properties: {
         user: Object,
-        membership: Object
-      },
-      _toArray: function(object) {
-        var toKeyValuePair = function(key) {
-          return {
-            eid: key,
-            race: object[key]
-          };
-        };
-
-        return Object.keys(object).map(toKeyValuePair);
+        membership: Object,
+        year: {
+          type: Number,
+          value: function() {
+            var now = new Date();
+            return now.getFullYear();
+          }
+        }
       }
     });
   </script>
