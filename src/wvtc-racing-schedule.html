@@ -1,0 +1,76 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors.
+Copyright (c) 2018 West Valley Track Club, Inc.
+All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-spinner/paper-spinner-lite.html">
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-query.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="wvtc-race.html">
+
+<dom-module id="wvtc-racing-schedule">
+  <template>
+    <style include="shared-styles"></style>
+
+    <firebase-query
+        app-name="wvtc"
+        path="/races/[[year]]/[[type]]"
+        data="{{firebaseRaces}}">
+    </firebase-query>
+    <app-indexeddb-mirror
+        key="races/[[year]]/[[type]]"
+        session="{{user.uid}}"
+        data="{{firebaseRaces}}"
+        persisted-data="{{races}}">
+    </app-indexeddb-mirror>
+
+    <template is="dom-if" if="[[isLoading]]">
+      <paper-spinner-lite active></paper-spinner-lite>
+    </template>
+
+    <template is="dom-if" if="[[!isLoading]]">
+      <paper-card class="wvtc-card wvtc-item-list" role="listbox">
+        <div class="card-content">
+          <template is="dom-repeat" items="{{races}}">
+            <wvtc-race
+                class="wvtc-item"
+                uid="{{user.uid}}"
+                eid="{{item.$key}}"
+                race="{{item}}"
+                membership="[[membership]]">
+            </wvtc-race>
+          </template>
+        </div>
+      </paper-card>
+    </template>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'wvtc-racing-schedule',
+      properties: {
+        user: Object,
+        membership: Object,
+        year: Number,
+        type: String,
+        isLoading: {
+          type: Boolean,
+          computed: '_computeIsLoading(races.length)'
+        }
+      },
+      _computeIsLoading: function(numRaces) {
+        return numRaces == 0;
+      }
+    });
+  </script>
+</dom-module>
