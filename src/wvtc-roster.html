@@ -106,7 +106,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       },
       _computeUserRecords: function(users, members, lifetimeMembers) {
-        console.log(lifetimeMembers);
         var isMember = function(user) {
           return members.base.hasOwnProperty(user.$key) ||
                  lifetimeMembers.base.hasOwnProperty(user.$key);
