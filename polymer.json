@@ -9,6 +9,7 @@
     "src/wvtc-membership.html",
     "src/wvtc-profile.html",
     "src/wvtc-racing.html",
+    "src/wvtc-roster.html",
     "src/wvtc-sign-in.html",
     "src/wvtc-upcoming-events.html"
   ],
