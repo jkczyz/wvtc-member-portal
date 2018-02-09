@@ -67,11 +67,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <firebase-document
         id="board"
         app-name="wvtc"
-        path="/board/2017/[[user.uid]]"
+        path="/board/[[_year]]/[[user.uid]]"
         data="{{_firebaseBoard}}">
     </firebase-document>
     <app-indexeddb-mirror
-        key="/board/2017/[[user.uid]]"
+        key="/board/[[_year]]/[[user.uid]]"
         session="{{user.uid}}"
         data="{{_firebaseBoard}}"
         persisted-data="{{_board}}">
@@ -116,7 +116,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           notify: true
         },
         _authSignedIn: Boolean,
-        _board: Boolean
+        _board: Boolean,
+        _year: {
+          type: Number,
+          value: function() {
+            var now = new Date();
+            return now.getFullYear();
+          }
+        }
       },
       _computeIsAdmin: function(board) {
         return !this.$.board.valueIsEmpty(board) && !!board;
