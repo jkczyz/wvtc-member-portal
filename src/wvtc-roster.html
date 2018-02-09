@@ -48,6 +48,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         persisted-data="{{members}}">
     </app-indexeddb-mirror>
 
+    <firebase-document
+        app-name="wvtc"
+        path="/members/lifetime"
+        data="{{firebaseLifetimeMembers}}">
+    </firebase-document>
+    <app-indexeddb-mirror
+        key="members/lifetime"
+        session="{{user.uid}}"
+        data="{{firebaseLifetimeMembers}}"
+        persisted-data="{{lifetimeMembers}}">
+    </app-indexeddb-mirror>
+
     <div class="wvtc-panel">
       <h2 class="wvtc-subheader">
         [[year]] WVTC Roster ([[userRecords.length]] members)
@@ -76,9 +88,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         user: Object,
         users: Array,
         members: Object,
+        lifetimeMembers: Object,
         userRecords: {
           type: Array,
-          computed: '_computeUserRecords(users.*, members.*)'
+          computed: '_computeUserRecords(users.*, members.*, lifetimeMembers.*)'
         },
         year: {
           type: Number,
@@ -89,12 +102,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         },
         isLoading: {
           type: Boolean,
-          computed: '_computeIsLoading(users.length, members)'
+          computed: '_computeIsLoading(users.length, members, lifetimeMembers)'
         }
       },
-      _computeUserRecords: function(users, members) {
+      _computeUserRecords: function(users, members, lifetimeMembers) {
+        console.log(lifetimeMembers);
         var isMember = function(user) {
-          return members.base.hasOwnProperty(user.$key);
+          return members.base.hasOwnProperty(user.$key) ||
+                 lifetimeMembers.base.hasOwnProperty(user.$key);
         };
         var toMinimalRecord = function(user) {
           return {
@@ -117,8 +132,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                          .map(toMinimalRecord)
                          .sort(compareByName);
       },
-      _computeIsLoading: function(numUsers, members) {
-        return numUsers == 0 || this.$.members.valueIsEmpty(members);
+      _computeIsLoading: function(numUsers, members, lifetimeMembers) {
+        return numUsers == 0 ||
+               this.$.members.valueIsEmpty(members) ||
+               this.$.members.valueIsEmpty(lifetimeMembers);
       }
     });
   </script>
