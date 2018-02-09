@@ -23,6 +23,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-icons/editor-icons.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/iron-icons/maps-icons.html">
+<link rel="import" href="../bower_components/iron-icons/social-icons.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animated-pages.html">
 <link rel="import" href="../bower_components/neon-animation/animations/fade-in-animation.html">
@@ -172,6 +173,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <iron-icon icon="communication:mail-outline"></iron-icon>
             <span>Communication</span>
           </a>
+          <a name="roster" href="/roster" drawer-toggle>
+            <div hidden$="[[!_isAdmin]]">
+              <iron-icon icon="social:group"></iron-icon>
+              <span>Roster</span>
+            </div>
+          </a>
           <a name="racing" href="/racing" drawer-toggle>
             <iron-icon icon="maps:directions-run"></iron-icon>
             <span>Racing</span>
@@ -235,6 +242,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               membership="[[membership]]">
           </wvtc-membership>
           <wvtc-communication name="communication"></wvtc-communication>
+          <wvtc-roster name="roster" user="[[user]]"></wvtc-roster>
           <wvtc-racing
               name="racing"
               user="[[user]]"

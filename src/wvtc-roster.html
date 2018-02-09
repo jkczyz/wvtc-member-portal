@@ -1,0 +1,125 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors.
+Copyright (c) 2018 West Valley Track Club, Inc.
+All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-spinner/paper-spinner-lite.html">
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-document.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-query.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="wvtc-roster-record.html">
+
+<dom-module id="wvtc-roster">
+  <template>
+    <style include="shared-styles"></style>
+
+    <firebase-query
+        app-name="wvtc"
+        path="/users"
+        data="{{firebaseUsers}}">
+    </firebase-query>
+    <app-indexeddb-mirror
+        key="users"
+        session="{{user.uid}}"
+        data="{{firebaseUsers}}"
+        persisted-data="{{users}}">
+    </app-indexeddb-mirror>
+
+    <firebase-document
+        id="members"
+        app-name="wvtc"
+        path="/members/[[year]]"
+        data="{{firebaseMembers}}">
+    </firebase-document>
+    <app-indexeddb-mirror
+        key="members/[[year]]"
+        session="{{user.uid}}"
+        data="{{firebaseMembers}}"
+        persisted-data="{{members}}">
+    </app-indexeddb-mirror>
+
+    <div class="wvtc-panel">
+      <h2 class="wvtc-subheader">
+        [[year]] WVTC Roster ([[userRecords.length]] members)
+      </h2>
+
+      <template is="dom-if" if="[[isLoading]]">
+        <paper-spinner-lite active></paper-spinner-lite>
+      </template>
+
+      <template is="dom-if" if="[[!isLoading]]">
+        <paper-card class="wvtc-card wvtc-item-list" role="listbox">
+          <div class="card-content">
+            <template is="dom-repeat" items="{{userRecords}}">
+              <wvtc-roster-record user="{{item}}"></wvtc-roster-record>
+            </template>
+          </div>
+        </paper-card>
+      </template>
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'wvtc-roster',
+      properties: {
+        user: Object,
+        users: Array,
+        members: Object,
+        userRecords: {
+          type: Array,
+          computed: '_computeUserRecords(users.*, members.*)'
+        },
+        year: {
+          type: Number,
+          value: function() {
+            var now = new Date();
+            return now.getFullYear();
+          }
+        },
+        isLoading: {
+          type: Boolean,
+          computed: '_computeIsLoading(users.length, members)'
+        }
+      },
+      _computeUserRecords: function(users, members) {
+        var isMember = function(user) {
+          return members.base.hasOwnProperty(user.$key);
+        };
+        var toMinimalRecord = function(user) {
+          return {
+            displayName: user.displayName,
+            email: user.email,
+            photoURL: user.photoURL
+          }
+        };
+        var compareByName = function(user1, user2) {
+          if (user1.displayName < user2.displayName) {
+            return -1;
+          }
+          if (user1.displayName > user2.displayName) {
+            return 1;
+          }
+          return 0;
+        };
+
+        return users.base.filter(isMember)
+                         .map(toMinimalRecord)
+                         .sort(compareByName);
+      },
+      _computeIsLoading: function(numUsers, members) {
+        return numUsers == 0 || this.$.members.valueIsEmpty(members);
+      }
+    });
+  </script>
+</dom-module>
