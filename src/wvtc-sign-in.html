@@ -110,6 +110,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           observer: '_signedInChanged',
           notify: true
         },
+        isReady: {
+          type: Boolean,
+          value: false,
+          notify: true
+        },
         userRecord: {
           type: Object,
           observer: '_userRecordChanged',
@@ -125,6 +130,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           }
         }
       },
+      observers: [
+        '_updateIsReady(statusKnown, signedIn, firebaseMembership)'
+      ],
       _computeIsAdmin: function(board) {
         return !this.$.board.valueIsEmpty(board) && !!board;
       },
@@ -133,6 +141,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
       _signedInChanged: function() {
         if (!this.signedIn) {
+          this.isReady = false;
           this._showSignIn();
         }
       },
@@ -148,6 +157,31 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               .catch(function(error) {
                 throw error;
               });
+        }
+      },
+      // This hack is a workaound for the following issue:
+      //
+      // https://github.com/firebase/polymerfire/issues/33
+      //
+      // Having the following feature would make the code cleaner:
+      //
+      // https://github.com/firebase/polymerfire/issues/290
+      _updateIsReady: function(statusKnown, signedIn, firebaseMembership) {
+        if (!statusKnown || !signedIn || this.isReady) {
+          return;
+        }
+
+        if (!this.$.membership.ref) {
+          // The observer is never called again when the ref is null, but the
+          // data seems to be ready.
+          this.isReady = true;
+        } else {
+          // Asynchronously update the ready state so incorrect member data
+          // is not momentarily shown.
+          var self = this;
+          this.$.membership.ref.once('value', function(snapshot) {
+            self.isReady = true;
+          });
         }
       },
       ready: function() {
