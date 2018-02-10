@@ -29,6 +29,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/neon-animation/animations/fade-in-animation.html">
 <link rel="import" href="../bower_components/neon-animation/animations/fade-out-animation.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-spinner/paper-spinner-lite.html">
 <link rel="import" href="../bower_components/paper-tooltip/paper-tooltip.html">
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="wvtc-icons.html">
@@ -127,6 +128,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         opacity: var(--dark-primary-opacity);
       }
 
+      .loading {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+
       .wvtc-content * {
         display: block;
 
@@ -214,6 +222,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           </app-toolbar>
         </app-header>
 
+        <template is="dom-if" if="[[_isLoading]]">
+          <div class="loading">
+            <paper-spinner-lite active></paper-spinner-lite>
+          </div>
+        </template>
+
         <neon-animated-pages
             class="wvtc-content"
             selected="[[page]]"
@@ -228,7 +242,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               membership="{{membership}}"
               is-admin="{{_isAdmin}}"
               status-known="{{_statusKnown}}"
-              signed-in="{{_signedIn}}">
+              signed-in="{{_signedIn}}"
+              is-ready="{{_isReady}}">
           </wvtc-sign-in>
           <wvtc-upcoming-events name="upcoming-events"></wvtc-upcoming-events>
           <wvtc-profile
@@ -273,23 +288,37 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         },
         _statusKnown: Boolean,
         _signedIn: Boolean,
+        _isReady: Boolean,
+        _isLoading: {
+          type: Boolean,
+          computed: '_computeIsLoading(_statusKnown, _signedIn, _isReady)'
+        },
         _isAdmin: Boolean
       },
 
       observers: [
-        '_routePageChanged(routeData.page, _statusKnown, _signedIn)'
+        '_routePageChanged(routeData.page, _statusKnown, _signedIn, _isReady)'
       ],
 
-      _routePageChanged: function(page, statusKnown, signedIn) {
+      _computeIsLoading: function(statusKnown, signedIn, isReady) {
+        return statusKnown && signedIn && !isReady;
+      },
+ 
+      _routePageChanged: function(page, statusKnown, signedIn, isReady) {
         if (!statusKnown) {
           return;
         }
 
-        if (signedIn) {
-          this.page = page || 'profile';
-        } else {
+        if (!signedIn) {
           this.page = 'sign-in';
+          return;
         }
+
+        if (!isReady) {
+          return;
+        }
+
+        this.page = page || 'profile';
 
         var drawer = this.$.drawer;
         if (!drawer.persistent) {
