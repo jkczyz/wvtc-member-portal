@@ -25,7 +25,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <firebase-query
         app-name="wvtc"
         path="/races/[[year]]/[[type]]"
-        data="{{firebaseRaces}}">
+        data="{{firebaseRaces}}"
+        order-by-child="event/start_time">
     </firebase-query>
     <app-indexeddb-mirror
         key="races/[[year]]/[[type]]"
