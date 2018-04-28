@@ -82,7 +82,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <firebase-document
         id="reimbursements"
         app-name="wvtc"
-        path="/reimbursements/2017/[[user.uid]]"
+        path="/reimbursements/[[year]]/[[user.uid]]"
         data="{{_reimbursements}}">
     </firebase-document>
 
@@ -90,7 +90,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <div class="card-content">
         <p>Members in good standing are eligible for PA race reimbursement</p>
         <p hidden$="[[!_isActiveMember(membership)]]">
-          <em>Deadlines to file requests are July 15 and <del>December 15</del> February 10</em>
+          <em>Deadlines to file requests are July 15 and December 15</em>
         </p>
         <div class="form" hidden$="[[!_isActiveMember(membership)]]">
           <paper-dropdown-menu class="races" label="Race">
@@ -117,7 +117,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             Request
           </paper-button>
         </div>
-        <wvtc-reimbursement-races races="{{_races}}"></wvtc-reimbursement-races>
+        <wvtc-reimbursement-races
+            races="{{_races}}"
+            year="[[year]]">
+        </wvtc-reimbursement-races>
         <wvtc-reimbursement-table
             hidden$="{{!_hasRequestedReimbursements(_reimbursements.*)}}"
             races={{_races}}
@@ -149,6 +152,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       properties: {
         user: Object,
         membership: Object,
+        year: {
+          type: Number,
+          value: function() {
+            var now = new Date();
+            return now.getFullYear();
+          }
+        },
         eligibleRaces: {
           type: Array,
           computed: '_computeEligibleRaces(_races, _reimbursements.*)'
