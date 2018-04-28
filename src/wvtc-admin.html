@@ -33,7 +33,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           class="wvtc-card wvtc-item-list"
           role="listbox">
         <div class="card-content">
-          <wvtc-reimbursement-races races="{{_races}}">
+          <wvtc-reimbursement-races
+              races="{{_races}}"
+              year="[[year]]">
           </wvtc-reimbursement-races>
           <template is="dom-repeat" items="{{requesters}}" as="uid">
             <wvtc-reimbursement-record
