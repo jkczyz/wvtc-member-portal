@@ -17,12 +17,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <template>
     <firebase-document
         app-name="wvtc"
-        path="/races/2017/road"
+        path="/races/[[year]]/road"
         data="{{_roadRaces}}">
     </firebase-document>
     <firebase-document
         app-name="wvtc"
-        path="/races/2017/xc"
+        path="/races/[[year]]/xc"
         data="{{_xcRaces}}">
     </firebase-document>
   </template>
@@ -37,6 +37,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           notify: true,
           readOnly: true
         },
+        year: Number,
         _xcRaces: Object,
         _roadRaces: Object
       },

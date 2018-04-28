@@ -25,7 +25,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <h2 class="wvtc-subheader">Race reimbursements</h2>
       <firebase-document
           app-name="wvtc"
-          path="/reimbursements/2017"
+          path="/reimbursements/[[year]]"
           data="{{_reimbursements}}">
       </firebase-document>
       <paper-card
@@ -53,6 +53,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       is: 'wvtc-admin',
       properties: {
         user: Object,
+        year: {
+          type: Number,
+          value: function() {
+            var now = new Date();
+            return now.getFullYear() - 1;
+          }
+        },
         requesters: {
           type: Array,
           computed: '_computeRequesters(_reimbursements)'
