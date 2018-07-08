@@ -62,7 +62,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             hidden$="{{!isActiveMember}}"
             name="[[race.name]]"
             uid="[[uid]]"
-            eid="[[eid]]">
+            eid="[[eid]]"
+            year="[[year]]">
         </wvtc-event-attendance>
       </div>
     </iron-collapse>
@@ -77,6 +78,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         eid: String,
         race: Object,
         membership: Object,
+        year: Number,
         opened: Boolean,
         _toggleIcon: {
           type: String,
