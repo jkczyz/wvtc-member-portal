@@ -76,17 +76,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <firebase-document
         app-name="wvtc"
-        path="/attendance/2017/[[eid]]"
+        path="/attendance/[[year]]/[[eid]]"
         data="{{_attendance}}">
     </firebase-document>
     <firebase-document
         app-name="wvtc"
-        path="/attendance/2017/[[eid]]/[[uid]]/response"
+        path="/attendance/[[year]]/[[eid]]/[[uid]]/response"
         data="{{_response}}">
     </firebase-document>
     <firebase-document
         app-name="wvtc"
-        path="/attendance/2017/[[eid]]/[[uid]]/carpool"
+        path="/attendance/[[year]]/[[eid]]/[[uid]]/carpool"
         data="{{_carpool}}">
     </firebase-document>
 
@@ -173,6 +173,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         name: String,
         uid: String,
         eid: String,
+        year: Number,
         yesRsvp: {
           type: Array,
           computed: '_computeYesRsvp(_attendance.*)'
