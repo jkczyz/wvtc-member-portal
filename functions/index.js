@@ -5,14 +5,13 @@ const stripe = require("stripe")("sk_test_Irhk77KavFhME0JraJhXVUQK");
 // CORS Express middleware to enable CORS Requests.
 const cors = require('cors');
 
-admin.initializeApp(functions.config().firebase);
+admin.initializeApp();
 
-exports.createUserRecord = functions.auth.user().onCreate(event => {
-  const user = event.data;
-  return admin.database().ref('users/' + user.uid).set({
-    displayName: user.displayName || null,
-    email: user.email || null,
-    photoURL: user.photoURL || null
+exports.createUserRecord = functions.auth.user().onCreate((userRecord, context) => {
+  return admin.database().ref('users/' + userRecord.uid).set({
+    displayName: userRecord.displayName || null,
+    email: userRecord.email || null,
+    photoURL: userRecord.photoURL || null
   });
 });
 
