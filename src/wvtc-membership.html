@@ -42,7 +42,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </wvtc-member>
 
     <div class="wvtc-panel">
-      <h2 class="wvtc-subheader">Club membership</h2>
+      <h2 class="wvtc-subheader">Club membership — [[year]]</h2>
       <paper-card
           id="card"
           class="wvtc-card wvtc-item-list"
@@ -51,7 +51,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <div class="card-content">
           <template is="dom-if" if="{{hasPaidDues}}">
             <div class="no-list">
-              <p>All paid up — your club membership is current</p>
+              <p>All paid up — your club membership is current for [[year]]</p>
               <p><em>Dues paid on [[_formatDate(membership.paidOn)]]</em></p>
             </div>
           </template>
@@ -100,49 +100,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       properties: {
         user: Object,
         membership: Object,
+        year: {
+          type: Number,
+          value: function() {
+            var now = new Date();
+            return now.getFullYear();
+          }
+        },
         individualOptions: {
           type: Array,
-          value: function() {
-            return [
-              {
-                type: 'New',
-                sku: 'new_2018_individual_membership',
-                price: 6000
-              },
-              {
-                type: 'Renewal',
-                sku: 'renewal_2018_individual_membership',
-                price: 5000
-              },
-              {
-                type: 'Student',
-                sku: 'student_2018_individual_membership',
-                price: 2000
-              },
-              {
-                type: 'Non-competitor',
-                sku: 'non-competitor_2018_individual_membership',
-                price: 2000
-              }
-            ];
-          }
+          computed: '_computeIndividualOptions(year)'
         },
         familyOptions: {
           type: Array,
-          value: function() {
-            return [
-              {
-                type: 'New',
-                sku: 'new_2018_family_membership',
-                price: 7000
-              },
-              {
-                type: 'Renewal',
-                sku: 'renewal_2018_family_membership',
-                price: 6500
-              }
-            ];
-          }
+          computed: '_computeFamilyOptions(year)'
         },
         lifetimeOptions: {
           type: Array,
@@ -156,6 +127,44 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             ];
           }
         }
+      },
+      _computeIndividualOptions: function(year) {
+        return [
+          {
+            type: 'New',
+            sku: 'new_' + year + '_individual_membership',
+            price: 6000
+          },
+          {
+            type: 'Renewal',
+            sku: 'renewal_' + year + '_individual_membership',
+            price: 5000
+          },
+          {
+            type: 'Student',
+            sku: 'student_' + year + '_individual_membership',
+            price: 2000
+          },
+          {
+            type: 'Non-competitor',
+            sku: 'non-competitor_' + year + '_individual_membership',
+            price: 2000
+          }
+        ];
+      },
+      _computeFamilyOptions: function(year) {
+        return [
+          {
+            type: 'New',
+            sku: 'new_' + year + '_family_membership',
+            price: 7000
+          },
+          {
+            type: 'Renewal',
+            sku: 'renewal_' + year + '_family_membership',
+            price: 6500
+          }
+        ];
       },
       _formatDate: function(date) {
         return moment(date).format('MMMM D, YYYY');
