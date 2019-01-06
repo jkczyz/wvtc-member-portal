@@ -155,8 +155,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         year: {
           type: Number,
           value: function() {
-            var now = new Date();
-            return now.getFullYear();
+            // TODO(jkczyz) Revert this once extended deadline has passed.
+            //var now = new Date();
+            //return now.getFullYear();
+            return 2018;
           }
         },
         eligibleRaces: {
