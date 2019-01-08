@@ -16,10 +16,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="wvtc-reimbursement-races.html">
 <link rel="import" href="wvtc-reimbursement-record.html">
+<link rel="import" href="wvtc-year-selector.html">
 
 <dom-module id="wvtc-admin">
   <template>
-    <style include="shared-styles"></style>
+    <style include="shared-styles">
+      .reimbursement-heading {
+        padding: 0 16px 16px;
+        @apply(--layout-horizontal);
+        @apply(--layout-baseline);
+        @apply(--layout-justified);
+      }
+      .reimbursement-summary {
+        flex: 3 3 auto;
+      }
+      .reimbursement-year {
+        flex: 1 1 80px;
+        @apply(--layout-horizontal);
+        @apply(--layout-end-justified);
+      }
+    </style>
 
     <div class="wvtc-panel">
       <h2 class="wvtc-subheader">Race reimbursements</h2>
@@ -33,6 +49,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           class="wvtc-card wvtc-item-list"
           role="listbox">
         <div class="card-content">
+          <div class="reimbursement-heading">
+            <div class="reimbursement-summary"></div>
+            <div class="reimbursement-year">
+              <wvtc-year-selector year="{{year}}"></wvtc-year-selector>
+            </div>
+          </div>
           <wvtc-reimbursement-races
               races="{{_races}}"
               year="[[year]]">
@@ -55,13 +77,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       is: 'wvtc-admin',
       properties: {
         user: Object,
-        year: {
-          type: Number,
-          value: function() {
-            var now = new Date();
-            return now.getFullYear();
-          }
-        },
         requesters: {
           type: Array,
           computed: '_computeRequesters(_reimbursements)'
