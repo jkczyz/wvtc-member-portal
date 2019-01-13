@@ -24,7 +24,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <style include="shared-styles">
       .reimbursement-heading {
         padding: 0 16px 0 0;
-        border-bottom: 1px solid var(--light-theme-divider-color);
         @apply(--layout-horizontal);
         @apply(--layout-justified);
       }
@@ -45,12 +44,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           path="/reimbursements/[[year]]"
           data="{{_reimbursements}}">
       </firebase-document>
+      <wvtc-reimbursement-races
+          races="{{_races}}"
+          year="[[year]]">
+      </wvtc-reimbursement-races>
       <paper-card
           id="card"
           class="wvtc-card wvtc-item-list"
           role="listbox">
         <div class="card-content">
-          <div class="reimbursement-heading">
+          <div class="reimbursement-heading wvtc-item">
             <div class="reimbursement-summary">
               <wvtc-reimbursement-summary
                   reimbursements="[[_reimbursements]]"
@@ -61,10 +64,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <wvtc-year-selector year="{{year}}"></wvtc-year-selector>
             </div>
           </div>
-          <wvtc-reimbursement-races
-              races="{{_races}}"
-              year="[[year]]">
-          </wvtc-reimbursement-races>
           <template is="dom-repeat" items="{{requesters}}" as="uid">
             <wvtc-reimbursement-record
                 class="wvtc-item"
