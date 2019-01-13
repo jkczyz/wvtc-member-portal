@@ -1,0 +1,143 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors.
+Copyright (c) 2019 West Valley Track Club, Inc.
+All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-item/paper-item-body.html">
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="wvtc-reimbursement-summary">
+  <template>
+    <style include="shared-styles"></style>
+    <paper-item>
+      <paper-item-body two-line>
+        <div>
+          Paid [[_sumRequests(_paidRequests, _reimbursementAmounts)]]
+          to [[_countUniqueRequesters(_paidRequests)]] members
+        </div>
+        <div secondary>
+            [[_sumRequests(_pendingRequests, _reimbursementAmounts)]] pending,
+            [[_sumRequests(_verifiedRequests, _reimbursementAmounts)]] verified,
+            [[_sumRequests(_deniedRequests, _reimbursementAmounts)]] denied
+        </div>
+      </paper-item-body>
+    </paper-item>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'wvtc-reimbursement-summary',
+      properties: {
+        reimbursements: Object,
+        races: Array,
+        _reimbursementRequests: {
+          type: Array,
+          computed: '_computeReimbursementRequests(reimbursements)'
+        },
+        _reimbursementAmounts: {
+          type: Object,
+          computed: '_computeReimbursementAmounts(races)'
+        },
+        _pendingRequests: {
+          type: Array,
+          computed: '_computePendingRequests(_reimbursementRequests)'
+        },
+        _verifiedRequests: {
+          type: Array,
+          computed: '_computeVerifiedRequests(_reimbursementRequests)'
+        },
+        _paidRequests: {
+          type: Array,
+          computed: '_computePaidRequests(_reimbursementRequests)'
+        },
+        _deniedRequests: {
+          type: Array,
+          computed: '_computeDeniedRequests(_reimbursementRequests)'
+        }
+      },
+      _computeReimbursementRequests(reimbursements) {
+        var reimbursementRequests = [];
+        for (uid in reimbursements) {
+          var userRequests = reimbursements[uid];
+          for (eid in userRequests) {
+            var request = userRequests[eid];
+            reimbursementRequests.push({
+              uid: uid,
+              eid: eid,
+              status: request.status
+            });
+          }
+        }
+
+        return reimbursementRequests;
+      },
+      _computeReimbursementAmounts(races) {
+        var mapRaceIdToReimbursementAmount = function(map, race) {
+          map[race.id] = race.amount || 0;
+          return map;
+        };
+
+        return races.reduce(mapRaceIdToReimbursementAmount, {});
+      },
+      _computePendingRequests: function(requests) {
+        var isPending = function(request) {
+          return request.status == 'Pending';
+        };
+        return requests.filter(isPending);
+      },
+      _computeVerifiedRequests: function(requests) {
+        var isVerified = function(request) {
+          return request.status == 'Verified';
+        };
+        return requests.filter(isVerified);
+      },
+      _computePaidRequests: function(requests) {
+        var isPaid = function(request) {
+          return request.status == 'Paid';
+        };
+        return requests.filter(isPaid);
+      },
+      _computeDeniedRequests: function(requests) {
+        var isDenied = function(request) {
+          return request.status.startsWith('Denied');
+        };
+        return requests.filter(isDenied);
+      },
+      _sumRequests: function(requests, amounts) {
+        var toAmount = function(request) {
+          return amounts[request.eid];
+        };
+        var sumAmounts = function(sum, value) {
+          return sum + value;
+        };
+        var formatter = new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0
+        });
+
+        var amountPaid = requests.map(toAmount)
+                                 .reduce(sumAmounts, 0);
+        return formatter.format(amountPaid / 100);
+      },
+      _countUniqueRequesters: function(requests) {
+        var requesters = Object.create(null);
+        requests.forEach(function(request) {
+          requesters[request.uid] = true;
+        });
+
+        return Object.keys(requesters).length;
+      }
+    });
+  </script>
+</dom-module>

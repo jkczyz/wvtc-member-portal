@@ -16,15 +16,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="wvtc-reimbursement-races.html">
 <link rel="import" href="wvtc-reimbursement-record.html">
+<link rel="import" href="wvtc-reimbursement-summary.html">
 <link rel="import" href="wvtc-year-selector.html">
 
 <dom-module id="wvtc-admin">
   <template>
     <style include="shared-styles">
       .reimbursement-heading {
-        padding: 0 16px 16px;
+        padding: 0 16px 0 0;
+        border-bottom: 1px solid var(--light-theme-divider-color);
         @apply(--layout-horizontal);
-        @apply(--layout-baseline);
         @apply(--layout-justified);
       }
       .reimbursement-summary {
@@ -50,7 +51,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           role="listbox">
         <div class="card-content">
           <div class="reimbursement-heading">
-            <div class="reimbursement-summary"></div>
+            <div class="reimbursement-summary">
+              <wvtc-reimbursement-summary
+                  reimbursements="[[_reimbursements]]"
+                  races="[[_races]]">
+              </wvtc-reimbursement-summary>
+            </div>
             <div class="reimbursement-year">
               <wvtc-year-selector year="{{year}}"></wvtc-year-selector>
             </div>
