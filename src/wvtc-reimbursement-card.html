@@ -27,6 +27,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="wvtc-reimbursement-pref.html">
 <link rel="import" href="wvtc-reimbursement-races.html">
 <link rel="import" href="wvtc-reimbursement-table.html">
+<link rel="import" href="wvtc-year-selector.html">
 
 <dom-module id="wvtc-reimbursement-card">
   <template>
@@ -85,13 +86,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         path="/reimbursements/[[year]]/[[user.uid]]"
         data="{{_reimbursements}}">
     </firebase-document>
+    <firebase-document
+        id="first-deadline"
+        app-name="wvtc"
+        path="/benefits/reimbursements/deadlines/[[year]]/first"
+        data="{{_firstDeadline}}">
+    </firebase-document>
+    <firebase-document
+        id="second-deadline"
+        app-name="wvtc"
+        path="/benefits/reimbursements/deadlines/[[year]]/second"
+        data="{{_secondDeadline}}">
+    </firebase-document>
 
     <paper-card id="card" class="wvtc-card" image="../images/logos/pausatf.png">
       <div class="card-content">
         <p>Members in good standing are eligible for PA race reimbursement</p>
         <p hidden$="[[!_isActiveMember(membership)]]">
-          <em>Deadline to file requests is January 15</em>
+          <em>[[_formatDeadline(deadline)]]</em>
         </p>
+        <wvtc-year-selector year="{{year}}"></wvtc-year-selector>
         <div class="form" hidden$="[[!_isActiveMember(membership)]]">
           <paper-dropdown-menu class="races" label="Race">
             <paper-listbox
@@ -146,37 +160,57 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </paper-card>
   </template>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
   <script>
     Polymer({
       is: 'wvtc-reimbursement-card',
       properties: {
         user: Object,
         membership: Object,
-        year: {
-          type: Number,
-          value: function() {
-            // TODO(jkczyz) Revert this once extended deadline has passed.
-            //var now = new Date();
-            //return now.getFullYear();
-            return 2018;
-          }
+        deadline: {
+          type: Object,
+          computed: '_computeDeadline(_firstDeadline, _secondDeadline)'
+        },
+        window: {
+          type: Object,
+          computed: '_computeWindow(_firstDeadline, deadline, year)'
         },
         eligibleRaces: {
           type: Array,
-          computed: '_computeEligibleRaces(_races, _reimbursements.*)'
-        },
-        selectedRace: {
-          type: Object,
-          value: function() {
-            return null;
-          }
+          computed: '_computeEligibleRaces(_races, _reimbursements.*, window)'
         },
         _toggleIcon: {
           type: String,
           computed: '_computeToggleIcon(opened)'
         },
       },
-      _computeEligibleRaces: function(allRaces, reimbursements) {
+      observers: [
+        '_updateSelectedRace(year)'
+      ],
+      _computeDeadline: function(firstDeadline, secondDeadline) {
+        if (this.$['first-deadline'].valueIsEmpty(firstDeadline) ||
+            this.$['second-deadline'].valueIsEmpty(secondDeadline)) {
+          return undefined;
+        }
+
+        var now = new Date();
+        return now.toJSON() < firstDeadline
+            ? new Date(firstDeadline) : new Date(secondDeadline);
+      },
+      _computeWindow: function(firstDeadline, deadline, year) {
+        var inFirstWindow = deadline.toJSON() == firstDeadline;
+        var newYearsDay = new Date(year.toString());
+        return {
+          start: inFirstWindow ? newYearsDay : new Date(firstDeadline),
+          end: deadline
+        };
+      },
+      _computeEligibleRaces: function(allRaces, reimbursements, window) {
+        var now = new Date();
+        if (now.toJSON() > window.end.toJSON()) {
+          return [];
+        }
+
         var compareByDate = function(race1, race2) {
           if (race1.date < race2.date) {
             return -1;
@@ -187,8 +221,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           return 0;
         };
         var isPast = function(race) {
-          var now = new Date();
           return race.date < now.toJSON();
+        };
+        var isInWindow = function(race) {
+          return race.date >= window.start.toJSON() &&
+                 race.date <= window.end.toJSON();
         };
         var hasNotBeenRequested = function(race) {
           return !reimbursements.base.hasOwnProperty(race.id);
@@ -196,10 +233,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         return allRaces.sort(compareByDate)
                        .filter(isPast)
+                       .filter(isInWindow)
                        .filter(hasNotBeenRequested);
       },
       _hasRequestedReimbursements: function(reimbursements) {
         return !this.$.reimbursements.valueIsEmpty(reimbursements.base);
+      },
+      _formatDeadline: function(deadline) {
+        var now = new Date();
+        if (!deadline) {
+          return 'Deadline to file requests is ...';
+        } else if (now.toJSON() < deadline.toJSON()) {
+          var formattedDate = moment(deadline).format('MMMM D, YYYY');
+          return 'Deadline to file requests is ' + formattedDate;
+        } else {
+          return 'Deadline to file requests has passed';
+        }
       },
       _formatAmount: function(amount) {
         if (!amount) {
@@ -214,6 +263,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           requestedOn: now.toJSON(),
           status: 'Pending'
         });
+        this.selectedRace = null;
+      },
+      _updateSelectedRace: function(year) {
         this.selectedRace = null;
       },
       toggleOpened: function() {
