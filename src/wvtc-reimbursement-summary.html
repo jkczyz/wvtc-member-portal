@@ -41,7 +41,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         races: Array,
         _reimbursementRequests: {
           type: Array,
-          computed: '_computeReimbursementRequests(reimbursements)'
+          computed: '_computeReimbursementRequests(reimbursements.*)'
         },
         _reimbursementAmounts: {
           type: Object,
@@ -66,8 +66,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
       _computeReimbursementRequests(reimbursements) {
         var reimbursementRequests = [];
-        for (uid in reimbursements) {
-          var userRequests = reimbursements[uid];
+        for (uid in reimbursements.base) {
+          var userRequests = reimbursements.base[uid];
           for (eid in userRequests) {
             var request = userRequests[eid];
             reimbursementRequests.push({
