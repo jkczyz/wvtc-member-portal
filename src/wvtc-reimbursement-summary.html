@@ -21,13 +21,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <paper-item>
       <paper-item-body two-line>
         <div>
-          Paid [[_sumRequests(_paidRequests, _reimbursementAmounts)]]
+          Paid [[_sumRequests(_paidRequests, races)]]
           to [[_countUniqueRequesters(_paidRequests)]] members
         </div>
         <div secondary>
-            [[_sumRequests(_pendingRequests, _reimbursementAmounts)]] pending,
-            [[_sumRequests(_verifiedRequests, _reimbursementAmounts)]] verified,
-            [[_sumRequests(_deniedRequests, _reimbursementAmounts)]] denied
+            [[_sumRequests(_pendingRequests, races)]] pending,
+            [[_sumRequests(_verifiedRequests, races)]] verified,
+            [[_sumRequests(_deniedRequests, races)]] denied
         </div>
       </paper-item-body>
     </paper-item>
@@ -38,14 +38,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       is: 'wvtc-reimbursement-summary',
       properties: {
         reimbursements: Object,
-        races: Array,
+        races: Object,
         _reimbursementRequests: {
           type: Array,
           computed: '_computeReimbursementRequests(reimbursements.*)'
-        },
-        _reimbursementAmounts: {
-          type: Object,
-          computed: '_computeReimbursementAmounts(races)'
         },
         _pendingRequests: {
           type: Array,
@@ -80,14 +76,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         return reimbursementRequests;
       },
-      _computeReimbursementAmounts(races) {
-        var mapRaceIdToReimbursementAmount = function(map, race) {
-          map[race.id] = race.amount || 0;
-          return map;
-        };
-
-        return races.reduce(mapRaceIdToReimbursementAmount, {});
-      },
       _computePendingRequests: function(requests) {
         var isPending = function(request) {
           return request.status == 'Pending';
@@ -112,9 +100,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         };
         return requests.filter(isDenied);
       },
-      _sumRequests: function(requests, amounts) {
+      _sumRequests: function(requests, races) {
         var toAmount = function(request) {
-          return amounts[request.eid];
+          return races[request.eid].amount;
         };
         var sumAmounts = function(sum, value) {
           return sum + value;

@@ -67,9 +67,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <template is="dom-repeat" items="{{requesters}}" as="uid">
             <wvtc-reimbursement-record
                 class="wvtc-item"
+                year="{{year}}"
                 uid="{{uid}}"
-                races={{_races}}
-                reimbursements="{{_reimbursementRequests(_reimbursements.*, uid)}}">
+                races="[[_races]]">
             </wvtc-reimbursement-record>
           </template>
         </div>

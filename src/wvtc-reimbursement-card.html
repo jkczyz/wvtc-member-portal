@@ -26,6 +26,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="wvtc-reimbursement-pref.html">
 <link rel="import" href="wvtc-reimbursement-races.html">
+<link rel="import" href="wvtc-reimbursement-requests.html">
 <link rel="import" href="wvtc-reimbursement-table.html">
 <link rel="import" href="wvtc-year-selector.html">
 
@@ -81,12 +82,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </style>
 
     <firebase-document
-        id="reimbursements"
-        app-name="wvtc"
-        path="/reimbursements/[[year]]/[[user.uid]]"
-        data="{{_reimbursements}}">
-    </firebase-document>
-    <firebase-document
         id="first-deadline"
         app-name="wvtc"
         path="/benefits/reimbursements/deadlines/[[year]]/first"
@@ -135,10 +130,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             races="{{_races}}"
             year="[[year]]">
         </wvtc-reimbursement-races>
+        <wvtc-reimbursement-requests
+            id="requests"
+            year="[[year]]"
+            uid="[[user.uid]]"
+            races="[[_races]]"
+            requests="{{_requests}}">
+        </wvtc-reimbursement-requests>
         <wvtc-reimbursement-table
-            hidden$="{{!_hasRequestedReimbursements(_reimbursements.*)}}"
-            races={{_races}}
-            reimbursements="{{_reimbursements}}">
+            hidden$="{{!_hasRequestedReimbursements(_requests.*)}}"
+            requests="{{_requests}}">
         </wvtc-reimbursement-table>
       </div>
       <div class="card-actions">
@@ -177,7 +178,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         },
         eligibleRaces: {
           type: Array,
-          computed: '_computeEligibleRaces(_races, _reimbursements.*, window)'
+          computed: '_computeEligibleRaces(_races, _requests.*, window)'
         },
         _toggleIcon: {
           type: String,
@@ -205,7 +206,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           end: deadline
         };
       },
-      _computeEligibleRaces: function(allRaces, reimbursements, window) {
+      _computeEligibleRaces: function(allRaces, requests, window) {
         var now = new Date();
         if (now.toJSON() > window.end.toJSON()) {
           return [];
@@ -228,16 +229,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                  race.date <= window.end.toJSON();
         };
         var hasNotBeenRequested = function(race) {
-          return !reimbursements.base.hasOwnProperty(race.id);
+          var hasSameRaceId = function(request) {
+            return request.id == race.id;
+          }
+          return !requests.base.some(hasSameRaceId);
         };
 
-        return allRaces.sort(compareByDate)
-                       .filter(isPast)
-                       .filter(isInWindow)
-                       .filter(hasNotBeenRequested);
+        return Object.values(allRaces)
+                     .sort(compareByDate)
+                     .filter(isPast)
+                     .filter(isInWindow)
+                     .filter(hasNotBeenRequested);
       },
-      _hasRequestedReimbursements: function(reimbursements) {
-        return !this.$.reimbursements.valueIsEmpty(reimbursements.base);
+      _hasRequestedReimbursements: function(requests) {
+        return requests.base.length > 0;
       },
       _formatDeadline: function(deadline) {
         var now = new Date();
@@ -258,11 +263,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
       _requestReimbursement: function() {
         var race = this.selectedRace;
-        var now = new Date();
-        this.set('_reimbursements.' + race.id, {
-          requestedOn: now.toJSON(),
-          status: 'Pending'
-        });
+        this.$.requests.requestReimbursement(race);
         this.selectedRace = null;
       },
       _updateSelectedRace: function(year) {

@@ -1,0 +1,77 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors.
+Copyright (c) 2019 West Valley Track Club, Inc.
+All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu-light.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="wvtc-reimbursement-status">
+  <template>
+    <style include="shared-styles">
+      paper-dropdown-menu-light {
+        --paper-dropdown-menu-input: {
+          font-size: inherit;
+        };
+      }
+      paper-item {
+        --paper-item: {
+          font-size: inherit;
+        };
+      }
+    </style>
+    <paper-dropdown-menu-light no-float-label>
+      <paper-listbox
+          class="dropdown-content"
+          selected="{{status}}"
+          attr-for-selected="name">
+        <template is="dom-repeat" items="{{choices}}">
+          <paper-item name="[[item]]">{{item}}</paper-item>
+        </template>
+      </paper-listbox>
+    </paper-dropdown-menu-light>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'wvtc-reimbursement-status',
+      properties: {
+        request: Object,
+        status: {
+          type: String,
+          observer: '_statusChanged'
+        },
+        choices: {
+          type: Array,
+          value: function() {
+            return [
+              "Pending",
+              "Verified",
+              "Paid",
+              "Denied",
+              "Denied (WVTC membership)",
+              "Denied (USATF membership)",
+              "Denied (Did not race)",
+              "Denied (Members free)",
+            ];
+          }
+        }
+      },
+      _statusChanged: function(newValue, oldValue) {
+        if (!!oldValue && oldValue != newValue) {
+          this.request.updateStatus(newValue);
+        }
+      }
+    });
+  </script>
+</dom-module>

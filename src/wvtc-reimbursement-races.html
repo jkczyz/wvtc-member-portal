@@ -16,11 +16,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <dom-module id="wvtc-reimbursement-races">
   <template>
     <firebase-document
+        id="road-races"
         app-name="wvtc"
         path="/races/[[year]]/road"
         data="{{_roadRaces}}">
     </firebase-document>
     <firebase-document
+        id="xc-races"
         app-name="wvtc"
         path="/races/[[year]]/xc"
         data="{{_xcRaces}}">
@@ -32,7 +34,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       is: 'wvtc-reimbursement-races',
       properties: {
         races: {
-          type: Array,
+          type: Object,
           computed: '_computeRaces(_xcRaces, _roadRaces)',
           notify: true,
           readOnly: true
@@ -42,6 +44,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         _roadRaces: Object
       },
       _computeRaces: function(xcRaces, roadRaces) {
+        if (this.$['road-races'].valueIsEmpty(roadRaces) ||
+            this.$['xc-races'].valueIsEmpty(xcRaces)) {
+          return undefined;
+        }
+
         var toSimplifiedRace = function(races) {
           return function(id) {
             var race = races[id];
@@ -49,13 +56,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               id: id,
               name: race.name,
               date: race.date,
-              amount: race.reimbursementAmount
+              amount: race.reimbursementAmount || 0
             };
           };
         };
+        var mapIdToRace = function(map, race) {
+          map[race.id] = race;
+          return map;
+        };
+
         var xc = Object.keys(xcRaces).map(toSimplifiedRace(xcRaces));
         var road = Object.keys(roadRaces).map(toSimplifiedRace(roadRaces));
-        return xc.concat(road);
+        return xc.concat(road).reduce(mapIdToRace, {});
       }
     });
   </script>
