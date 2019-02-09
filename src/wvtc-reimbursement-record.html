@@ -40,17 +40,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         path="/users/{{uid}}"
         data="{{user}}">
     </firebase-document>
-    <wvtc-reimbursement-requests
-        reimbursements="{{reimbursements}}"
-        races="{{races}}"
-        requests="{{requests}}">
-    </wvtc-reimbursement-requests>
     <paper-item>
       <paper-item-body two-line>
         <div>[[user.displayName]]</div>
         <div secondary>[[_reimbursementMethod(user)]]</div>
       </paper-item-body>
-      <div class="amount">[[_amountOwed(requests)]]</div>
+      <div class="amount">[[_amountOwed(_requests)]]</div>
       <paper-icon-button
           class="toggle"
           icon="[[_toggleIcon]]"
@@ -58,9 +53,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </paper-icon-button>
     </paper-item>
     <iron-collapse opened={{opened}}>
+      <wvtc-reimbursement-requests
+          year="[[year]]"
+          uid="[[uid]]"
+          races="[[races]]"
+          requests="{{_requests}}">
+      </wvtc-reimbursement-requests>
       <wvtc-reimbursement-table
-          races="{{races}}"
-          reimbursements="{{reimbursements}}">
+          editable="[[editable]]"
+          requests="[[_requests]]">
       </wvtc-reimbursement-table>
     </iron-collapse>
   </template>
@@ -69,10 +70,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     Polymer({
       is: 'wvtc-reimbursement-record',
       properties: {
+        year: Number,
         uid: String,
         user: Object,
-        reimbursements: Object,
-        races: Array,
+        races: Object,
+        _requests: Array,
+        editable: Boolean,
         opened: Boolean,
         _toggleIcon: {
           type: String,
@@ -108,8 +111,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         return '$' + (amountOwed / 100);
       },
       toggleOpened: function() {
+        // Only set editable upon opening the record to avoid slowness seen when
+        // first loading the page. This can happen when the page contains
+        // multiple records each with many paper-dropdown-menu elements.
+        this.editable = true;
         this.opened = !this.opened;
-        this.selected = this.selected || 0;
       },
       _computeToggleIcon: function(opened) {
         return opened ? 'icons:expand-less' : 'icons:expand-more';

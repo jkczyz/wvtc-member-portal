@@ -11,37 +11,59 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-query.html">
 
 <dom-module id="wvtc-reimbursement-requests">
+  <template>
+      <firebase-query
+          id="reimbursements"
+          app-name="wvtc"
+          path="/reimbursements/[[year]]/[[uid]]"
+          data="{{_reimbursements}}">
+      </firebase-query>
+  </template>
   <script>
     Polymer({
       is: 'wvtc-reimbursement-requests',
       properties: {
-        races: Array,
-        reimbursements: Object,
+        year: Number,
+        uid: String,
+        races: Object,
+        _reimbursements: Array,
         requests: {
           type: Array,
-          computed: '_computeRequests(races, reimbursements.*)',
+          computed: '_computeRequests(races, _reimbursements.*)',
           notify: true
         }
       },
       _computeRequests: function(races, reimbursements) {
-        var hasRequestedReimbursement = function(race) {
-          return reimbursements.base.hasOwnProperty(race.id);
-        };
-        var toReimbursementRequest = function(race) {
-          var request = reimbursements.base[race.id];
+        var self = this;
+        var toCompleteRequest = function(reimbursement) {
+          var id = reimbursement.$key;
+          var race = races[id];
           return {
+            id: id,
             race: race.name,
-            requestedOn: request.requestedOn,
+            requestedOn: reimbursement.requestedOn,
             amount: race.amount,
-            status: request.status
+            status: reimbursement.status,
+            updateStatus: function(status) {
+              self.$.reimbursements.ref.child(id).update({
+                status: status
+              });
+            }
           };
         };
 
-        return races.filter(hasRequestedReimbursement)
-                    .map(toReimbursementRequest);
+        return reimbursements.base.map(toCompleteRequest);
       },
+      requestReimbursement: function(race) {
+        var now = new Date();
+        this.$.reimbursements.ref.child(race.id).set({
+          requestedOn: now.toJSON(),
+          status: 'Pending'
+        });
+      }
     });
   </script>
 </dom-module>
