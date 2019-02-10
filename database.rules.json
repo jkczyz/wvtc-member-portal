@@ -30,6 +30,10 @@
         ".write": false
       }
     },
+    "events": {
+      ".read": "auth != null",
+      ".write": false
+    },
     "races": {
       ".read": "auth != null",
       ".write": false
