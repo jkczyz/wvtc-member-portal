@@ -30,6 +30,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         @apply(--layout-horizontal);
         @apply(--layout-justified);
       }
+      .roster-heading .spinner {
+        padding: 16px;
+      }
       .roster-summary {
         flex: 3 3 auto;
       }
@@ -80,30 +83,35 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <div class="wvtc-panel">
       <h2 class="wvtc-subheader">WVTC Roster</h2>
 
-      <template is="dom-if" if="[[isLoading]]">
-        <paper-spinner-lite active></paper-spinner-lite>
-      </template>
-
       <paper-card
           hidden$="[[isLoading]]"
           class="wvtc-card wvtc-item-list"
           role="listbox">
         <div class="card-content">
           <div class="roster-heading wvtc-item">
-            <div class="roster-summary">
-              <paper-item>
-                <paper-item-body two-line>
-                  <div>[[userRecords.length]] members</div>
-                  <div secondary>Annual and lifetime memberships</div>
-                </paper-item-body>
-              </paper-item>
-            </div>
+            <template is="dom-if" if="[[isLoading]]">
+              <div class="spinner">
+                <paper-spinner-lite active></paper-spinner-lite>
+              </div>
+            </template>
+            <template is="dom-if" if="[[!isLoading]]">
+              <div class="roster-summary">
+                <paper-item>
+                  <paper-item-body two-line>
+                    <div>[[userRecords.length]] members</div>
+                    <div secondary>Annual and lifetime memberships</div>
+                  </paper-item-body>
+                </paper-item>
+              </div>
+            </template>
             <div class="roster-year">
               <wvtc-year-selector year="{{year}}"></wvtc-year-selector>
             </div>
           </div>
-          <template is="dom-repeat" items="{{userRecords}}">
-            <wvtc-roster-record user="{{item}}"></wvtc-roster-record>
+          <template is="dom-if" if="[[!isLoading]]">
+            <template is="dom-repeat" items="{{userRecords}}">
+              <wvtc-roster-record user="{{item}}"></wvtc-roster-record>
+            </template>
           </template>
         </div>
       </paper-card>
