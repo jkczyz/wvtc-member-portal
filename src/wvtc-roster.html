@@ -12,16 +12,33 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-item/paper-item-body.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner-lite.html">
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-document.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-query.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="wvtc-roster-record.html">
+<link rel="import" href="wvtc-year-selector.html">
 
 <dom-module id="wvtc-roster">
   <template>
-    <style include="shared-styles"></style>
+    <style include="shared-styles">
+      .roster-heading {
+        padding: 0 16px 0 0;
+        @apply(--layout-horizontal);
+        @apply(--layout-justified);
+      }
+      .roster-summary {
+        flex: 3 3 auto;
+      }
+      .roster-year {
+        flex: 1 1 80px;
+        @apply(--layout-horizontal);
+        @apply(--layout-end-justified);
+      }
+    </style>
 
     <firebase-query
         app-name="wvtc"
@@ -61,23 +78,35 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </app-indexeddb-mirror>
 
     <div class="wvtc-panel">
-      <h2 class="wvtc-subheader">
-        [[year]] WVTC Roster ([[userRecords.length]] members)
-      </h2>
+      <h2 class="wvtc-subheader">WVTC Roster</h2>
 
       <template is="dom-if" if="[[isLoading]]">
         <paper-spinner-lite active></paper-spinner-lite>
       </template>
 
-      <template is="dom-if" if="[[!isLoading]]">
-        <paper-card class="wvtc-card wvtc-item-list" role="listbox">
-          <div class="card-content">
-            <template is="dom-repeat" items="{{userRecords}}">
-              <wvtc-roster-record user="{{item}}"></wvtc-roster-record>
-            </template>
+      <paper-card
+          hidden$="[[isLoading]]"
+          class="wvtc-card wvtc-item-list"
+          role="listbox">
+        <div class="card-content">
+          <div class="roster-heading wvtc-item">
+            <div class="roster-summary">
+              <paper-item>
+                <paper-item-body two-line>
+                  <div>[[userRecords.length]] members</div>
+                  <div secondary>Annual and lifetime memberships</div>
+                </paper-item-body>
+              </paper-item>
+            </div>
+            <div class="roster-year">
+              <wvtc-year-selector year="{{year}}"></wvtc-year-selector>
+            </div>
           </div>
-        </paper-card>
-      </template>
+          <template is="dom-repeat" items="{{userRecords}}">
+            <wvtc-roster-record user="{{item}}"></wvtc-roster-record>
+          </template>
+        </div>
+      </paper-card>
     </div>
   </template>
 
@@ -93,13 +122,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           type: Array,
           computed: '_computeUserRecords(users.*, members.*, lifetimeMembers.*)'
         },
-        year: {
-          type: Number,
-          value: function() {
-            var now = new Date();
-            return now.getFullYear();
-          }
-        },
+        year: Number,
         isLoading: {
           type: Boolean,
           computed: '_computeIsLoading(users.length, members, lifetimeMembers)'
