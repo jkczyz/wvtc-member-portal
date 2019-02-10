@@ -1,7 +1,8 @@
 {
   "rules": {
-    ".read": "root.child('members/all/' + auth.uid + '/year').val().matches(/^2019|lifetime$/)",
+    ".read": "root.child('admin/' + auth.uid).val() === true || root.child('board/' + root.child('year').val() + '/' + auth.uid).val() === true",
     "users": {
+      ".read": "root.child('members/' + root.child('year').val() + '/' + auth.uid).exists() || root.child('members/lifetime/' + auth.uid).exists()",
       "$uid": {
         ".read": "$uid === auth.uid",
         ".write": "$uid === auth.uid"
@@ -15,14 +16,27 @@
         }
       }
     },
+    "board": {
+      "$year": {
+        "$uid": {
+          ".read": "$uid === auth.uid",
+          ".write": false
+        }
+      }
+    },
+    "admin": {
+      "$uid": {
+        ".read": "$uid === auth.uid",
+        ".write": false
+      }
+    },
     "races": {
       ".read": "auth != null",
       ".write": false
     },
     "attendance": {
-      ".read": "root.child('members/all/' + auth.uid + '/year').val().matches(/^2019|lifetime$/)",
-      ".write": false,
       "$year": {
+        ".read": "root.child('members/' + $year + '/' + auth.uid).exists() || root.child('members/lifetime/' + auth.uid).exists()",
         "$eid": {
           "$uid": {
             ".read": "$uid === auth.uid",
@@ -32,14 +46,25 @@
       }
     },
     "benefits": {
-      ".read": "root.child('members/all/' + auth.uid + '/year').val().matches(/^2019|lifetime$/)",
-      ".write": false
+      "discounts": {
+        ".read": "root.child('members/' + root.child('year').val() + '/' + auth.uid).exists() || root.child('members/lifetime/' + auth.uid).exists()",
+        ".write": false
+      },
+      "reimbursements": {
+        ".read": "auth.uid != null",
+        ".write": false
+      }
     },
     "reimbursements": {
       "$year": {
         "$uid": {
           ".read": "$uid === auth.uid",
-          ".write": "$uid === auth.uid"
+          ".write": "$uid === auth.uid",
+          "$eid": {
+            "status": {
+              ".write": "root.child('admin/' + auth.uid).val() === true"
+            }
+          }
         }
       }
     }
