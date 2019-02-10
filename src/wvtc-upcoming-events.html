@@ -11,12 +11,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-query.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="wvtc-facebook-event.html">
 
 <dom-module id="wvtc-upcoming-events">
   <template>
     <style include="shared-styles"></style>
+    <firebase-query
+        app-name="wvtc"
+        path="/events/[[year]]"
+        data="{{events}}">
+    </firebase-query>
 
     <div class="wvtc-panel">
       <h2 class="wvtc-subheader">Upcoming events</h2>
@@ -30,40 +36,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     Polymer({
       is: 'wvtc-upcoming-events',
       properties: {
-        // TODO: Retrieve these programmatically.
-        events: {
-          type: Array,
+        events: Array,
+        year: {
+          type: Number,
           value: function() {
-            return [
-              // Retrieved via Facebook Graph API request:
-              //
-              // /1986745448264355?fields=id,name,place,cover,start_time,end_time
-              {
-                "id": "189246921629554",
-                "name": "WVTC Annual Party",
-                "place": {
-                  "name": "Covo",
-                  "location": {
-                    "city": "San Francisco",
-                    "country": "United States",
-                    "latitude": 37.7811394,
-                    "longitude": -122.4078827,
-                    "state": "CA",
-                    "street": "981 Mission Street",
-                    "zip": "94103"
-                  },
-                  "id": "1506041862996327"
-                },
-                "cover": {
-                  "offset_x": 0,
-                  "offset_y": 74,
-                  "source": "https://scontent.xx.fbcdn.net/v/t31.0-0/p180x540/25300010_10212237256141292_4180847761440560944_o.jpg?oh=9d3fa353101058c8dbbe1f6b220b46c4&oe=5B224BC2",
-                  "id": "10212237256141292"
-                },
-                "start_time": "2018-02-10T19:00:00-0800",
-                "end_time": "2018-02-10T23:00:00-0800"
-              }
-            ];
+            return new Date().getFullYear();
           }
         }
       }
