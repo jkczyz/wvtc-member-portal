@@ -16,24 +16,37 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <dom-module id="wvtc-racing">
   <template>
-    <style include="shared-styles"></style>
+    <style include="shared-styles">
+      .road-first {
+        display: flex;
+        flex-direction: column;
+      }
+      .xc-first {
+        display: flex;
+        flex-direction: column-reverse;
+      }
+    </style>
 
-    <div class="wvtc-panel">
-      <h2 class="wvtc-subheader">[[year]] PA USATF Cross Country</h2>
-      <wvtc-racing-schedule
-          user="[[user]]"
-          membership=[[membership]]
-          year="[[year]]"
-          type="xc">
-      </wvtc-racing-schedule>
-
-      <h2 class="wvtc-subheader">[[year]] PA USATF Road Racing</h2>
-      <wvtc-racing-schedule
-          user="[[user]]"
-          membership=[[membership]]
-          year="[[year]]"
-          type="road">
-      </wvtc-racing-schedule>
+    <div class$="{{order}} wvtc-panel">
+      <div>
+        <h2 class="wvtc-subheader">[[year]] PA USATF Road Racing</h2>
+        <wvtc-racing-schedule
+            user="[[user]]"
+            membership=[[membership]]
+            year="[[year]]"
+            type="road">
+        </wvtc-racing-schedule>
+      </div>
+      
+      <div>
+        <h2 class="wvtc-subheader">[[year]] PA USATF Cross Country</h2>
+        <wvtc-racing-schedule
+            user="[[user]]"
+            membership=[[membership]]
+            year="[[year]]"
+            type="xc">
+        </wvtc-racing-schedule>
+      </div>
     </div>
   </template>
 
@@ -48,6 +61,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           value: function() {
             var now = new Date();
             return now.getFullYear();
+          }
+        },
+        order: {
+          type: String,
+          value: function() {
+            var now = new Date();
+            var july = 6;  // 0-based index.
+            if (now.getMonth() > july) {
+              return 'xc-first';
+            } else {
+              return 'road-first';
+            }
           }
         }
       }
