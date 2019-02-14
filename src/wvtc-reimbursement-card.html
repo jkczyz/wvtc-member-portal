@@ -97,50 +97,50 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <paper-card id="card" class="wvtc-card" image="../images/logos/pausatf.png">
       <div class="card-content">
         <p>Members in good standing are eligible for PA race reimbursement</p>
-        <p hidden$="[[!_isActiveMember(membership)]]">
-          <em>[[_formatDeadline(deadline)]]</em>
-        </p>
+        <p><em>[[_formatDeadline(deadline)]]</em></p>
         <wvtc-year-selector year="{{year}}"></wvtc-year-selector>
-        <div class="form" hidden$="[[!_isActiveMember(membership)]]">
-          <paper-dropdown-menu class="races" label="Race">
-            <paper-listbox
-                class="dropdown-content"
-                selected="{{selectedRace}}"
-                attr-for-selected="race">
-              <template is="dom-repeat" items="{{eligibleRaces}}" as="race">
-                <paper-item race="[[race]]">{{race.name}}</paper-item>
-              </template>
-            </paper-listbox>
-          </paper-dropdown-menu>
-          <paper-input
-              class="amount"
-              label="Amount"
-              value="{{_formatAmount(selectedRace.amount)}}"
-              readonly>
-          </paper-input>
-          <paper-button
-              class="request"
-              on-tap="_requestReimbursement"
-              raised
-              disabled="[[!selectedRace]]">
-            Request
-          </paper-button>
+        <div hidden$="[[!_shouldShowForm(membership, year, deadline)]]">
+          <div class="form">
+            <paper-dropdown-menu class="races" label="Race">
+              <paper-listbox
+                  class="dropdown-content"
+                  selected="{{selectedRace}}"
+                  attr-for-selected="race">
+                <template is="dom-repeat" items="{{eligibleRaces}}" as="race">
+                  <paper-item race="[[race]]">{{race.name}}</paper-item>
+                </template>
+              </paper-listbox>
+            </paper-dropdown-menu>
+            <paper-input
+                class="amount"
+                label="Amount"
+                value="{{_formatAmount(selectedRace.amount)}}"
+                readonly>
+            </paper-input>
+            <paper-button
+                class="request"
+                on-tap="_requestReimbursement"
+                raised
+                disabled="[[!selectedRace]]">
+              Request
+            </paper-button>
+          </div>
+          <wvtc-reimbursement-races
+              races="{{_races}}"
+              year="[[year]]">
+          </wvtc-reimbursement-races>
+          <wvtc-reimbursement-requests
+              id="requests"
+              year="[[year]]"
+              uid="[[user.uid]]"
+              races="[[_races]]"
+              requests="{{_requests}}">
+          </wvtc-reimbursement-requests>
+          <wvtc-reimbursement-table
+              hidden$="{{!_hasRequestedReimbursements(_requests.*)}}"
+              requests="{{_requests}}">
+          </wvtc-reimbursement-table>
         </div>
-        <wvtc-reimbursement-races
-            races="{{_races}}"
-            year="[[year]]">
-        </wvtc-reimbursement-races>
-        <wvtc-reimbursement-requests
-            id="requests"
-            year="[[year]]"
-            uid="[[user.uid]]"
-            races="[[_races]]"
-            requests="{{_requests}}">
-        </wvtc-reimbursement-requests>
-        <wvtc-reimbursement-table
-            hidden$="{{!_hasRequestedReimbursements(_requests.*)}}"
-            requests="{{_requests}}">
-        </wvtc-reimbursement-table>
       </div>
       <div class="card-actions">
         <div class="buttons">
@@ -275,9 +275,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _computeToggleIcon: function(opened) {
         return opened ? 'icons:expand-less' : 'icons:expand-more';
       },
-      _isActiveMember: function(membership) {
-        return !!membership.paidOn;
-      },
+      _shouldShowForm: function(membership, year, deadline) {
+        if (!membership.year) {
+          return false;
+        }
+
+        if (membership.year == 'lifetime') {
+          return true;
+        }
+
+        var now = new Date();
+        if (now.toJSON() > deadline.toJSON()) {
+          return true;
+        }
+
+        // NOTE: This will prevent the form from showing if the reimbursement
+        // dealine is in a year after the given reimbursement year.
+        return membership.year == year;
+      }
     });
   </script>
 </dom-module>
