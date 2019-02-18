@@ -201,6 +201,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <span>Admin</span>
             </div>
           </a>
+          <a name="privacy" href="/privacy" drawer-toggle>
+            <iron-icon icon="lock"></iron-icon>
+            <span>Privacy</span>
+          </a>
         </iron-selector>
       </app-drawer>
 
@@ -269,6 +273,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               membership="[[membership]]">
           </wvtc-benefits>
           <wvtc-admin name="admin" user="[[user]]"></wvtc-admin>
+          <wvtc-privacy name="privacy"></wvtc-privacy>
           <wvtc-404 name="404"></wvtc-404>
         </neon-animated-pages>
       </app-header-layout>
@@ -305,6 +310,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
  
       _routePageChanged: function(page, statusKnown, signedIn, isReady) {
+        if (page == 'privacy') {
+          this.page = page;
+          return;
+        }
+
         if (!statusKnown) {
           return;
         }
