@@ -30,7 +30,7 @@ exports.processMemberDues = functions.https.onRequest((req, res) => {
       chargeId = order.charge;
       return updateStripeCharge(chargeId, email);
     }).then(charge => {
-      return updateMemberDatabase(uid, orderId);
+      return updateMemberDatabase(uid, orderId, sku);
     }).then(() => {
       return fulfillStripeOrder(orderId);
     }).then(() => {
@@ -42,9 +42,10 @@ exports.processMemberDues = functions.https.onRequest((req, res) => {
   });
 });
 
-var updateMemberDatabase = function(uid, orderId) {
+var updateMemberDatabase = function(uid, orderId, sku) {
+  const isLifetime = isLifetimeMembership(sku);
   const now = new Date();
-  const year = now.getFullYear().toString();
+  const year = isLifetime ? 'lifetime' : now.getFullYear().toString();
   return admin.database().ref('members/all/' + uid).set({
     year: year,
     paidOn: now.toJSON()
@@ -54,6 +55,10 @@ var updateMemberDatabase = function(uid, orderId) {
       paidOn: now.toJSON()
     });
   });
+};
+
+var isLifetimeMembership = function(sku) {
+  return sku == 'new_lifetime_membership';
 };
 
 var processStripeOrder = function(uid, email, sku, tokenId) {
