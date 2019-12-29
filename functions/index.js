@@ -22,9 +22,6 @@ exports.processMemberDues = functions.https.onRequest((req, res) => {
     const sku = req.body.sku;
     const tokenId = req.body.tokenId;
 
-    const skuParts = sku.split('_');
-    const year = skuParts[1];
-
     console.log('Processing %s payment for uid %s', sku, uid);
     var orderId;
     var chargeId;
@@ -33,7 +30,7 @@ exports.processMemberDues = functions.https.onRequest((req, res) => {
       chargeId = order.charge;
       return updateStripeCharge(chargeId, email);
     }).then(charge => {
-      return updateMemberDatabase(uid, orderId, year);
+      return updateMemberDatabase(uid, orderId);
     }).then(() => {
       return fulfillStripeOrder(orderId);
     }).then(() => {
@@ -45,8 +42,9 @@ exports.processMemberDues = functions.https.onRequest((req, res) => {
   });
 });
 
-var updateMemberDatabase = function(uid, orderId, year) {
+var updateMemberDatabase = function(uid, orderId) {
   const now = new Date();
+  const year = now.getFullYear().toString();
   return admin.database().ref('members/all/' + uid).set({
     year: year,
     paidOn: now.toJSON()
