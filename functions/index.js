@@ -19,7 +19,7 @@ exports.processMemberDues = functions.https.onRequest((req, res) => {
   cors({origin: true, methods: ['POST']})(req, res, () => {
     const uid = req.body.uid;
     const email = req.body.email;
-    const sku = req.body.sku;
+    const sku = normalizeStripeSku(req.body.sku);
     const tokenId = req.body.tokenId;
 
     console.log('Processing %s payment for uid %s', sku, uid);
@@ -59,6 +59,11 @@ var updateMemberDatabase = function(uid, orderId, sku) {
 
 var isLifetimeMembership = function(sku) {
   return sku == 'new_lifetime_membership';
+};
+
+var normalizeStripeSku(sku) = function(sku) {
+  const isNotYear = x => isNaN(parseInt(x));
+  return sku.split('_').filter(isNotYear).join('_');
 };
 
 var processStripeOrder = function(uid, email, sku, tokenId) {
