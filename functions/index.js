@@ -61,7 +61,7 @@ var isLifetimeMembership = function(sku) {
   return sku == 'new_lifetime_membership';
 };
 
-var normalizeStripeSku(sku) = function(sku) {
+var normalizeStripeSku = function(sku) {
   const isNotYear = x => isNaN(parseInt(x));
   return sku.split('_').filter(isNotYear).join('_');
 };
