@@ -289,9 +289,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           return true;
         }
 
-        // NOTE: This will prevent the form from showing if the reimbursement
-        // dealine is in a year after the given reimbursement year.
-        return membership.year == year;
+        // NOTE: This could allow members to request reimbursement for a year
+        // in which they didn't pay dues if:
+        //
+        // (1) the deadline is in a year after the reimbursement year, and
+        // (2) the member didn't pay dues that year but did in a later year.
+        //
+        // This can be avoided by keeping the deadline within the reimbursement
+        // year.
+        return membership.year >= year;
       }
     });
   </script>
