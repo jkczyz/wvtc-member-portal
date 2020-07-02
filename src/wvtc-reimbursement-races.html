@@ -27,6 +27,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         path="/races/[[year]]/xc"
         data="{{_xcRaces}}">
     </firebase-document>
+    <firebase-document
+        id="mut-races"
+        app-name="wvtc"
+        path="/races/[[year]]/mut"
+        data="{{_mutRaces}}">
+    </firebase-document>
   </template>
 
   <script>
@@ -35,15 +41,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       properties: {
         races: {
           type: Object,
-          computed: '_computeRaces(_xcRaces, _roadRaces)',
+          computed: '_computeRaces(_xcRaces, _roadRaces, _mutRaces)',
           notify: true,
           readOnly: true
         },
         year: Number,
         _xcRaces: Object,
-        _roadRaces: Object
+        _roadRaces: Object,
+        _mutRaces: Object,
       },
-      _computeRaces: function(xcRaces, roadRaces) {
+      _computeRaces: function(xcRaces, roadRaces, mutRaces) {
+        // NOTE: not including mutRaces so that the drop down will continue
+        // to work for years prior to 2020 when we didn't include MUT.
         if (this.$['road-races'].valueIsEmpty(roadRaces) ||
             this.$['xc-races'].valueIsEmpty(xcRaces)) {
           return undefined;
@@ -67,7 +76,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         var xc = Object.keys(xcRaces).map(toSimplifiedRace(xcRaces));
         var road = Object.keys(roadRaces).map(toSimplifiedRace(roadRaces));
-        return xc.concat(road).reduce(mapIdToRace, {});
+        var mut = Object.keys(mutRaces).map(toSimplifiedRace(mutRaces));
+        return xc.concat(road).concat(mut).reduce(mapIdToRace, {});
       }
     });
   </script>
